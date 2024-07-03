@@ -1,0 +1,45 @@
+@import './base.css';
+
+#nav {
+  padding: 10px;
+  background: #f3f3f3;
+  border-bottom: 0px solid #ddd;
+}
+#nav a {
+  font-weight: bold;
+  color: #2c3e50;
+  margin-right: 10px;
+}
+#nav a.router-link-exact-active {
+  color: red;
+}
+.route-enter-from{
+  opacity: 0;
+  transform: translateX(100%px);
+}
+.route-enter-active{
+  transition: ass 0.2s ease-out;
+}
+.route-leave-to{
+  opacity: 0;
+  transform: translateX(-100px)
+}
+.route-enter-active{
+  transition: all 0.2s
+}
+.layer {  
+  position: fixed;  
+  bottom: 0;  
+  height: 200px;
+  width: 100%;  
+  background: #f0f0f0;  
+  transition: all 0.5s ease;  
+  transform: translateY(50);  
+}  
+
+a:hover {   
+  color: #1B78B5;   
+}  
+a {   
+  color: #1B78B5;   
+}  
