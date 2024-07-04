@@ -215,6 +215,8 @@ function OnClickLink(agent_id){
         align-content: center;
         border: 1px solid #ccc;
         align-items: center;
+    background: #ffffff;
+    background-color: #ffffff;
         }
     table {
         width: 90vw;

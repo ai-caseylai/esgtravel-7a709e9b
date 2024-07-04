@@ -65,8 +65,8 @@ if($_POST['ActionType'] == "GetOTP"){
 			$otpcode = rand(100000,999999);
 			$controller->processUpdateOTPInfoByMobile($mobile, $ccode, $otpcode, time(), 0, "");
 
-			//$smscontroller->processSend($userinfo, $otpcode);
-
+			$smscontroller->processSend($userinfo, $otpcode);
+			//echo json_encode(["userinfo" => $userinfo]);
 			echo "otpcode_sent" ;
 		}else{
 			//session_unset();
@@ -255,19 +255,38 @@ if($_POST['ActionType'] == "GetOTP"){
 	$telStatus = $controller->processCheckUpdateCompanyTelExist(trim($_POST['tel']), trim($_POST['countrycode']),trim($_POST['company_id']));
 	if($emailStatus == true && $mobileStatus == true)
 	{
-		$status= $controller->processUpdateCompany(trim($_POST['company_id']), trim($_POST['companyname']), trim($_POST['contactname']), trim($_POST['country']), trim($_POST['countrycode']), trim($_POST['mobile']), trim($_POST['tel']), trim($_POST['email']), trim($_POST['address_1']), trim($_POST['address_2']), trim($_POST['address_3']));
+		if(trim($_POST['status'])=='true')
+		{
+			//echo "status true" . trim($_POST['status']);
+			$status = 1;
+		}
+		else{
+			//echo "status false". trim($_POST['status']);
+			$status = 0;
+		}
+
+		$status= $controller->processUpdateCompany(trim($_POST['company_id']), trim($_POST['companyname']), trim($_POST['contactname']), trim($_POST['country']), trim($_POST['countrycode']), trim($_POST['mobile']), trim($_POST['tel']), trim($_POST['email']), trim($_POST['address_1']), trim($_POST['address_2']), trim($_POST['address_3']), $status);
 		echo json_encode(['updatestatus' => $status, 'emailstatus' => $emailStatus, 'mobilestatus' => $mobileStatus, 'telstatus' => $telStatus]);
 	}else{
 		echo json_encode(['updatestatus' => false, 'emailstatus' => $emailStatus, 'mobilestatus' => $mobileStatus, 'telstatus' => $telStatus]);
 	}
 	
 }else if($_POST['ActionType'] == "UpdateAgent"){
-
 	$emailStatus = $controller->processCheckUpdateAgentEmailExist(trim($_POST['email']),trim($_POST['agent_id']));
 	$mobileStatus = $controller->processCheckUpdateAgentMobileExist(trim($_POST['mobile']), trim($_POST['ccode']),trim($_POST['agent_id']));
 	if($emailStatus == true && $mobileStatus == true)
 	{
-		$status= $controller->processUpdateAgent(trim($_POST['agent_id']), trim($_POST['contactname']), trim($_POST['ccode']), trim($_POST['mobile']), trim($_POST['email']));
+
+		if(trim($_POST['status'])=='true')
+		{
+			//echo "status true". trim($_POST['status']);
+			$status = 1;
+		}
+		else{
+			//echo "status false".trim($_POST['status']);
+			$status = 0;
+		}
+		$status= $controller->processUpdateAgent(trim($_POST['agent_id']), trim($_POST['contactname']), trim($_POST['ccode']), trim($_POST['mobile']), trim($_POST['email']), $status);
 		echo json_encode(['updatestatus' => $status, 'emailstatus' => $emailStatus, 'mobilestatus' => $mobileStatus]);
 	}else{
 		echo json_encode(['updatestatus' => false, 'emailstatus' => $emailStatus, 'mobilestatus' => $mobileStatus]);

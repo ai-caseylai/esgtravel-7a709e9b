@@ -150,7 +150,7 @@ onMounted(() => {
             </table>
             
             <div style="display: flex;  justify-content: center;  align-items: center; width:100%; left:0%;  border:0px solid #ced4da;" v-if="!onprocess"> 
-                <button type="submit" @click="handleSubmit()" style="background:#1B78B5; width:180px; height:40px; border-radius: 12px;border: 0px solid #ced4da;" :disabled="store.state.countdown > 0" >
+                <button type="submit" @click="handleSubmit()" style="color: #ffffff;background:#1B78B5; width:180px; height:40px; border-radius: 12px;border: 0px solid #ced4da;" :disabled="store.state.countdown > 0" >
                 <label style="font-family: Arial, Verdana, Helvetica, sans-serif;  color: #ffffff; font-weight:normal; font-size: 20px; line-height: 0px; letter-spacing: 0px; padding-left: 0px; padding-top: 10px;" v-if="store.state.countdown<=0">Submit</label>
                 <label style="font-family: Arial, Verdana, Helvetica, sans-serif;  color: #ffffff; font-weight:normal; font-size: 20px; line-height: 0px; letter-spacing: 0px; padding-left: 0px; padding-top: 10px;" v-if="store.state.countdown>0">Resend OTP in {{ store.state.countdown }}</label>
                 </button>
@@ -166,6 +166,8 @@ onMounted(() => {
         border: 0px solid #ccc;
         width: 100%;
 
+        background: #ffffff;
+        background-color: #ffffff;
         justify-content: center;
     }
 

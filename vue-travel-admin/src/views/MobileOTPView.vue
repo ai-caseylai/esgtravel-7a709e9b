@@ -109,7 +109,7 @@ async function RequestOTP(){
 
       if (res.status == 200) {
         const result = res.data;
-        
+        console.log(result);
         //console.log(res.data);
         
         store.commit("setIsCountDown", true);
@@ -161,7 +161,7 @@ onMounted(() => {
             </tr>
             <tr>
                 <td style="width:30%;border:0px solid #ced4da;vertical-align: middle;"><br><br>
-                <select required v-model="ccode" style="width:100%;  margin-left: 2%;background-color: #ffffff; height: 35px;border-radius: 5px;">
+                <select required v-model="ccode" style="width:100%;  margin-left: 2%;background-color: #ffffff; height: 35px;border-radius: 5px;border: 1px solid #ccc;">
                 <option v-for="countrycode in store.state.countrycodes" :key="countrycode.id" :value="countrycode.country_code">{{countrycode.country_code}}</option>
                 </select>
                 </td>
@@ -173,7 +173,7 @@ onMounted(() => {
             
             <label v-if="error" style="font-family: Arial, Verdana, Helvetica, sans-serif;color: red; font-weight:normal; font-size: 14px; line-height: 0px; letter-spacing: 0px; padding-left: 0px; padding-top: 0px;"> {{ error_txt}}</label><br>
             <div style="display: flex;  justify-content: center;  align-items: center; width:100%; left:0%;  border:0px solid #ced4da;" v-if="!onprocess"> 
-                <button type="submit" @click="handleSubmit()" style="background:#1B78B5; width:180px; height:40px; border-radius: 12px;border: 0px solid #ced4da;" :disabled="store.state.countdown > 0" >
+                <button type="submit" @click="handleSubmit()" style="color: #ffffff;background:#1B78B5; width:200px; height:40px; border-radius: 12px;border: 0px solid #ced4da;" :disabled="store.state.countdown > 0" >
                 <label style="font-family: Arial, Verdana, Helvetica, sans-serif;  color: #ffffff; font-weight:normal; font-size: 20px; line-height: 0px; letter-spacing: 0px; padding-left: 0px; padding-top: 10px;" v-if="store.state.countdown<=0">Submit</label>
                 <label style="font-family: Arial, Verdana, Helvetica, sans-serif;  color: #ffffff; font-weight:normal; font-size: 20px; line-height: 0px; letter-spacing: 0px; padding-left: 0px; padding-top: 10px;" v-if="store.state.countdown>0">Resend OTP in {{ store.state.countdown }}</label>
                 </button>
@@ -191,6 +191,8 @@ onMounted(() => {
         width: 100%;
         display: flex;
         justify-content: center;
+        background: #ffffff;
+        background-color: #ffffff;
     }
     
     form {

@@ -142,7 +142,7 @@ async function LoadSiteTextContent()
 
       if (res.status == 200) {
         const result = res.data.sitecontent;
-        
+        console.log(result);
         store.commit('setSiteContent', result);
         subheader_txt.value = store.state.sitecontent.subheader;
         desc_txt.value = store.state.sitecontent.description;

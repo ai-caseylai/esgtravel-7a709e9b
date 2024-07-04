@@ -106,7 +106,7 @@ function onClickAddNew() {
 }
 
 function ClearData() {
-    contactname ='';
+    contactname.value ='';
     email.value ='';
     ccode.value ='';
     mobile.value ='';
@@ -128,14 +128,14 @@ onMounted(() => {
         <form class="newform" @submit.prevent="handleSubmit">
             <table>
             <tr>
-                <td colspan="2" style="text-align: center; justify-content: center;"><label>Add New Agent</label></td>
+                <td colspan="2" style="text-align: center; justify-content: center;"><label style="color:#000;">Add New Agent</label></td>
             </tr>
             <tr>
-                <td style="width:40%; text-align:right; ">Agent Name :</td>
+                <td style="width:40%; text-align:right; "><label style="color:#000;">Agent Name :</label></td>
                 <td style="width:60%;"><input required v-model="contactname" maxlength="50" style="width: 80%;"></td>
             </tr>
             <tr>
-                <td style="width:40%; text-align:right; ">Country Code :</td>
+                <td style="width:40%; text-align:right; "><label style="color:#000;">Country Code :</label></td>
                 <td style="width:60%;"><select required v-model="ccode" style="width:30%; background-color: #ffffff; height: 35px;" >
                   
                   <option v-for="countrycode in store.state.countrycodes" :key="countrycode.id" :value="countrycode.country_code">{{countrycode.country_code}}</option>
@@ -143,7 +143,7 @@ onMounted(() => {
                   </select></td>
             </tr>
             <tr>
-                <td style="width:40%; text-align:right; ">Mobile :</td>
+                <td style="width:40%; text-align:right; "><label style="color:#000;">Mobile :</label></td>
                 <td style="width:60%;"><input required v-model="mobile" maxlength="10" style="width: 80%;" type="number"></td>
             </tr>
             <tr v-if="mobilestatus == false">
@@ -151,7 +151,7 @@ onMounted(() => {
                 <td style="width:60%;"><label style="color: red;">Mobile already exist.</label></td>
             </tr>
             <tr>
-                <td style="width:40%; text-align:right; ">Email :</td>
+                <td style="width:40%; text-align:right; "><label style="color:#000;">Email :</label></td>
                 <td style="width:60%;"><input required v-model="email" maxlength="30" style="width: 80%;" type="email"></td>
             </tr>
             <tr v-if="mobilestatus == false">
@@ -165,8 +165,8 @@ onMounted(() => {
         </table>
         <table style="border: 0px solid #ccc;">
             <tr style="border: 0px solid #ccc;">
-                <td style="width:50%; text-align:right; vertical-align:middle;border: 0px solid #ccc;"><button name="Clear" style="background:#1B78B5; width:180px; height:40px; border-radius: 12px;border: 0px solid #ced4da;color: #fff;">Clear</button></td>
-                <td style="width:50%; text-align:left; vertical-align:middle;border: 0px solid #ccc;"><button name="Submit" style="background:#1B78B5; width:180px; height:40px; border-radius: 12px;border: 0px solid #ced4da;color: #fff;">Submit</button></td>
+                <td style="width:50%; text-align:right; vertical-align:middle;border: 0px solid #ccc;"><button name="Clear" style="color: #ffffff;background:#1B78B5; width:180px; height:40px; border-radius: 12px;border: 0px solid #ced4da;color: #fff;">Clear</button></td>
+                <td style="width:50%; text-align:left; vertical-align:middle;border: 0px solid #ccc;"><button name="Submit" style="color: #ffffff;background:#1B78B5; width:180px; height:40px; border-radius: 12px;border: 0px solid #ced4da;color: #fff;">Submit</button></td>
             </tr>
         </table>
         </form>
@@ -198,6 +198,8 @@ onMounted(() => {
         align-content: center;
         border: 0px solid #ccc;
         align-items: center;
+        background: #ffffff;
+        background-color: #ffffff;
         }
     
     .newform label {

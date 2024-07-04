@@ -417,7 +417,7 @@ class AdminGateway
 	}
 	public function getUserInfoByMobile(string $mobile, string $ccode)
 	{
-		$sql = "SELECT * FROM agentmaster a inner join companymaster b on a.company_id = b.company_id  where a.mobile = '". $mobile ."' and a.countrycode ='". $ccode ."';";
+		$sql = "SELECT a.*, b.companyname, b.company_id FROM agentmaster a inner join companymaster b on a.company_id = b.company_id  where a.mobile = '". $mobile ."' and a.countrycode ='". $ccode ."';";
 		
 		//echo $sql;
 		$data=null;
@@ -586,10 +586,10 @@ class AdminGateway
 		return $status;
 	}
 
-	public function updateCompany(string $company_id, string $companyname, string $contactname, string $country, string $ccode, string $mobile, string $tel, string $email, string $address_1, string $address_2, string $address_3)
+	public function updateCompany(string $company_id, string $companyname, string $contactname, string $country, string $ccode, string $mobile, string $tel, string $email, string $address_1, string $address_2, string $address_3, int $status)
 	{
 		
-		$sql = "update companymaster set companyname = '". $companyname ."', contactname = '". $contactname ."', country = '". $country ."', countrycode = '". $ccode ."', mobile = '". $mobile ."', tel = '". $tel ."', email = '". $email ."', address_1 = '". $address_1 ."', address_2 = '". $address_2 ."', address_3 = '". $address_3 ."' where company_id = '". $company_id ."';";
+		$sql = "update companymaster set companyname = '". $companyname ."', contactname = '". $contactname ."', country = '". $country ."', countrycode = '". $ccode ."', mobile = '". $mobile ."', status = '". $status ."', tel = '". $tel ."', email = '". $email ."', address_1 = '". $address_1 ."', address_2 = '". $address_2 ."', address_3 = '". $address_3 ."' where company_id = '". $company_id ."';";
 		//echo $sql;
 		$status=false;
 		
@@ -631,10 +631,10 @@ class AdminGateway
 		return $status;
 	}
 
-	public function updateAgent(string $agent_id, string $contactname, string $ccode, string $mobile, string $email)
+	public function updateAgent(string $agent_id, string $contactname, string $ccode, string $mobile, string $email, int $status)
 	{
 		
-		$sql = "update agentmaster set contactname = '". $contactname ."', countrycode = '". $ccode ."', mobile = '". $mobile ."', email = '". $email ."' where agent_id = '". $agent_id ."';";
+		$sql = "update agentmaster set contactname = '". $contactname ."', countrycode = '". $ccode ."', mobile = '". $mobile ."', status = '". $status ."', email = '". $email ."' where agent_id = '". $agent_id ."';";
 		//echo $sql;
 		$status=false;
 		

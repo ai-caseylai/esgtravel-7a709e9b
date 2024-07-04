@@ -219,9 +219,9 @@ class AdminController
 		return $status;
 	}
 
-	public function processUpdateCompany(string $company_id, string $companyname, string $contactname, string $country, string $ccode, string $mobile, string $tel, string $email, string $address_1, string $address_2, string $address_3)
+	public function processUpdateCompany(string $company_id, string $companyname, string $contactname, string $country, string $ccode, string $mobile, string $tel, string $email, string $address_1, string $address_2, string $address_3, int $status)
 	{
-		$status = $this->gateway->updateCompany($company_id, $companyname, $contactname, $country, $ccode, $mobile, $tel, $email, $address_1, $address_2, $address_3);
+		$status = $this->gateway->updateCompany($company_id, $companyname, $contactname, $country, $ccode, $mobile, $tel, $email, $address_1, $address_2, $address_3, $status);
 		return $status;
 	}
 	public function processAddNewAgent(string $company_id, string $contactname, string $ccode, string $mobile, string $email)
@@ -229,9 +229,9 @@ class AdminController
 		$status = $this->gateway->addNewAgent($company_id, $contactname, $ccode, $mobile, $email);
 		return $status;
 	}
-	public function processUpdateAgent(string $agent_id, string $contactname, string $ccode, string $mobile, string $email)
+	public function processUpdateAgent(string $agent_id, string $contactname, string $ccode, string $mobile, string $email, int $status)
 	{
-		$status = $this->gateway->updateAgent($agent_id, $contactname, $ccode, $mobile, $email);
+		$status = $this->gateway->updateAgent($agent_id, $contactname, $ccode, $mobile, $email, $status);
 		return $status;
 	}
 	public function processGetBadgeInfo(int $badge_id)

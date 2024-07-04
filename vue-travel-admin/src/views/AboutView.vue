@@ -14,6 +14,8 @@
     align-content: center;
     border: 0px solid #ccc;
     flex-direction: column;
+    background: #ffffff;
+    background-color: #ffffff;
   }
      h1, h3 {
         text-align: center;

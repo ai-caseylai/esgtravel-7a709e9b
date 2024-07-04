@@ -234,7 +234,7 @@ onMounted(() => {
 
         </div>
 
-        <div style="position: absolute; top:15vh; width: 70%; left:15%; border:0px solid #ced4da;text-align: center; ">
+        <!-- <div style="position: absolute; top:15vh; width: 70%; left:15%; border:0px solid #ced4da;text-align: center; ">
 
                <label style="font-family: Arial, Verdana, Helvetica, sans-serif;color: #1B78B5; font-weight:bold; font-size: 28px; line-height: 40px; letter-spacing: 0px; padding-top: 10px;"> {{header_txt}}</label><br>
             
@@ -244,13 +244,19 @@ onMounted(() => {
 
             <label style="font-family: Arial, Verdana, Helvetica, sans-serif;color: red; font-weight:normal; font-size: 14px; line-height: 40px; letter-spacing: 0px; padding-top: 10px;">{{error_txt}}</label><br>
             
-        </div>
-        <div style="display: flex;  position: absolute; top:25vh; width:100%; left:0%;  border:0px solid #ced4da;"> 
+        </div> -->
+        <div style="display: flex;  position: absolute; top:10vh; width:100%; left:0%;  border:0px solid #ced4da;"> 
             <form class="optform" @submit.prevent="handleSubmit">
                 
                 <div style="display: flex;  justify-content: center;  align-items: center; position: absolute; top:0vh; width:90%; left:5%;  border:0px solid #ced4da;" v-if="allowInput"> 
 
                     <table style="width: 80%;">  
+                        <tr>
+                            <td colspan="6"><label style=" display: flex;  justify-content: center; font-family: Arial, Verdana, Helvetica, sans-serif;color: #1B78B5; font-weight:bold; font-size: 28px; line-height: 40px; letter-spacing: 0px; padding-top: 10px;"> {{header_txt}}</label><br></td>
+                        </tr>
+                        <tr v-if="error == true">
+                            <td colspan="6"><label style="display: flex;  justify-content: center; font-family: Arial, Verdana, Helvetica, sans-serif;color: red; font-weight:normal; font-size: 14px; line-height: 40px; letter-spacing: 0px; padding-top: 10px;">{{error_txt}}</label><br></td>
+                        </tr>
                         <tr>  
                             <td>
                                 <input required v-model="code[0]" type="number" max="9" @input="checkCode(0)" id="code_0">
@@ -271,9 +277,19 @@ onMounted(() => {
                                 <input required v-model="code[5]" type="number" maxlength="9" @input="checkCode(5)" id="code_5">
                             </td>  
                         </tr>  
+                        <tr>
+                            <td colspan="6" style="border: 0px solid #ced4da; text-align: center; vertical-align: middle;"><br><label style="font-family: Arial, Verdana, Helvetica, sans-serif;color: #000000; font-weight:normal; font-size: 16px; line-height: 10px; letter-spacing: 0px; padding-top: 10px;"> {{title_txt}}</label><br></td>
+                        </tr>
+                        <tr>
+                            <td colspan="6" style="border: 0px solid #ced4da; text-align: center; vertical-align: middle;"><br>
+                                <button type="submit" @click="handleSubmit()" style="background:#1B78B5; width:180px; height:40px; border-radius: 12px;border: 0px solid #ced4da;" v-if="allowInput">
+                                    <label style="font-family: Arial, Verdana, Helvetica, sans-serif; align-content: center; align-items: center; color: #ffffff; font-weight:normal; font-size: 20px; line-height: 20px; letter-spacing: 0px; padding-left: 0px; padding: 10px;">{{submitbtn_txt}}</label>
+                                </button>    
+                            </td>
+                        </tr>
                     </table> 
                 </div>
-                <div style="position: absolute; top:10vh; width: 90%; left:5%; border:0px solid #ced4da;text-align: center; ">
+                <!-- <div style="position: absolute; top:10vh; width: 90%; left:5%; border:0px solid #ced4da;text-align: center; ">
 
                     <label style="font-family: Arial, Verdana, Helvetica, sans-serif;color: #000000; font-weight:normal; font-size: 16px; line-height: 10px; letter-spacing: 0px; padding-top: 10px;"> {{title_txt}}</label><br>
 
@@ -283,7 +299,7 @@ onMounted(() => {
                     <button type="submit" @click="handleSubmit()" style="background:#1B78B5; width:180px; height:40px; border-radius: 12px;border: 0px solid #ced4da;">
                     <label style="font-family: Arial, Verdana, Helvetica, sans-serif; align-content: center; align-items: center; color: #ffffff; font-weight:normal; font-size: 20px; line-height: 20px; letter-spacing: 0px; padding-left: 0px; padding: 10px;">{{submitbtn_txt}}</label>
                     </button>
-                </div>
+                </div> -->
             </form>
         </div>
 

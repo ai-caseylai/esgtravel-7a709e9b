@@ -7,7 +7,8 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: () => import('../views/MobileOTPView.vue')
+      //component: HomeView
     },
     {
       path: '/about',
