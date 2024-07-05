@@ -302,24 +302,24 @@ function OnClickLink(company_id){
         <div v-if="companylist !=null">
             <table>
                 <tr>
-                    <td style="width:20%;text-align: center;border:0px solid #ccc;"><label v-if="currentpage > 0" @click="getCompanyList(currentpage-1)">Pervious</label></td>
-                    <td colspan="4" style="width:50%;text-align: center;border: 0px solid #ccc;"><label>Page {{ currentpage+1 }}</label></td>
-                    <td colspan="2" style="width:20%;text-align: center;border: 0px solid #ccc;"><label v-if="recordcount == pagesize" @click="getCompanyList(currentpage+1)">Next</label></td>
+                    <td colspan="2" style="text-align: center;border:0px solid #ccc;"><label v-if="currentpage > 0" @click="getCompanyList(currentpage-1)">Pervious</label></td>
+                    <td style="text-align: center;border: 0px solid #ccc;"><label>Page {{ currentpage+1 }}</label></td>
+                    <td colspan="3" style="text-align: center;border: 0px solid #ccc;"><label v-if="recordcount == pagesize" @click="getCompanyList(currentpage+1)">Next</label></td>
                 </tr>
                 <tr>
-                    <td style="width:20%;text-align: center;border: 1px solid #ccc; background-color: greenyellow;"><label style="color:#000;">Company</label></td>
-                    <td style="width:20%;text-align: center;border: 1px solid #ccc; background-color: greenyellow;"><label style="color:#000;">Contact</label></td>
-                    <td style="width:20%;text-align: center;border: 1px solid #ccc; background-color: greenyellow;"><label style="color:#000;">Email</label></td>
-                    <td style="width:10%;text-align: center;border: 1px solid #ccc; background-color: greenyellow;"><label style="color:#000;">Mobile</label></td>
+                    <td style="width:25%;text-align: center;border: 1px solid #ccc; background-color: greenyellow;"><label style="color:#000;">Company</label></td>
+                    <td style="width:10%;text-align: center;border: 1px solid #ccc; background-color: greenyellow;"><label style="color:#000;">Contact</label></td>
+                    <td style="width:30%;text-align: center;border: 1px solid #ccc; background-color: greenyellow;"><label style="color:#000;">Email</label></td>
+                    <td style="width:20%;text-align: center;border: 1px solid #ccc; background-color: greenyellow;"><label style="color:#000;">Mobile</label></td>
                     <td style="width:10%;text-align: center;border: 1px solid #ccc; background-color: greenyellow;"><label style="color:#000;">Country</label></td>
-                    <td style="width:10%;text-align: center;border: 1px solid #ccc; background-color: greenyellow;"><label style="color:#000;">Status</label></td>
-                    <td style="width:10%;text-align: center;border: 1px solid #ccc; background-color: greenyellow;"><label style="color:#000;"></label></td>
+                    <td style="width:5%;text-align: center;border: 1px solid #ccc; background-color: greenyellow;"><label style="color:#000;">Status</label></td>
+                    <!-- <td style="width:10%;text-align: center;border: 1px solid #ccc; background-color: greenyellow;"><label style="color:#000;"></label></td> -->
                 </tr>
                 <tr v-for="company in companylist" :key="company.company_id">
-                    <td style="width:20%;text-align: center;border: 1px solid #ccc;"><label v-if="companylist !=''" style="cursor:pointer;" @click=OnClickLink(company.company_id)>{{ company.companyname }}</label></td>
-                    <td style="width:20%;text-align: center;border: 1px solid #ccc;"><label v-if="companylist !=''" style="cursor:pointer;" @click=OnClickLink(company.company_id)>{{ company.contactname }}</label></td>
+                    <td style="width:25%;text-align: center;border: 1px solid #ccc;"><label v-if="companylist !=''" style="cursor:pointer;" @click=OnClickLink(company.company_id)>{{ company.companyname }}</label></td>
+                    <td style="width:15%;text-align: center;border: 1px solid #ccc;"><label v-if="companylist !=''" style="cursor:pointer;" @click=OnClickLink(company.company_id)>{{ company.contactname }}</label></td>
                     <td style="width:20%;text-align: center;border: 1px solid #ccc;"><label v-if="companylist !=''" style="cursor:pointer;" @click=OnClickLink(company.company_id)>{{ company.email }}</label></td>
-                    <td style="width:10%;text-align: center;border: 1px solid #ccc;"><label v-if="companylist !=''" style="cursor:pointer;" @click=OnClickLink(company.company_id)>{{ company.countrycode }}-{{ company.mobile }}</label></td>
+                    <td style="width:20%;text-align: center;border: 1px solid #ccc;"><label v-if="companylist !=''" style="cursor:pointer;" @click=OnClickLink(company.company_id)>{{ company.countrycode }}-{{ company.mobile }}</label></td>
                     
                     <td style="width:10%;text-align: center;border: 1px solid #ccc;"><label v-if="companylist !=''" style="cursor:pointer;" @click=OnClickLink(company.company_id)>{{ company.country }}</label></td>
                     
@@ -329,12 +329,12 @@ function OnClickLink(company_id){
                             <span v-else>In-active</span>  
                         </label>
                     </td>
-                    <td style="width:10%;text-align: center;border: 1px solid #ccc;"><label v-if="companylist !=''" style="cursor:pointer;color: red;" @click=OnClickLink(company.company_id)>MODIFY</label></td>
+                    <!-- <td style="width:10%;text-align: center;border: 1px solid #ccc;"><label v-if="companylist !=''" style="cursor:pointer;color: red;" @click=OnClickLink(company.company_id)>MODIFY</label></td> -->
                 </tr>
                 <tr>
-                    <td style="width:20%;text-align: center;border:0px solid #ccc;"><label v-if="currentpage > 0" @click="getCompanyList(currentpage-1)">Pervious</label></td>
-                    <td colspan="4" style="width:50%;text-align: center;border: 0px solid #ccc;"><label>Page {{ currentpage+1 }}</label></td>
-                    <td colspan="2" style="width:20%;text-align: center;border: 0px solid #ccc;"><label v-if="recordcount == pagesize" @click="getCompanyList(currentpage+1)">Next</label></td>
+                    <td colspan="2" style="width:40%;text-align: center;border:0px solid #ccc;"><label v-if="currentpage > 0" @click="getCompanyList(currentpage-1)">Pervious</label></td>
+                    <td style="width:20%;text-align: center;border: 0px solid #ccc;"><label>Page {{ currentpage+1 }}</label></td>
+                    <td colspan="3" style="width:40%;text-align: center;border: 0px solid #ccc;"><label v-if="recordcount == pagesize" @click="getCompanyList(currentpage+1)">Next</label></td>
                 </tr>
             </table>
         </div>

@@ -166,7 +166,7 @@ onMounted(() => {
 <template>
     <div class="modifycompany" v-if="isEditMode == true">
        
-        <form class="newform" @submit.prevent="handleSubmit">
+        <form class="newform">
             <table>
             <tr>
                 <td colspan="2" style="text-align: center; justify-content: center;"><label style="color:#000;">Modify Company Information</label></td>
@@ -222,8 +222,8 @@ onMounted(() => {
         </table>
         <table style="border: 0px solid #ccc;">
             <tr style="border: 0px solid #ccc;">
-                <td style="width:50%; text-align:right; vertical-align:middle;border: 0px solid #ccc;"><button name="Clear"  style="color: #ffffff;background:#1B78B5; width:180px; height:40px; border-radius: 12px;border: 0px solid #ced4da;color: #fff;">Clear</button></td>
-                <td style="width:50%; text-align:left; vertical-align:middle;border: 0px solid #ccc;"><button name="Submit"  style="color: #ffffff;background:#1B78B5; width:180px; height:40px; border-radius: 12px;border: 0px solid #ced4da;color: #fff;">Submit</button></td>
+                <td style="width:50%; text-align:right; vertical-align:middle;border: 0px solid #ccc;"><button name="Clear" @click="onClickBack" style="color: #ffffff;background:#1B78B5; width:180px; height:40px; border-radius: 12px;border: 0px solid #ced4da;color: #fff;">Back</button></td>
+                <td style="width:50%; text-align:left; vertical-align:middle;border: 0px solid #ccc;"><button name="Submit" @click="handleSubmit" style="color: #ffffff;background:#1B78B5; width:180px; height:40px; border-radius: 12px;border: 0px solid #ced4da;color: #fff;">Submit</button></td>
             </tr>
         </table>
         </form>

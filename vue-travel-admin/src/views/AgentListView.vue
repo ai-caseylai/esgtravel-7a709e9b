@@ -111,21 +111,21 @@ function OnClickLink(agent_id){
         <div v-if="agentlist !=null">
             <table>
                 <tr>
-                    <td style="width:20%;text-align: center;border:1px solid #ccc;"><label v-if="currentpage > 0" @click="loadAgentList(currentpage-1)">Pervious</label></td>
-                    <td colspan="3" style="width:50%;text-align: center;border: 1px solid #ccc;"><label>Page {{ currentpage+1 }}</label></td>
-                    <td style="width:20%;text-align: center;border: 1px solid #ccc;"><label v-if="recordcount == pagesize" @click="loadAgentList(currentpage+1)">Next</label></td>
+                    <td style="width:20%;text-align: center;border:0px solid #ccc;"><label v-if="currentpage > 0" @click="loadAgentList(currentpage-1)">Pervious</label></td>
+                    <td colspan="2" style="width:50%;text-align: center;border: 0px solid #ccc;"><label>Page {{ currentpage+1 }}</label></td>
+                    <td style="width:20%;text-align: center;border: 0px solid #ccc;"><label v-if="recordcount == pagesize" @click="loadAgentList(currentpage+1)">Next</label></td>
                 </tr>
                 <tr>
                     <td style="width:20%;text-align: center;border: 1px solid #ccc; background-color: greenyellow;"><label style="color:#000;">Name</label></td>
-                    <td style="width:20%;text-align: center;border: 1px solid #ccc; background-color: greenyellow;"><label style="color:#000;">Email</label></td>
-                    <td style="width:20%;text-align: center;border: 1px solid #ccc; background-color: greenyellow;"><label style="color:#000;">Mobile</label></td>
+                    <td style="width:30%;text-align: center;border: 1px solid #ccc; background-color: greenyellow;"><label style="color:#000;">Email</label></td>
+                    <td style="width:30%;text-align: center;border: 1px solid #ccc; background-color: greenyellow;"><label style="color:#000;">Mobile</label></td>
                     <td style="width:20%;text-align: center;border: 1px solid #ccc; background-color: greenyellow;"><label style="color:#000;">Status</label></td>
-                    <td style="width:20%;text-align: center;border: 1px solid #ccc; background-color: greenyellow;"></td>
+                    <!-- <td style="width:20%;text-align: center;border: 1px solid #ccc; background-color: greenyellow;"></td> -->
                 </tr>
                 <tr v-for="agent in agentlist" :key="agent.agent_id">
                     <td style="width:20%;text-align: center;border: 1px solid #ccc;"><label v-if="agentlist !=''" style="cursor:pointer;" @click=OnClickLink(agent.agent_id)>{{ agent.contactname }}</label></td>
-                    <td style="width:20%;text-align: center;border: 1px solid #ccc;"><label v-if="agentlist !=''" style="cursor:pointer;" @click=OnClickLink(agent.agent_id)>{{ agent.email }}</label></td>
-                    <td style="width:20%;text-align: center;border: 1px solid #ccc;"><label v-if="agentlist !=''" style="cursor:pointer;" @click=OnClickLink(agent.agent_id)>{{ agent.countrycode }}-{{ agent.mobile }}</label></td>
+                    <td style="width:30%;text-align: center;border: 1px solid #ccc;"><label v-if="agentlist !=''" style="cursor:pointer;" @click=OnClickLink(agent.agent_id)>{{ agent.email }}</label></td>
+                    <td style="width:30%;text-align: center;border: 1px solid #ccc;"><label v-if="agentlist !=''" style="cursor:pointer;" @click=OnClickLink(agent.agent_id)>{{ agent.countrycode }}-{{ agent.mobile }}</label></td>
                     
                     <td style="width:20%;text-align: center;border: 1px solid #ccc;">
                         <label v-if="agentlist !=''" style="cursor:pointer;" @click=OnClickLink(agent.agent_id)>
@@ -133,12 +133,12 @@ function OnClickLink(agent_id){
                             <span v-else>In-active</span>  
                         </label>
                     </td>
-                    <td style="width:20%;text-align: center;border: 1px solid #ccc;"><label v-if="agentlist !=''" style="cursor:pointer;color: red;" @click=OnClickLink(agent.agent_id)>MODIFY</label></td>
+                    <!-- <td style="width:20%;text-align: center;border: 1px solid #ccc;"><label v-if="agentlist !=''" style="cursor:pointer;color: red;" @click=OnClickLink(agent.agent_id)>MODIFY</label></td> -->
                 </tr>
                 <tr>
-                    <td style="width:20%;text-align: center;border:1px solid #ccc;"><label v-if="currentpage > 0" @click="loadAgentList(currentpage-1)">Pervious</label></td>
-                    <td colspan="3" style="width:50%;text-align: center;border: 1px solid #ccc;"><label>Page {{ currentpage+1 }}</label></td>
-                    <td style="width:20%;text-align: center;border: 1px solid #ccc;"><label v-if="recordcount == pagesize" @click="loadAgentList(currentpage+1)">Next</label></td>
+                    <td style="width:20%;text-align: center;border:0px solid #ccc;"><label v-if="currentpage > 0" @click="loadAgentList(currentpage-1)">Pervious</label></td>
+                    <td colspan="2" style="width:50%;text-align: center;border:0px solid #ccc;"><label>Page {{ currentpage+1 }}</label></td>
+                    <td style="width:20%;text-align: center;border: 0px solid #ccc;"><label v-if="recordcount == pagesize" @click="loadAgentList(currentpage+1)">Next</label></td>
                 </tr>
             </table>
         </div>
