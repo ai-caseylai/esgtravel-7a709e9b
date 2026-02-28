@@ -69,11 +69,11 @@ export default function SettingsPage() {
 
   const handleLogout = async () => {
     await signOut();
-    navigate('/');
+    navigate('/mobile');
   };
 
   if (!user) {
-    navigate('/login');
+    navigate('/mobile/login');
     return null;
   }
 
@@ -153,7 +153,7 @@ export default function SettingsPage() {
 
         {/* Contact Us */}
         <button
-          onClick={() => navigate('/contact')}
+          onClick={() => navigate('/mobile/contact')}
           className="w-full bg-card rounded-2xl border border-border shadow-sm flex items-center gap-3 p-4 text-left cursor-pointer"
         >
           <Mail className="w-5 h-5 text-primary" />

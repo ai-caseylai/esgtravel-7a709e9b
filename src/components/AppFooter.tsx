@@ -7,15 +7,15 @@ export default function AppFooter() {
   return (
     <div className="py-6 text-center">
       <div className="flex items-center justify-center gap-1 text-sm">
-        <Link to="/" className="text-primary hover:underline font-medium">
+        <Link to="/mobile" className="text-primary hover:underline font-medium">
           {t(ui.home).toUpperCase()}
         </Link>
         <span className="text-primary">|</span>
-        <Link to="/passport" className="text-primary hover:underline font-medium">
+        <Link to="/mobile/passport" className="text-primary hover:underline font-medium">
           {t(ui.passport).toUpperCase()}
         </Link>
         <span className="text-primary">|</span>
-        <Link to="/contact" className="text-primary hover:underline font-medium">
+        <Link to="/mobile/contact" className="text-primary hover:underline font-medium">
           {t(ui.contactUs).toUpperCase()}
         </Link>
       </div>

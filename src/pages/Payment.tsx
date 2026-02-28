@@ -26,7 +26,7 @@ export default function PaymentPage() {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center">
         <p>{t({ 0: '請先登入', 1: '请先登录', 2: 'Please login first', 3: 'ログインしてください' })}</p>
-        <Link to="/login">
+        <Link to="/mobile/login">
           <button className="mt-4 bg-primary text-primary-foreground px-6 py-2 rounded-xl border-none">
             {t(ui.login)}
           </button>
@@ -52,7 +52,7 @@ export default function PaymentPage() {
       if (error) throw error;
 
       toast.success(t(ui.paymentSuccess));
-      navigate('/payment-success');
+      navigate('/mobile/payment-success');
     } catch (err: any) {
       toast.error(err.message || t(ui.paymentFailed));
     }

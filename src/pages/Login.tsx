@@ -38,7 +38,7 @@ export default function LoginPage() {
       setError(t({ 0: '電郵或密碼不正確', 1: '邮箱或密码不正确', 2: 'Incorrect email or password', 3: 'メールまたはパスワードが正しくありません' }));
     } else {
       toast.success(t({ 0: '登入成功', 1: '登录成功', 2: 'Login successful', 3: 'ログイン成功' }));
-      navigate('/passport');
+      navigate('/mobile/passport');
     }
     setLoading(false);
   };
@@ -181,7 +181,7 @@ export default function LoginPage() {
 
         <p className="mt-6 text-center text-sm text-muted-foreground">
           {t({ 0: '還沒有帳號？', 1: '还没有帐号？', 2: "Don't have an account?", 3: 'アカウントをお持ちでない方' })}{' '}
-          <Link to="/signup" className="text-primary font-medium hover:underline">
+          <Link to="/mobile/signup" className="text-primary font-medium hover:underline">
             {t({ 0: '註冊', 1: '注册', 2: 'Sign up', 3: 'サインアップ' })}
           </Link>
         </p>

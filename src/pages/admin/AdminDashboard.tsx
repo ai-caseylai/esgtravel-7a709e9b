@@ -19,7 +19,7 @@ export default function AdminDashboard() {
   const location = useLocation();
 
   if (loading) return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
-  if (!user) return <Navigate to="/login" replace />;
+  if (!user) return <Navigate to="/mobile/login" replace />;
 
   return (
     <div className="flex min-h-screen bg-muted/30">
@@ -52,7 +52,7 @@ export default function AdminDashboard() {
           })}
         </nav>
         <div className="mt-auto p-3 border-t border-border">
-          <Link to="/" className="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground">
+          <Link to="/site" className="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground">
             ← 返回前台
           </Link>
         </div>

@@ -25,7 +25,7 @@ export default function PassportPage() {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center">
         <p className="text-foreground">{t({ 0: '請先登入', 1: '请先登录', 2: 'Please login first', 3: 'ログインしてください' })}</p>
-        <Link to="/login">
+        <Link to="/mobile/login">
           <button className="mt-4 bg-primary text-primary-foreground px-6 py-2 rounded-xl border-none">
             {t(ui.login)}
           </button>
@@ -86,7 +86,7 @@ export default function PassportPage() {
             <p className="text-foreground text-lg mb-2">{getMonth(dateKey)}</p>
             <div className="flex flex-wrap gap-2">
               {dateBadges.map(badge => (
-                <Link key={badge.id} to={`/badge/${badge.id}`}>
+                <Link key={badge.id} to={`/mobile/badge/${badge.id}`}>
                   <div className="w-[50px] h-[50px] bg-muted rounded flex items-center justify-center cursor-pointer hover:ring-2 hover:ring-primary">
                     <span className="text-2xl">🏅</span>
                   </div>

@@ -68,18 +68,19 @@ const App = () => (
                 <Route path="contact" element={<SiteContact />} />
               </Route>
               <Route path="/" element={<Navigate to="/site" replace />} />
-              <Route path="/login" element={<Layout><Login /></Layout>} />
-              <Route path="/signup" element={<Layout><Signup /></Layout>} />
-              <Route path="/badges" element={<Layout><BadgesList /></Layout>} />
-              <Route path="/badge/:id" element={<Layout><BadgeDetail /></Layout>} />
-              <Route path="/cert/:id" element={<Layout><CertPage /></Layout>} />
-              <Route path="/payment/:badgeId" element={<Layout><Payment /></Layout>} />
-              <Route path="/payment-success" element={<Layout><PaymentSuccess /></Layout>} />
-              <Route path="/passport" element={<Layout><Passport /></Layout>} />
-              <Route path="/coupons" element={<Layout><CouponsPage /></Layout>} />
-              <Route path="/settings" element={<Layout><SettingsPage /></Layout>} />
-              <Route path="/ranking" element={<Layout><Ranking /></Layout>} />
-              <Route path="/contact" element={<Layout><Contact /></Layout>} />
+              <Route path="/mobile" element={<Layout><Index /></Layout>} />
+              <Route path="/mobile/login" element={<Layout><Login /></Layout>} />
+              <Route path="/mobile/signup" element={<Layout><Signup /></Layout>} />
+              <Route path="/mobile/badges" element={<Layout><BadgesList /></Layout>} />
+              <Route path="/mobile/badge/:id" element={<Layout><BadgeDetail /></Layout>} />
+              <Route path="/mobile/cert/:id" element={<Layout><CertPage /></Layout>} />
+              <Route path="/mobile/payment/:badgeId" element={<Layout><Payment /></Layout>} />
+              <Route path="/mobile/payment-success" element={<Layout><PaymentSuccess /></Layout>} />
+              <Route path="/mobile/passport" element={<Layout><Passport /></Layout>} />
+              <Route path="/mobile/coupons" element={<Layout><CouponsPage /></Layout>} />
+              <Route path="/mobile/settings" element={<Layout><SettingsPage /></Layout>} />
+              <Route path="/mobile/ranking" element={<Layout><Ranking /></Layout>} />
+              <Route path="/mobile/contact" element={<Layout><Contact /></Layout>} />
               <Route path="*" element={<Layout><NotFound /></Layout>} />
             </Routes>
           </BrowserRouter>
