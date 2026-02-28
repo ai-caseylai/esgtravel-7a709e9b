@@ -63,7 +63,7 @@ export default function SiteHome() {
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link to="/" className="bg-primary text-primary-foreground px-8 py-3 rounded-xl text-lg font-medium no-underline flex items-center justify-center gap-2 hover:opacity-90 transition-opacity shadow-lg">
-                {t({ 0: '立即開始', 1: 'Get Started', 2: '今すぐ始める' })} <ArrowRight className="w-5 h-5" />
+                {t({ 0: '立即下載 App', 1: 'Download App Now', 2: '今すぐアプリをダウンロード' })} <ArrowRight className="w-5 h-5" />
               </Link>
               <Link to="/site/how-it-works" className="bg-card/90 backdrop-blur text-foreground px-8 py-3 rounded-xl text-lg font-medium no-underline border border-border flex items-center justify-center hover:bg-card transition-colors shadow-lg">
                 {t({ 0: '了解更多', 1: 'Learn More', 2: '詳しく見る' })}
@@ -160,7 +160,7 @@ export default function SiteHome() {
             {t({ 0: '加入我們，一起為地球的可持續未來出一分力。', 1: 'Join us and contribute to a sustainable future for our planet.', 2: '私たちと一緒に、地球の持続可能な未来に貢献しましょう。' })}
           </p>
           <Link to="/" className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-8 py-3 rounded-xl text-lg font-medium no-underline hover:opacity-90 transition-opacity shadow-lg">
-            {t({ 0: '立即開始', 1: 'Get Started Now', 2: '今すぐ始める' })} <ArrowRight className="w-5 h-5" />
+            {t({ 0: '立即下載 App', 1: 'Download App Now', 2: '今すぐアプリをダウンロード' })} <ArrowRight className="w-5 h-5" />
           </Link>
         </div>
       </section>
