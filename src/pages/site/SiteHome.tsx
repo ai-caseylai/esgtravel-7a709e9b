@@ -1,30 +1,31 @@
 import { Link } from 'react-router-dom';
 import { useI18n } from '@/lib/i18n';
 import { motion } from 'framer-motion';
-import { ArrowRight, Globe, Award, Heart, Users } from 'lucide-react';
+import { ArrowRight, Globe, Award, Heart, Users, Home, Wheat, HeartPulse, GraduationCap, Equal, Droplets, Zap, Briefcase, Lightbulb, Scale, Building2, Recycle, Leaf, Fish, TreePine, Shield, Handshake } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import siteHero from '@/assets/site-hero.jpg';
 import featureBadge from '@/assets/feature-badge.jpg';
 import featureCommunity from '@/assets/feature-community.jpg';
 import featureImpact from '@/assets/feature-impact.jpg';
 
-const sdgs = [
-  { id: 1, color: '#E5243B', en: 'No Poverty', zh: '消除貧窮', ja: '貧困をなくそう' },
-  { id: 2, color: '#DDA63A', en: 'Zero Hunger', zh: '消除飢餓', ja: '飢餓をゼロに' },
-  { id: 3, color: '#4C9F38', en: 'Good Health', zh: '健康與福祉', ja: '健康と福祉' },
-  { id: 4, color: '#C5192D', en: 'Quality Education', zh: '優質教育', ja: '質の高い教育' },
-  { id: 5, color: '#FF3A21', en: 'Gender Equality', zh: '性別平等', ja: 'ジェンダー平等' },
-  { id: 6, color: '#26BDE2', en: 'Clean Water', zh: '清潔飲水', ja: '安全な水' },
-  { id: 7, color: '#FCC30B', en: 'Clean Energy', zh: '清潔能源', ja: 'クリーンエネルギー' },
-  { id: 8, color: '#A21942', en: 'Decent Work', zh: '體面工作', ja: '働きがい' },
-  { id: 9, color: '#FD6925', en: 'Innovation', zh: '產業創新', ja: 'イノベーション' },
-  { id: 10, color: '#DD1367', en: 'Reduced Inequalities', zh: '減少不平等', ja: '不平等の是正' },
-  { id: 11, color: '#FD9D24', en: 'Sustainable Cities', zh: '永續城市', ja: '持続可能な都市' },
-  { id: 12, color: '#BF8B2E', en: 'Responsible Consumption', zh: '負責任消費', ja: '責任ある消費' },
-  { id: 13, color: '#3F7E44', en: 'Climate Action', zh: '氣候行動', ja: '気候変動対策' },
-  { id: 14, color: '#0A97D9', en: 'Life Below Water', zh: '水下生態', ja: '海の豊かさ' },
-  { id: 15, color: '#56C02B', en: 'Life on Land', zh: '陸地生態', ja: '陸の豊かさ' },
-  { id: 16, color: '#00689D', en: 'Peace & Justice', zh: '和平正義', ja: '平和と公正' },
-  { id: 17, color: '#19486A', en: 'Partnerships', zh: '夥伴關係', ja: 'パートナーシップ' },
+const sdgs: { id: number; color: string; en: string; zh: string; ja: string; icon: LucideIcon }[] = [
+  { id: 1, color: '#E5243B', en: 'No Poverty', zh: '消除貧窮', ja: '貧困をなくそう', icon: Home },
+  { id: 2, color: '#DDA63A', en: 'Zero Hunger', zh: '消除飢餓', ja: '飢餓をゼロに', icon: Wheat },
+  { id: 3, color: '#4C9F38', en: 'Good Health', zh: '健康與福祉', ja: '健康と福祉', icon: HeartPulse },
+  { id: 4, color: '#C5192D', en: 'Quality Education', zh: '優質教育', ja: '質の高い教育', icon: GraduationCap },
+  { id: 5, color: '#FF3A21', en: 'Gender Equality', zh: '性別平等', ja: 'ジェンダー平等', icon: Equal },
+  { id: 6, color: '#26BDE2', en: 'Clean Water', zh: '清潔飲水', ja: '安全な水', icon: Droplets },
+  { id: 7, color: '#FCC30B', en: 'Clean Energy', zh: '清潔能源', ja: 'クリーンエネルギー', icon: Zap },
+  { id: 8, color: '#A21942', en: 'Decent Work', zh: '體面工作', ja: '働きがい', icon: Briefcase },
+  { id: 9, color: '#FD6925', en: 'Innovation', zh: '產業創新', ja: 'イノベーション', icon: Lightbulb },
+  { id: 10, color: '#DD1367', en: 'Reduced Inequalities', zh: '減少不平等', ja: '不平等の是正', icon: Scale },
+  { id: 11, color: '#FD9D24', en: 'Sustainable Cities', zh: '永續城市', ja: '持続可能な都市', icon: Building2 },
+  { id: 12, color: '#BF8B2E', en: 'Responsible Consumption', zh: '負責任消費', ja: '責任ある消費', icon: Recycle },
+  { id: 13, color: '#3F7E44', en: 'Climate Action', zh: '氣候行動', ja: '気候変動対策', icon: Leaf },
+  { id: 14, color: '#0A97D9', en: 'Life Below Water', zh: '水下生態', ja: '海の豊かさ', icon: Fish },
+  { id: 15, color: '#56C02B', en: 'Life on Land', zh: '陸地生態', ja: '陸の豊かさ', icon: TreePine },
+  { id: 16, color: '#00689D', en: 'Peace & Justice', zh: '和平正義', ja: '平和と公正', icon: Shield },
+  { id: 17, color: '#19486A', en: 'Partnerships', zh: '夥伴關係', ja: 'パートナーシップ', icon: Handshake },
 ];
 
 export default function SiteHome() {
@@ -121,22 +122,26 @@ export default function SiteHome() {
           </div>
 
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
-            {sdgs.map(sdg => (
-              <motion.div
-                key={sdg.id}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: sdg.id * 0.03 }}
-                className="rounded-xl p-3 text-center cursor-default hover:scale-105 transition-transform"
-                style={{ backgroundColor: sdg.color }}
-              >
-                <span className="text-white font-bold text-lg block">{sdg.id}</span>
-                <span className="text-white/90 text-[10px] font-medium block leading-tight mt-1">
-                  {getSdgName(sdg)}
-                </span>
-              </motion.div>
-            ))}
+            {sdgs.map(sdg => {
+              const SdgIcon = sdg.icon;
+              return (
+                <motion.div
+                  key={sdg.id}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: sdg.id * 0.03 }}
+                  className="rounded-xl p-3 text-center cursor-default hover:scale-105 transition-transform"
+                  style={{ backgroundColor: sdg.color }}
+                >
+                  <SdgIcon className="w-6 h-6 text-white/90 mx-auto mb-1" strokeWidth={1.5} />
+                  <span className="text-white font-bold text-sm block">{sdg.id}</span>
+                  <span className="text-white/90 text-[10px] font-medium block leading-tight mt-0.5">
+                    {getSdgName(sdg)}
+                  </span>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
