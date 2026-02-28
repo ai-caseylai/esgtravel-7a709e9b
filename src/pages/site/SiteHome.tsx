@@ -62,10 +62,17 @@ export default function SiteHome() {
               {t({ 0: 'STAR SDG 計劃透過數碼徽章，將旅遊與聯合國永續發展目標結合，讓每一次旅行都成為對地球的貢獻。', 1: 'The STAR SDG programme connects tourism with UN Sustainable Development Goals through digital badges, making every trip a contribution to the planet.', 2: 'STAR SDGプログラムはデジタルバッジを通じて観光と国連の持続可能な開発目標を結びつけ、すべての旅を地球への貢献にします。' })}
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link to="/" className="bg-primary text-primary-foreground px-8 py-3 rounded-xl text-lg font-medium no-underline flex items-center justify-center gap-2 hover:opacity-90 transition-opacity shadow-lg">
-                {t({ 0: '立即下載 App', 1: 'Download App Now', 2: '今すぐアプリをダウンロード' })} <ArrowRight className="w-5 h-5" />
-              </Link>
-              <Link to="/site/how-it-works" className="bg-card/90 backdrop-blur text-foreground px-8 py-3 rounded-xl text-lg font-medium no-underline border border-border flex items-center justify-center hover:bg-card transition-colors shadow-lg">
+              <a href="https://apps.apple.com" target="_blank" rel="noopener noreferrer" className="bg-foreground text-background px-6 py-3 rounded-xl text-lg font-medium no-underline flex items-center justify-center gap-3 hover:opacity-90 transition-opacity shadow-lg">
+                <svg viewBox="0 0 24 24" className="w-6 h-6 fill-current"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                App Store
+              </a>
+              <a href="https://play.google.com" target="_blank" rel="noopener noreferrer" className="bg-foreground text-background px-6 py-3 rounded-xl text-lg font-medium no-underline flex items-center justify-center gap-3 hover:opacity-90 transition-opacity shadow-lg">
+                <svg viewBox="0 0 24 24" className="w-6 h-6 fill-current"><path d="M3.18 23.67c-.413-.15-.725-.477-.876-.893-.07-.19-.104-.39-.104-.6V1.82c0-.21.034-.41.104-.6.15-.416.463-.742.876-.893L13.54 11.99 3.18 23.67zm1.447.18l11.39-6.57-2.49-2.49-8.9 9.06zm13.55-7.82L5.65.53l8.9 9.06 2.49-2.49-11.39-6.57 12.53 7.23 1.96-1.13c.5-.29.81-.81.81-1.38s-.31-1.09-.81-1.38l-1.96-1.13z" transform="translate(1,1) scale(0.9)"/></svg>
+                Google Play
+              </a>
+            </div>
+            <div className="mt-4">
+              <Link to="/site/how-it-works" className="text-foreground/70 underline underline-offset-4 hover:text-foreground transition-colors">
                 {t({ 0: '了解更多', 1: 'Learn More', 2: '詳しく見る' })}
               </Link>
             </div>
@@ -159,9 +166,16 @@ export default function SiteHome() {
           <p className="text-muted-foreground text-lg mb-6 max-w-xl mx-auto">
             {t({ 0: '加入我們，一起為地球的可持續未來出一分力。', 1: 'Join us and contribute to a sustainable future for our planet.', 2: '私たちと一緒に、地球の持続可能な未来に貢献しましょう。' })}
           </p>
-          <Link to="/" className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-8 py-3 rounded-xl text-lg font-medium no-underline hover:opacity-90 transition-opacity shadow-lg">
-            {t({ 0: '立即下載 App', 1: 'Download App Now', 2: '今すぐアプリをダウンロード' })} <ArrowRight className="w-5 h-5" />
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <a href="https://apps.apple.com" target="_blank" rel="noopener noreferrer" className="bg-foreground text-background px-6 py-3 rounded-xl text-lg font-medium no-underline flex items-center justify-center gap-3 hover:opacity-90 transition-opacity shadow-lg">
+              <svg viewBox="0 0 24 24" className="w-6 h-6 fill-current"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+              App Store
+            </a>
+            <a href="https://play.google.com" target="_blank" rel="noopener noreferrer" className="bg-foreground text-background px-6 py-3 rounded-xl text-lg font-medium no-underline flex items-center justify-center gap-3 hover:opacity-90 transition-opacity shadow-lg">
+              <svg viewBox="0 0 24 24" className="w-6 h-6 fill-current"><path d="M3.18 23.67c-.413-.15-.725-.477-.876-.893-.07-.19-.104-.39-.104-.6V1.82c0-.21.034-.41.104-.6.15-.416.463-.742.876-.893L13.54 11.99 3.18 23.67zm1.447.18l11.39-6.57-2.49-2.49-8.9 9.06zm13.55-7.82L5.65.53l8.9 9.06 2.49-2.49-11.39-6.57 12.53 7.23 1.96-1.13c.5-.29.81-.81.81-1.38s-.31-1.09-.81-1.38l-1.96-1.13z" transform="translate(1,1) scale(0.9)"/></svg>
+              Google Play
+            </a>
+          </div>
         </div>
       </section>
     </div>
