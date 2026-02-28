@@ -20,7 +20,7 @@ export default function CouponsPage() {
         <p className="text-foreground mb-4">
           {t({ 0: '請先登入查看優惠券', 1: '请先登录查看优惠券', 2: 'Please login to view coupons', 3: 'クーポンを表示するにはログインしてください' })}
         </p>
-        <Link to="/login">
+        <Link to="/mobile/login">
           <button className="bg-primary text-primary-foreground px-6 py-2 rounded-xl border-none">
             {t({ 0: '登入', 1: '登录', 2: 'Login', 3: 'ログイン' })}
           </button>

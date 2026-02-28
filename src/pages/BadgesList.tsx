@@ -34,7 +34,7 @@ export default function BadgesListPage() {
           {badges?.map(badge => {
             const tr = badge.translation;
             return (
-              <Link key={badge.id} to={`/badge/${badge.id}`} className="no-underline">
+              <Link key={badge.id} to={`/mobile/badge/${badge.id}`} className="no-underline">
                 <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden hover:shadow-md transition-shadow">
                   <div className="w-full aspect-square bg-muted flex items-center justify-center">
                     {badge.image_url ? (

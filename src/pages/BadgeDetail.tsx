@@ -32,7 +32,7 @@ export default function BadgeDetailPage() {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center">
         <p className="text-muted-foreground">Badge not found</p>
-        <Link to="/">
+        <Link to="/mobile">
           <button className="mt-4 text-primary underline">{t(ui.backHome)}</button>
         </Link>
       </div>
@@ -96,7 +96,7 @@ export default function BadgeDetailPage() {
             <h2 className="text-accent font-bold text-xl mb-4">{tr?.title}</h2>
 
             <button
-              onClick={() => navigate(`/cert/${id}`)}
+              onClick={() => navigate(`/mobile/cert/${id}`)}
               className="bg-primary text-primary-foreground font-medium text-lg py-2 rounded-[20px] w-[70%] border-none mb-6"
             >
               {t({ 0: '查看認證', 1: '查看认证', 2: 'View Certificate', 3: '認証を見る' })}
@@ -157,7 +157,7 @@ export default function BadgeDetailPage() {
 
       {user && (
         <div className="px-[15%] py-4">
-          <Link to={`/payment/${badge.id}`}>
+          <Link to={`/mobile/payment/${badge.id}`}>
             <button className="w-full py-3 bg-primary text-primary-foreground font-medium text-lg rounded-[20px] border-none">
               ${badge.price} USD - {t(ui.buyBadge)}
             </button>

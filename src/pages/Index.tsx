@@ -91,14 +91,14 @@ export default function HomePage() {
         {/* Buttons section */}
         <div className="mt-6 flex flex-col items-center gap-3 px-[15%]">
           <button
-            onClick={() => currentBadge && navigate(`/payment/${currentBadge.id}`)}
+            onClick={() => currentBadge && navigate(`/mobile/payment/${currentBadge.id}`)}
             className="w-full py-4 bg-primary text-primary-foreground font-medium text-lg rounded-[20px] border-none"
           >
             {t({ 0: '支持及取得徽章', 1: '支持及取得徽章', 2: 'SUPPORT & GET A BADGE', 3: 'サポートしてバッジを取得' })}
           </button>
 
           <button
-            onClick={() => navigate('/passport')}
+            onClick={() => navigate('/mobile/passport')}
             className="w-full py-4 bg-card text-foreground font-medium text-lg rounded-[20px] border border-primary"
           >
             {t({ 0: '徽章護照', 1: '徽章护照', 2: 'BADGE PASSPORT', 3: 'バッジパスポート' })}

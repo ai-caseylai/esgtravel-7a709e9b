@@ -14,12 +14,12 @@ export default function PaymentSuccessPage() {
           {t({ 0: '你的徽章已加入護照中', 1: '你的徽章已加入护照中', 2: 'Your badge has been added to your passport', 3: 'バッジがパスポートに追加されました' })}
         </p>
         <div className="flex gap-3">
-          <Link to="/passport">
+          <Link to="/mobile/passport">
             <button className="bg-primary text-primary-foreground px-6 py-3 rounded-xl border-none text-lg">
               {t(ui.passport)}
             </button>
           </Link>
-          <Link to="/">
+          <Link to="/mobile">
             <button className="bg-card text-foreground px-6 py-3 rounded-xl border border-primary text-lg">
               {t(ui.backHome)}
             </button>

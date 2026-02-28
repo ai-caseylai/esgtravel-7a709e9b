@@ -34,7 +34,7 @@ export default function SignupPage() {
       toast.error(error.message);
     } else {
       toast.success(t({ 0: '請檢查郵箱以確認帳號', 1: '请检查邮箱以确认帐号', 2: 'Check your email to confirm your account', 3: 'メールを確認してアカウントを認証してください' }));
-      navigate('/login');
+      navigate('/mobile/login');
     }
     setLoading(false);
   };
@@ -93,7 +93,7 @@ export default function SignupPage() {
 
           <p className="mt-6 text-center text-sm text-muted-foreground">
             {t({ 0: '已有帳號？', 1: '已有帐号？', 2: 'Already have an account?', 3: 'すでにアカウントをお持ちですか？' })}{' '}
-            <Link to="/login" className="text-primary font-medium hover:underline">
+            <Link to="/mobile/login" className="text-primary font-medium hover:underline">
               {t(ui.login)}
             </Link>
           </p>
