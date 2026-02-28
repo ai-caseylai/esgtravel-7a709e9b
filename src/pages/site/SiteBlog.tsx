@@ -27,6 +27,7 @@ export default function SiteBlog() {
         .from('posts')
         .select('id, slug, cover_image, created_at')
         .eq('is_published', true)
+        .eq('category', 'blog')
         .order('created_at', { ascending: false });
 
       if (!data || data.length === 0) { setPosts([]); setLoading(false); return; }
