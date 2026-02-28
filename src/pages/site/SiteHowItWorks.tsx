@@ -83,12 +83,6 @@ export default function SiteHowItWorks() {
         ))}
       </section>
 
-      {/* CTA */}
-      <section className="max-w-4xl mx-auto px-4 pb-16 text-center">
-        <Link to="/" className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-8 py-3 rounded-xl text-lg font-medium no-underline hover:opacity-90 transition-opacity shadow-lg">
-          {t({ 0: '立即獲取徽章', 1: '立即获取徽章', 2: 'Get Your Badge Now', 3: '今すぐバッジを取得' })} <ArrowRight className="w-5 h-5" />
-        </Link>
-      </section>
     </div>
   );
 }
