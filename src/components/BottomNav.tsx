@@ -1,18 +1,27 @@
 import { Link, useLocation } from 'react-router-dom';
-import { useI18n } from '@/lib/i18n';
+import { useSiteContent } from '@/hooks/use-site-content';
 import { Home, Award, BookOpen, Ticket, Settings } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const navItems = [
-  { path: '/mobile', icon: Home, labelKey: { 0: '首頁', 1: '首页', 2: 'Home', 3: 'ホーム' } },
-  { path: '/mobile/badges', icon: Award, labelKey: { 0: '徽章', 1: '徽章', 2: 'Badges', 3: 'バッジ' } },
-  { path: '/mobile/passport', icon: BookOpen, labelKey: { 0: '護照', 1: '护照', 2: 'Passport', 3: 'パスポート' } },
-  { path: '/mobile/coupons', icon: Ticket, labelKey: { 0: '優惠', 1: '优惠', 2: 'Coupons', 3: 'クーポン' } },
-  { path: '/mobile/settings', icon: Settings, labelKey: { 0: '設定', 1: '设置', 2: 'Settings', 3: '設定' } },
+  { path: '/mobile', icon: Home, contentKey: 'home', fallback: 'Home' },
+  { path: '/mobile/badges', icon: Award, contentKey: 'badge', fallback: 'Badges' },
+  { path: '/mobile/passport', icon: BookOpen, contentKey: 'passport', fallback: 'Passport' },
+  { path: '/mobile/coupons', icon: Ticket, contentKey: '', fallback: 'Coupons' },
+  { path: '/mobile/settings', icon: Settings, contentKey: '', fallback: 'Settings' },
 ];
 
+// Fallback labels when DB content not yet loaded
+const fallbackLabels: Record<string, Record<number, string>> = {
+  '/mobile': { 0: '首頁', 1: '首页', 2: 'Home', 3: 'ホーム' },
+  '/mobile/badges': { 0: '徽章', 1: '徽章', 2: 'Badges', 3: 'バッジ' },
+  '/mobile/passport': { 0: '護照', 1: '护照', 2: 'Passport', 3: 'パスポート' },
+  '/mobile/coupons': { 0: '優惠', 1: '优惠', 2: 'Coupons', 3: 'クーポン' },
+  '/mobile/settings': { 0: '設定', 1: '设置', 2: 'Settings', 3: '設定' },
+};
+
 export default function BottomNav() {
-  const { t } = useI18n();
+  const { tc } = useSiteContent();
   const location = useLocation();
 
   if (!location.pathname.startsWith('/mobile')) return null;
@@ -26,6 +35,9 @@ export default function BottomNav() {
           const isActive = location.pathname === item.path ||
             (item.path !== '/mobile' && location.pathname.startsWith(item.path));
           const Icon = item.icon;
+          const label = item.contentKey
+            ? tc(item.contentKey, fallbackLabels[item.path]?.[0] || item.fallback)
+            : fallbackLabels[item.path]?.[0] || item.fallback;
           return (
             <Link
               key={item.path}
@@ -43,7 +55,7 @@ export default function BottomNav() {
                 <Icon className={`w-[22px] h-[22px] transition-colors ${isActive ? 'text-primary' : 'text-muted-foreground'}`} strokeWidth={isActive ? 2.2 : 1.8} />
               </div>
               <span className={`text-[10px] leading-tight transition-colors ${isActive ? 'text-primary font-semibold' : 'text-muted-foreground'}`}>
-                {t(item.labelKey)}
+                {label}
               </span>
             </Link>
           );
