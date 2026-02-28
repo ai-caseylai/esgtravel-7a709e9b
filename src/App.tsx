@@ -27,10 +27,13 @@ import AdminOrders from "./pages/admin/AdminOrders";
 import AdminBadges from "./pages/admin/AdminBadges";
 import AdminCompanies from "./pages/admin/AdminCompanies";
 import AdminAgents from "./pages/admin/AdminAgents";
+import AdminPosts from "./pages/admin/AdminPosts";
+import AdminRoles from "./pages/admin/AdminRoles";
 import SiteLayout from "./pages/site/SiteLayout";
 import SiteHome from "./pages/site/SiteHome";
 import SiteHowItWorks from "./pages/site/SiteHowItWorks";
 import SiteEvents from "./pages/site/SiteEvents";
+import SiteBlog from "./pages/site/SiteBlog";
 import SiteContact from "./pages/site/SiteContact";
 
 const queryClient = new QueryClient();
@@ -50,8 +53,10 @@ const App = () => (
                 <Route path="users" element={<AdminUsers />} />
                 <Route path="orders" element={<AdminOrders />} />
                 <Route path="badges" element={<AdminBadges />} />
+                <Route path="posts" element={<AdminPosts />} />
                 <Route path="companies" element={<AdminCompanies />} />
                 <Route path="agents" element={<AdminAgents />} />
+                <Route path="roles" element={<AdminRoles />} />
               </Route>
 
               {/* Website / intro site */}
@@ -59,6 +64,7 @@ const App = () => (
                 <Route index element={<SiteHome />} />
                 <Route path="how-it-works" element={<SiteHowItWorks />} />
                 <Route path="events" element={<SiteEvents />} />
+                <Route path="blog" element={<SiteBlog />} />
                 <Route path="contact" element={<SiteContact />} />
               </Route>
               <Route path="/" element={<Navigate to="/site" replace />} />
