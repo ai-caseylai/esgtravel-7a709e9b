@@ -25,7 +25,7 @@ export default function PaymentPage() {
   if (!user) {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center">
-        <p>{t({ 0: '請先登入', 1: 'Please login first', 2: 'ログインしてください' })}</p>
+        <p>{t({ 0: '請先登入', 1: '请先登录', 2: 'Please login first', 3: 'ログインしてください' })}</p>
         <Link to="/login">
           <button className="mt-4 bg-primary text-primary-foreground px-6 py-2 rounded-xl border-none">
             {t(ui.login)}
@@ -121,7 +121,7 @@ export default function PaymentPage() {
 
           {/* Total */}
           <div className="border-t pt-4 flex justify-between text-lg font-bold">
-            <span>{t({ 0: '總計', 1: 'Total', 2: '合計' })}</span>
+            <span>{t({ 0: '總計', 1: '总计', 2: 'Total', 3: '合計' })}</span>
             <span className="text-primary">${total} USD</span>
           </div>
         </div>
@@ -132,13 +132,13 @@ export default function PaymentPage() {
           className="w-full py-4 bg-primary text-primary-foreground font-medium text-lg rounded-[20px] border-none mt-6 disabled:opacity-50"
         >
           {loading
-            ? t({ 0: '處理中...', 1: 'Processing...', 2: '処理中...' })
+            ? t({ 0: '處理中...', 1: '处理中...', 2: 'Processing...', 3: '処理中...' })
             : t(ui.payNow)
           }
         </button>
 
         <p className="text-xs text-center text-muted-foreground mt-4">
-          {t({ 0: '70% 的費用將投放於當地可持續發展項目', 1: '70% of proceeds go to local sustainable development', 2: '収益の70%は地域の持続可能な開発に使われます' })}
+          {t({ 0: '70% 的費用將投放於當地可持續發展項目', 1: '70% 的费用将投放于当地可持续发展项目', 2: '70% of proceeds go to local sustainable development', 3: '収益の70%は地域の持続可能な開発に使われます' })}
         </p>
       </div>
 

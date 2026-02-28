@@ -1,4 +1,5 @@
 import { supabase } from '@/integrations/supabase/client';
+import { toDbLang } from '@/lib/i18n';
 
 export interface Badge {
   id: number;
@@ -27,6 +28,7 @@ export interface BadgeWithTranslation extends Badge {
 }
 
 export async function fetchBadges(lang: number): Promise<BadgeWithTranslation[]> {
+  const dbLang = toDbLang(lang as any);
   const { data: badges, error: badgesErr } = await supabase
     .from('badges')
     .select('*')
@@ -38,7 +40,7 @@ export async function fetchBadges(lang: number): Promise<BadgeWithTranslation[]>
   const { data: translations, error: transErr } = await supabase
     .from('badge_translations')
     .select('*')
-    .eq('lang', lang);
+    .eq('lang', dbLang);
 
   if (transErr) throw transErr;
 
@@ -49,6 +51,7 @@ export async function fetchBadges(lang: number): Promise<BadgeWithTranslation[]>
 }
 
 export async function fetchBadgeDetail(badgeId: number, lang: number): Promise<BadgeWithTranslation | null> {
+  const dbLang = toDbLang(lang as any);
   const { data: badge, error: badgeErr } = await supabase
     .from('badges')
     .select('*')
@@ -61,7 +64,7 @@ export async function fetchBadgeDetail(badgeId: number, lang: number): Promise<B
     .from('badge_translations')
     .select('*')
     .eq('badge_id', badgeId)
-    .eq('lang', lang)
+    .eq('lang', dbLang)
     .single();
 
   return { ...badge, translation: translation || null };

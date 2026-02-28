@@ -16,7 +16,7 @@ export default function RankingPage() {
   return (
     <div className="min-h-screen bg-background text-center pt-8">
       <h1 className="text-primary font-normal text-2xl mb-4">
-        {t({ 0: '支持者的反應', 1: 'Reactions by other supporters', 2: 'サポーターの反応' })}
+        {t({ 0: '支持者的反應', 1: '支持者的反应', 2: 'Reactions by other supporters', 3: 'サポーターの反応' })}
       </h1>
 
       {/* Face emoji ranking */}
@@ -58,7 +58,7 @@ export default function RankingPage() {
         </div>
       ) : (
         <p className="text-muted-foreground py-8">
-          {t({ 0: '還沒有排名資料', 1: 'No ranking data yet', 2: 'ランキングデータがまだありません' })}
+          {t({ 0: '還沒有排名資料', 1: '还没有排名数据', 2: 'No ranking data yet', 3: 'ランキングデータがまだありません' })}
         </p>
       )}
 

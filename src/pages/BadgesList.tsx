@@ -17,10 +17,10 @@ export default function BadgesListPage() {
       {/* Header */}
       <div className="pt-6 pb-4 text-center">
         <h1 className="text-primary font-bold text-2xl">
-          {t({ 0: '數碼徽章', 1: 'Digital Badges', 2: 'デジタルバッジ' })}
+          {t({ 0: '數碼徽章', 1: '数码徽章', 2: 'Digital Badges', 3: 'デジタルバッジ' })}
         </h1>
         <p className="text-muted-foreground text-sm mt-1">
-          {t({ 0: '探索所有可用徽章', 1: 'Explore all available badges', 2: 'すべてのバッジを探す' })}
+          {t({ 0: '探索所有可用徽章', 1: '探索所有可用徽章', 2: 'Explore all available badges', 3: 'すべてのバッジを探す' })}
         </p>
       </div>
 
@@ -36,7 +36,6 @@ export default function BadgesListPage() {
             return (
               <Link key={badge.id} to={`/badge/${badge.id}`} className="no-underline">
                 <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-                  {/* Badge image */}
                   <div className="w-full aspect-square bg-muted flex items-center justify-center">
                     {badge.image_url ? (
                       <img src={badge.image_url} alt={tr?.title || ''} className="w-full h-full object-cover" />
@@ -44,7 +43,6 @@ export default function BadgesListPage() {
                       <span className="text-5xl">🏅</span>
                     )}
                   </div>
-                  {/* Badge info */}
                   <div className="p-3">
                     <p className="text-foreground font-semibold text-sm truncate">
                       {tr?.home_header || badge.code}
