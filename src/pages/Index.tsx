@@ -1,147 +1,135 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchBadges, BadgeWithTranslation } from '@/lib/api';
+import { fetchBadges } from '@/lib/api';
 import { useI18n, ui } from '@/lib/i18n';
-import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { ArrowRight, Globe2, Heart, Leaf, Shield, TreePine } from 'lucide-react';
-import { motion } from 'framer-motion';
-
-const sdgIcons = [
-  { icon: Globe2, label: { 0: '氣候行動', 1: 'Climate Action', 2: '気候変動' } },
-  { icon: TreePine, label: { 0: '陸地生態', 1: 'Life on Land', 2: '陸上の生態系' } },
-  { icon: Heart, label: { 0: '海洋保育', 1: 'Life Below Water', 2: '海洋保全' } },
-  { icon: Shield, label: { 0: '負責任消費', 1: 'Responsible Consumption', 2: '責任ある消費' } },
-];
-
-function BadgeCard({ badge, index }: { badge: BadgeWithTranslation; index: number }) {
-  const { t } = useI18n();
-  const tr = badge.translation;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      viewport={{ once: true }}
-    >
-      <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 border-0 shadow-md">
-        <div className="h-48 bg-gradient-to-br from-primary/20 to-ocean/20 flex items-center justify-center relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-t from-card/60 to-transparent" />
-          <Leaf className="h-20 w-20 text-primary/30 group-hover:scale-110 transition-transform duration-500" />
-          <div className="absolute bottom-4 left-4 right-4">
-            <h3 className="font-bold text-lg text-foreground">{tr?.home_header || badge.code}</h3>
-          </div>
-        </div>
-        <CardContent className="p-5">
-          <p className="text-sm text-muted-foreground line-clamp-3 mb-4">
-            {tr?.show_more || ''}
-          </p>
-          <div className="flex items-center justify-between">
-            <span className="text-primary font-bold text-lg">${badge.price} USD</span>
-            <Link to={`/badge/${badge.id}`}>
-              <Button size="sm" className="gap-1">
-                {t(ui.learnMore)} <ArrowRight className="h-3 w-3" />
-              </Button>
-            </Link>
-          </div>
-        </CardContent>
-      </Card>
-    </motion.div>
-  );
-}
+import { useAuth } from '@/lib/auth';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import AppFooter from '@/components/AppFooter';
 
 export default function HomePage() {
-  const { lang, t } = useI18n();
-  const { data: badges, isLoading } = useQuery({
+  const { lang, setLang, t } = useI18n();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  const { data: badges } = useQuery({
     queryKey: ['badges', lang],
     queryFn: () => fetchBadges(lang),
   });
 
-  return (
-    <div>
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-background to-ocean/5 py-20 md:py-32">
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-primary rounded-full blur-3xl" />
-          <div className="absolute bottom-10 right-10 w-96 h-96 bg-ocean rounded-full blur-3xl" />
-        </div>
-        <div className="container relative">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="max-w-2xl mx-auto text-center"
-          >
-            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary rounded-full px-4 py-1.5 text-sm font-medium mb-6">
-              <Leaf className="h-4 w-4" /> STAR Program
-            </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
-              {t(ui.heroTitle)}
-            </h1>
-            <p className="text-lg text-muted-foreground mb-8">
-              {t(ui.heroSubtitle)}
-            </p>
-            <a href="#badges">
-              <Button size="lg" className="gap-2 text-base">
-                {t(ui.exploreBadges)} <ArrowRight className="h-4 w-4" />
-              </Button>
-            </a>
-          </motion.div>
-        </div>
-      </section>
+  // Use first badge or query param badge
+  const badgeId = searchParams.get('badge_id');
+  const currentBadge = badges?.find(b => String(b.id) === badgeId) || badges?.[0];
+  const tr = currentBadge?.translation;
 
-      {/* SDG Section */}
-      <section className="py-16 bg-card">
-        <div className="container">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-2xl md:text-3xl font-bold mb-3">{t(ui.sdgTitle)}</h2>
-            <p className="text-muted-foreground max-w-xl mx-auto">{t(ui.sdgDesc)}</p>
-          </motion.div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
-            {sdgIcons.map((sdg, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ delay: i * 0.1 }}
-                viewport={{ once: true }}
-                className="flex flex-col items-center gap-3 p-6 rounded-xl bg-background border hover:border-primary/30 transition-colors"
+  const langFlags = [
+    { label: '中', lang: 0 as const },
+    { label: 'EN', lang: 1 as const },
+    { label: '日', lang: 2 as const },
+  ];
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Background Image Area */}
+      <div className="relative w-full">
+        <div className="w-full h-[30vh] bg-gradient-to-b from-primary/30 to-primary/10 flex items-center justify-center relative overflow-hidden">
+          {/* Placeholder for badge background image */}
+          <div className="absolute inset-0 bg-[url('/placeholder.svg')] bg-cover bg-center opacity-50" />
+
+          {/* Header text */}
+          <div className="absolute top-[2vh] w-full text-center z-10">
+            <h1 className="text-foreground font-medium text-[22px] tracking-[4px]">
+              {tr?.home_header || 'VISITKOCHI'}
+            </h1>
+            <p className="text-foreground text-xs mt-1">
+              {tr?.title || 'The blessings of nature'}
+            </p>
+          </div>
+
+          {/* Title */}
+          <div className="absolute top-[13vh] w-full text-center z-10">
+            <h2 className="text-foreground font-medium text-[26px]">
+              {t({ 0: '高知觀光協會', 1: 'Kochi Japan Tourism Board', 2: '高知県観光協会' })}
+            </h2>
+            <p className="text-foreground text-lg mt-0">
+              {t({ 0: '認證影響力授權者', 1: 'Verified Impact Authorizer', 2: '認定インパクト・オーソライザー' })}
+            </p>
+          </div>
+
+          {/* Language buttons */}
+          <div className="absolute top-2 right-2 flex gap-1 z-10">
+            {langFlags.map(lf => (
+              <button
+                key={lf.lang}
+                onClick={() => setLang(lf.lang)}
+                className={`w-8 h-8 rounded-full text-xs font-bold border-2 transition-colors ${
+                  lang === lf.lang
+                    ? 'bg-primary text-primary-foreground border-primary'
+                    : 'bg-background/80 text-foreground border-border'
+                }`}
               >
-                <sdg.icon className="h-10 w-10 text-primary" />
-                <span className="text-sm font-medium text-center">{t(sdg.label)}</span>
-              </motion.div>
+                {lf.label}
+              </button>
             ))}
           </div>
         </div>
-      </section>
 
-      {/* Badges Section */}
-      <section id="badges" className="py-16">
-        <div className="container">
-          <h2 className="text-2xl md:text-3xl font-bold text-center mb-10">
-            {t(ui.exploreBadges)}
-          </h2>
-          {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[...Array(4)].map((_, i) => (
-                <div key={i} className="h-80 bg-muted animate-pulse rounded-xl" />
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {badges?.map((badge, i) => (
-                <BadgeCard key={badge.id} badge={badge} index={i} />
-              ))}
-            </div>
-          )}
+        {/* White overlay card */}
+        <div className="relative -mt-10 mx-[10%] bg-card rounded-[20px] shadow-lg border p-5 text-center z-20">
+          <h3 className="text-primary font-medium text-xl leading-snug">
+            {t({ 0: '成為', 1: 'Become', 2: 'なろう' })}
+          </h3>
+          <h3 className="text-primary font-bold text-[22px] leading-snug mt-1">
+            {t(ui.heroTitle)}
+          </h3>
+          <hr className="w-[30%] h-1 bg-primary/60 border-none mx-auto my-3" />
+          <p className="text-foreground text-sm leading-5 px-2">
+            {tr?.show_more?.substring(0, 200) || t(ui.heroSubtitle)}
+          </p>
         </div>
-      </section>
+
+        {/* Buttons section */}
+        <div className="mt-6 flex flex-col items-center gap-3 px-[15%]">
+          <button
+            onClick={() => currentBadge && navigate(`/payment/${currentBadge.id}`)}
+            className="w-full py-4 bg-primary text-primary-foreground font-medium text-lg rounded-[20px] border-none"
+          >
+            {t({ 0: '支持及取得徽章', 1: 'SUPPORT & GET A BADGE', 2: 'サポートしてバッジを取得' })}
+          </button>
+
+          <button
+            onClick={() => navigate('/passport')}
+            className="w-full py-4 bg-card text-foreground font-medium text-lg rounded-[20px] border border-primary"
+          >
+            {t({ 0: '徽章護照', 1: 'BADGE PASSPORT', 2: 'バッジパスポート' })}
+          </button>
+
+          <button
+            onClick={() => {
+              if (currentBadge?.map_url) window.open(currentBadge.map_url, '_blank');
+            }}
+            className="w-full py-4 bg-card text-foreground font-medium text-lg rounded-[20px] border border-primary"
+          >
+            {t({ 0: '官方網站', 1: 'OFFICIAL WEBSITE', 2: '公式サイト' })}
+          </button>
+        </div>
+
+        {/* Ranking section placeholder */}
+        <div className="mt-8 text-center px-4">
+          <p className="text-foreground font-medium mb-4">
+            {t({ 0: '其他支持者的反應', 1: 'Reactions by other supporters', 2: '他のサポーターの反応' })}
+          </p>
+          <div className="flex justify-center gap-4">
+            {[0, 1, 2, 3, 4].map(i => (
+              <div key={i} className="w-14 h-14 rounded-full bg-muted flex items-center justify-center text-2xl">
+                {['😀', '😊', '😍', '🤩', '😎'][i]}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Footer */}
+        <AppFooter />
+      </div>
     </div>
   );
 }

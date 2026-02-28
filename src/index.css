@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,93 +6,95 @@
 
 @layer base {
   :root {
-    --background: 180 25% 97%;
-    --foreground: 200 25% 10%;
+    --background: 0 0% 100%;
+    --foreground: 0 0% 13%;
 
     --card: 0 0% 100%;
-    --card-foreground: 200 25% 10%;
+    --card-foreground: 0 0% 13%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 200 25% 10%;
+    --popover-foreground: 0 0% 13%;
 
-    --primary: 162 63% 35%;
+    --primary: 204 74% 41%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 200 20% 94%;
-    --secondary-foreground: 200 25% 15%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 13%;
 
-    --muted: 200 15% 93%;
-    --muted-foreground: 200 10% 45%;
+    --muted: 0 0% 93%;
+    --muted-foreground: 0 0% 45%;
 
-    --accent: 42 92% 55%;
-    --accent-foreground: 200 25% 10%;
+    --accent: 0 61% 53%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 200 15% 88%;
-    --input: 200 15% 88%;
-    --ring: 162 63% 35%;
+    --border: 0 0% 83%;
+    --input: 0 0% 83%;
+    --ring: 204 74% 41%;
 
-    --radius: 0.75rem;
+    --radius: 1.25rem;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 162 63% 35%;
+    --sidebar-primary: 204 74% 41%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 162 30% 95%;
-    --sidebar-accent-foreground: 200 25% 10%;
-    --sidebar-border: 200 15% 88%;
-    --sidebar-ring: 162 63% 35%;
+    --sidebar-accent: 204 30% 95%;
+    --sidebar-accent-foreground: 0 0% 13%;
+    --sidebar-border: 0 0% 83%;
+    --sidebar-ring: 204 74% 41%;
 
-    --ocean: 195 80% 45%;
+    --ocean: 204 74% 41%;
     --ocean-foreground: 0 0% 100%;
     --earth: 35 60% 50%;
     --earth-foreground: 0 0% 100%;
+    --badge-red: 7 57% 52%;
   }
 
   .dark {
-    --background: 200 25% 8%;
-    --foreground: 180 15% 95%;
+    --background: 0 0% 8%;
+    --foreground: 0 0% 95%;
 
-    --card: 200 20% 12%;
-    --card-foreground: 180 15% 95%;
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 95%;
 
-    --popover: 200 20% 12%;
-    --popover-foreground: 180 15% 95%;
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 95%;
 
-    --primary: 162 55% 42%;
+    --primary: 204 65% 48%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 200 20% 18%;
-    --secondary-foreground: 180 15% 95%;
+    --secondary: 0 0% 18%;
+    --secondary-foreground: 0 0% 95%;
 
-    --muted: 200 15% 18%;
-    --muted-foreground: 200 10% 60%;
+    --muted: 0 0% 18%;
+    --muted-foreground: 0 0% 60%;
 
-    --accent: 42 80% 50%;
-    --accent-foreground: 200 25% 10%;
+    --accent: 7 57% 52%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 200 15% 20%;
-    --input: 200 15% 20%;
-    --ring: 162 55% 42%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 204 65% 48%;
 
-    --sidebar-background: 200 20% 10%;
-    --sidebar-foreground: 180 15% 95%;
-    --sidebar-primary: 162 55% 42%;
+    --sidebar-background: 0 0% 10%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 204 65% 48%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 200 15% 15%;
-    --sidebar-accent-foreground: 180 15% 95%;
-    --sidebar-border: 200 15% 20%;
-    --sidebar-ring: 162 55% 42%;
+    --sidebar-accent: 0 0% 15%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 0 0% 20%;
+    --sidebar-ring: 204 65% 48%;
 
-    --ocean: 195 70% 50%;
+    --ocean: 204 65% 50%;
     --ocean-foreground: 0 0% 100%;
     --earth: 35 55% 55%;
     --earth-foreground: 0 0% 100%;
+    --badge-red: 7 57% 52%;
   }
 }
 
@@ -103,10 +105,10 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+    font-family: Arial, 'Noto Sans TC', Verdana, Helvetica, sans-serif;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+    font-family: Arial, 'Noto Sans TC', Verdana, Helvetica, sans-serif;
   }
 }

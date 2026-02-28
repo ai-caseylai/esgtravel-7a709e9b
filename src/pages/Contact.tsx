@@ -1,57 +1,42 @@
-import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useI18n, ui } from '@/lib/i18n';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Mail, Send } from 'lucide-react';
-import { toast } from 'sonner';
+import AppFooter from '@/components/AppFooter';
 
 export default function ContactPage() {
   const { t } = useI18n();
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setTimeout(() => {
-      toast.success(t({ 0: '訊息已發送！', 1: 'Message sent!', 2: 'メッセージが送信されました！' }));
-      setLoading(false);
-    }, 1000);
-  };
+  const navigate = useNavigate();
 
   return (
-    <div className="container py-8 md:py-16">
-      <div className="max-w-lg mx-auto">
-        <Card className="border-0 shadow-lg">
-          <CardHeader className="text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-              <Mail className="h-6 w-6 text-primary" />
-            </div>
-            <CardTitle>{t(ui.contactUs)}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label>{t(ui.name)}</Label>
-                <Input required />
-              </div>
-              <div className="space-y-2">
-                <Label>{t(ui.email)}</Label>
-                <Input type="email" required />
-              </div>
-              <div className="space-y-2">
-                <Label>{t({ 0: '訊息', 1: 'Message', 2: 'メッセージ' })}</Label>
-                <Textarea rows={5} required />
-              </div>
-              <Button type="submit" className="w-full gap-2" disabled={loading}>
-                <Send className="h-4 w-4" />
-                {t({ 0: '發送', 1: 'Send', 2: '送信' })}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+    <div className="min-h-screen bg-background">
+      {/* Logo */}
+      <div className="flex justify-center pt-8">
+        <div className="w-[94px] h-[107px] bg-muted rounded-lg flex items-center justify-center">
+          <span className="text-4xl">🌍</span>
+        </div>
+      </div>
+
+      {/* Back button */}
+      <div className="px-4 mt-2">
+        <button onClick={() => navigate(-1)} className="text-primary text-2xl">
+          ←
+        </button>
+      </div>
+
+      {/* Contact info */}
+      <div className="mt-[10vh] text-center px-4">
+        <h1 className="text-primary font-normal text-2xl mb-6">
+          {t(ui.contactUs)}
+        </h1>
+        <p className="text-foreground text-lg mb-2">
+          {t({ 0: '聯繫電話：+852 1234-5678', 1: 'Contact: +852 1234-5678', 2: '連絡先：+852 1234-5678' })}
+        </p>
+        <p className="text-foreground text-lg">
+          {t({ 0: '電郵：info@starsdg.com', 1: 'Email: info@starsdg.com', 2: 'メール：info@starsdg.com' })}
+        </p>
+      </div>
+
+      <div className="absolute bottom-0 w-full">
+        <AppFooter />
       </div>
     </div>
   );

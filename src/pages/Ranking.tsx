@@ -1,12 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetchRanking } from '@/lib/api';
 import { useI18n, ui } from '@/lib/i18n';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Trophy, Medal, Award } from 'lucide-react';
-import { motion } from 'framer-motion';
+import AppFooter from '@/components/AppFooter';
 
-const rankIcons = [Trophy, Medal, Award];
-const rankColors = ['text-accent', 'text-muted-foreground', 'text-earth'];
+const faceEmojis = ['😀', '😊', '😍', '🤩', '😎'];
 
 export default function RankingPage() {
   const { t } = useI18n();
@@ -17,68 +14,55 @@ export default function RankingPage() {
   });
 
   return (
-    <div className="container py-8 md:py-16">
-      <div className="max-w-2xl mx-auto">
-        <div className="text-center mb-10">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-accent/10">
-            <Trophy className="h-8 w-8 text-accent" />
-          </div>
-          <h1 className="text-3xl font-bold">{t(ui.ranking)}</h1>
-          <p className="text-muted-foreground mt-2">
-            {t({ 0: '可持續旅遊大使排行', 1: 'Sustainable Travel Ambassador Rankings', 2: '持続可能な観光大使ランキング' })}
-          </p>
-        </div>
+    <div className="min-h-screen bg-background text-center pt-8">
+      <h1 className="text-primary font-normal text-2xl mb-4">
+        {t({ 0: '支持者的反應', 1: 'Reactions by other supporters', 2: 'サポーターの反応' })}
+      </h1>
 
-        {isLoading ? (
-          <div className="space-y-3">
-            {[...Array(5)].map((_, i) => (
-              <div key={i} className="h-16 bg-muted animate-pulse rounded-xl" />
-            ))}
+      {/* Face emoji ranking */}
+      <div className="flex justify-center gap-4 mb-8">
+        {faceEmojis.map((emoji, i) => (
+          <div key={i} className="flex flex-col items-center gap-1">
+            <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center text-3xl cursor-pointer hover:bg-primary/10 transition-colors">
+              {emoji}
+            </div>
           </div>
-        ) : ranking?.length === 0 ? (
-          <p className="text-center text-muted-foreground py-16">
-            {t({ 0: '還沒有排名資料', 1: 'No ranking data yet', 2: 'ランキングデータがまだありません' })}
-          </p>
-        ) : (
-          <div className="space-y-3">
-            {ranking?.map((entry, i) => {
-              const RankIcon = rankIcons[i] || Award;
-              const rankColor = rankColors[i] || 'text-muted-foreground';
-
-              return (
-                <motion.div
-                  key={entry.user_id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                >
-                  <Card className={`border-0 shadow-sm ${i < 3 ? 'shadow-md' : ''}`}>
-                    <CardContent className="flex items-center gap-4 py-4">
-                      <div className={`flex h-10 w-10 items-center justify-center rounded-full ${i < 3 ? 'bg-accent/10' : 'bg-muted'}`}>
-                        {i < 3 ? (
-                          <RankIcon className={`h-5 w-5 ${rankColor}`} />
-                        ) : (
-                          <span className="text-sm font-bold text-muted-foreground">#{i + 1}</span>
-                        )}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-semibold truncate">{entry.contact_name}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {entry.badge_count} {t(ui.badgesCollected)}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-bold text-primary">${entry.total_donated}</p>
-                        <p className="text-xs text-muted-foreground">{t(ui.totalDonation)}</p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              );
-            })}
-          </div>
-        )}
+        ))}
       </div>
+
+      {/* Leaderboard */}
+      {isLoading ? (
+        <p className="text-muted-foreground">Loading...</p>
+      ) : ranking && ranking.length > 0 ? (
+        <div className="px-[5%]">
+          <table className="w-full text-left">
+            <thead>
+              <tr className="border-b">
+                <th className="py-2 text-primary text-sm">#</th>
+                <th className="py-2 text-primary text-sm">{t(ui.name)}</th>
+                <th className="py-2 text-primary text-sm text-right">{t(ui.badgesCollected)}</th>
+                <th className="py-2 text-primary text-sm text-right">{t(ui.totalDonation)}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {ranking.map((entry, i) => (
+                <tr key={entry.user_id} className="border-b border-muted">
+                  <td className="py-3 text-foreground">{i + 1}</td>
+                  <td className="py-3 text-foreground">{entry.contact_name}</td>
+                  <td className="py-3 text-foreground text-right">{entry.badge_count}</td>
+                  <td className="py-3 text-primary font-bold text-right">${entry.total_donated}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <p className="text-muted-foreground py-8">
+          {t({ 0: '還沒有排名資料', 1: 'No ranking data yet', 2: 'ランキングデータがまだありません' })}
+        </p>
+      )}
+
+      <AppFooter />
     </div>
   );
 }
