@@ -1,10 +1,26 @@
 <?php
 require 'Stripe/init.php';
-//require_once('vendor/autoload.php');  
-$sessionid = $_GET['session'];
-$stripe = new Stripe\StripeClient("YOUR_STRIPE_SECRET_KEY");
 
-Stripe\Stripe::setApiKey('YOUR_STRIPE_SECRET_KEY');  
+// Load environment variables from .env file
+function loadEnv($path) {
+    if (!file_exists($path)) return;
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        if (strpos(trim($line), '#') === 0) continue;
+        list($name, $value) = explode('=', $line, 2);
+        putenv(trim($name) . '=' . trim($value));
+    }
+}
+loadEnv(__DIR__ . '/.env');
+
+$stripeSecretKey = getenv('STRIPE_SECRET_KEY');
+$stripePublishableKey = getenv('STRIPE_PUBLISHABLE_KEY');
+
+//require_once('vendor/autoload.php');
+$sessionid = $_GET['session'];
+$stripe = new Stripe\StripeClient($stripeSecretKey);
+
+Stripe\Stripe::setApiKey($stripeSecretKey);
 
 /*
 try {  
@@ -150,7 +166,7 @@ curl_close($ch);  */
   
     <script>  
         // Create a Stripe client.  
-        var stripe = Stripe('pk_test_TYooMQauvdEDq54NiTphI7jx'); // Your Publishable Key  
+        var stripe = Stripe('<?php echo $stripePublishableKey; ?>');  
   
         // Create an instance of Elements.  
         var elements = stripe.elements();  

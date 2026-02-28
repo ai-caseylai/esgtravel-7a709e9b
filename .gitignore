@@ -38,3 +38,10 @@ obj/
 *.log
 *.idb
 *.opendb
+
+# =============== #
+# Environment     #
+# =============== #
+.env
+.env.local
+.env.*.local

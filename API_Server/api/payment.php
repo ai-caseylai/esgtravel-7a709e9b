@@ -1,7 +1,23 @@
 <?php
 require 'Stripe/init.php';
+
+// Load environment variables from .env file
+function loadEnv($path) {
+    if (!file_exists($path)) return;
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        if (strpos(trim($line), '#') === 0) continue;
+        list($name, $value) = explode('=', $line, 2);
+        putenv(trim($name) . '=' . trim($value));
+    }
+}
+loadEnv(__DIR__ . '/.env');
+
+$stripeSecretKey = getenv('STRIPE_SECRET_KEY');
+$stripePublishableKey = getenv('STRIPE_PUBLISHABLE_KEY');
+
 $sessionid = $_GET['session'];
-$stripe = new Stripe\StripeClient("YOUR_STRIPE_SECRET_KEY");
+$stripe = new Stripe\StripeClient($stripeSecretKey);
 
 
 //header('Content-Type: application/json');  
@@ -42,7 +58,7 @@ echo 'Checkout Session ID: ' . $checkout_session->id;
 <script src="https://js.stripe.com/v3/"></script>  
   
 <script>  
-var stripe = Stripe('pk_test_51P8JxFKoT0FBRG3bykjICxUsdmnmCHUr7XpJ4bLMrWqPdglj4emfwiOV5pjenJH7FvOLsmu0a9oY9LIy91tFpPsR00qFp3KuCI'); // replace with your publishable key  
+var stripe = Stripe('<?php echo $stripePublishableKey; ?>');  
   
 var checkoutButton = document.getElementById('checkout-button');  
   
