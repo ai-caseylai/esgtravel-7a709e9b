@@ -11,8 +11,8 @@ export default function BadgeDetailPage() {
   const { lang, t } = useI18n();
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [tabIdx, setTabIdx] = useState(1); // 0=impact, 1=badge, 2=event
-  const [eventTabIdx, setEventTabIdx] = useState(0); // 0=summary, 1=detail
+  const [tabIdx, setTabIdx] = useState(1);
+  const [eventTabIdx, setEventTabIdx] = useState(0);
 
   const { data: badge, isLoading } = useQuery({
     queryKey: ['badge', id, lang],
@@ -42,9 +42,9 @@ export default function BadgeDetailPage() {
   const tr = badge.translation;
 
   const tabs = [
-    { idx: 1, label: t({ 0: '徽章', 1: 'Badge', 2: 'バッジ' }) },
-    { idx: 0, label: t({ 0: '影響', 1: 'Impact', 2: '影響' }) },
-    { idx: 2, label: t({ 0: '活動', 1: 'Event', 2: 'イベント' }) },
+    { idx: 1, label: t({ 0: '徽章', 1: '徽章', 2: 'Badge', 3: 'バッジ' }) },
+    { idx: 0, label: t({ 0: '影響', 1: '影响', 2: 'Impact', 3: '影響' }) },
+    { idx: 2, label: t({ 0: '活動', 1: '活动', 2: 'Event', 3: 'イベント' }) },
   ];
 
   return (
@@ -75,7 +75,6 @@ export default function BadgeDetailPage() {
 
       {/* Tab content */}
       <div className="px-4 overflow-y-auto" style={{ height: '70vh' }}>
-        {/* Impact tab */}
         {tabIdx === 0 && (
           <div className="py-4">
             {tr?.impact ? (
@@ -88,10 +87,8 @@ export default function BadgeDetailPage() {
           </div>
         )}
 
-        {/* Badge tab */}
         {tabIdx === 1 && (
           <div className="py-4 flex flex-col items-center">
-            {/* Badge image placeholder */}
             <div className="w-[215px] h-[215px] bg-muted rounded-lg flex items-center justify-center mb-6">
               <span className="text-6xl">🏅</span>
             </div>
@@ -102,12 +99,12 @@ export default function BadgeDetailPage() {
               onClick={() => navigate(`/cert/${id}`)}
               className="bg-primary text-primary-foreground font-medium text-lg py-2 rounded-[20px] w-[70%] border-none mb-6"
             >
-              {t({ 0: '查看認證', 1: 'View Certificate', 2: '認証を見る' })}
+              {t({ 0: '查看認證', 1: '查看认证', 2: 'View Certificate', 3: '認証を見る' })}
             </button>
 
             <div className="w-1/2 text-center">
               <h3 className="text-foreground font-medium text-base">
-                {t({ 0: '影響力記錄', 1: 'Impact Record', 2: 'インパクト記録' })}
+                {t({ 0: '影響力記錄', 1: '影响力记录', 2: 'Impact Record', 3: 'インパクト記録' })}
               </h3>
               <hr className="w-full h-1 bg-primary/60 border-none my-2" />
             </div>
@@ -120,17 +117,14 @@ export default function BadgeDetailPage() {
           </div>
         )}
 
-        {/* Event tab */}
         {tabIdx === 2 && (
           <div className="py-4">
-            {/* Event background image placeholder */}
             <div className="w-full h-40 bg-muted rounded-lg mb-4 flex items-center justify-center">
               <span className="text-muted-foreground text-sm">Event Image</span>
             </div>
 
             <h2 className="text-accent font-bold text-xl mb-4">{tr?.title}</h2>
 
-            {/* Event sub-tabs */}
             <div className="flex justify-center gap-4 mb-4">
               <button
                 onClick={() => setEventTabIdx(0)}
@@ -140,7 +134,7 @@ export default function BadgeDetailPage() {
                     : 'bg-muted text-muted-foreground'
                 }`}
               >
-                {t({ 0: '摘要', 1: 'Summary', 2: '概要' })}
+                {t({ 0: '摘要', 1: '摘要', 2: 'Summary', 3: '概要' })}
               </button>
               <button
                 onClick={() => setEventTabIdx(1)}
@@ -150,7 +144,7 @@ export default function BadgeDetailPage() {
                     : 'bg-muted text-muted-foreground'
                 }`}
               >
-                {t({ 0: '詳情', 1: 'Detail', 2: '詳細' })}
+                {t({ 0: '詳情', 1: '详情', 2: 'Detail', 3: '詳細' })}
               </button>
             </div>
 
@@ -161,7 +155,6 @@ export default function BadgeDetailPage() {
         )}
       </div>
 
-      {/* Buy button */}
       {user && (
         <div className="px-[15%] py-4">
           <Link to={`/payment/${badge.id}`}>

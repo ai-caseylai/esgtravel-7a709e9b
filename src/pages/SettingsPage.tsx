@@ -47,7 +47,7 @@ export default function SettingsPage() {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success(t({ 0: '個人資料已更新', 1: 'Profile updated', 2: 'プロフィールを更新しました' }));
+      toast.success(t({ 0: '個人資料已更新', 1: '个人资料已更新', 2: 'Profile updated', 3: 'プロフィールを更新しました' }));
       queryClient.invalidateQueries({ queryKey: ['profile'] });
       setEditingProfile(false);
     },
@@ -60,7 +60,7 @@ export default function SettingsPage() {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success(t({ 0: '密碼已更新', 1: 'Password updated', 2: 'パスワードを更新しました' }));
+      toast.success(t({ 0: '密碼已更新', 1: '密码已更新', 2: 'Password updated', 3: 'パスワードを更新しました' }));
       setEditingPassword(false);
       setNewPassword('');
     },
@@ -78,16 +78,17 @@ export default function SettingsPage() {
   }
 
   const langOptions = [
-    { value: 0 as const, label: '中文' },
-    { value: 1 as const, label: 'English' },
-    { value: 2 as const, label: '日本語' },
+    { value: 0 as const, label: '繁體中文' },
+    { value: 1 as const, label: '简体中文' },
+    { value: 2 as const, label: 'English' },
+    { value: 3 as const, label: '日本語' },
   ];
 
   return (
     <div className="min-h-screen bg-background pb-20">
       <div className="pt-6 pb-4 text-center">
         <h1 className="text-primary font-bold text-2xl">
-          {t({ 0: '設定', 1: 'Settings', 2: '設定' })}
+          {t({ 0: '設定', 1: '设置', 2: 'Settings', 3: '設定' })}
         </h1>
       </div>
 
@@ -100,7 +101,7 @@ export default function SettingsPage() {
           >
             <User className="w-5 h-5 text-primary" />
             <span className="flex-1 text-foreground font-medium">
-              {t({ 0: '個人資料', 1: 'Personal Info', 2: '個人情報' })}
+              {t({ 0: '個人資料', 1: '个人资料', 2: 'Personal Info', 3: '個人情報' })}
             </span>
             <ChevronRight className={`w-4 h-4 text-muted-foreground transition-transform ${editingProfile ? 'rotate-90' : ''}`} />
           </button>
@@ -119,7 +120,7 @@ export default function SettingsPage() {
                 <Input value={user.email || ''} disabled className="opacity-60" />
               </div>
               <Button onClick={() => updateProfile.mutate()} disabled={updateProfile.isPending} className="w-full">
-                {t({ 0: '儲存', 1: 'Save', 2: '保存' })}
+                {t({ 0: '儲存', 1: '保存', 2: 'Save', 3: '保存' })}
               </Button>
             </div>
           )}
@@ -130,10 +131,10 @@ export default function SettingsPage() {
           <div className="flex items-center gap-3 p-4">
             <Globe className="w-5 h-5 text-primary" />
             <span className="flex-1 text-foreground font-medium">
-              {t({ 0: '語言', 1: 'Language', 2: '言語' })}
+              {t({ 0: '語言', 1: '语言', 2: 'Language', 3: '言語' })}
             </span>
           </div>
-          <div className="px-4 pb-4 flex gap-2">
+          <div className="px-4 pb-4 flex gap-2 flex-wrap">
             {langOptions.map(opt => (
               <button
                 key={opt.value}
@@ -170,18 +171,18 @@ export default function SettingsPage() {
           >
             <Lock className="w-5 h-5 text-primary" />
             <span className="flex-1 text-foreground font-medium">
-              {t({ 0: '更改密碼', 1: 'Change Password', 2: 'パスワード変更' })}
+              {t({ 0: '更改密碼', 1: '更改密码', 2: 'Change Password', 3: 'パスワード変更' })}
             </span>
             <ChevronRight className={`w-4 h-4 text-muted-foreground transition-transform ${editingPassword ? 'rotate-90' : ''}`} />
           </button>
           {editingPassword && (
             <div className="px-4 pb-4 space-y-3">
               <div>
-                <Label>{t({ 0: '新密碼', 1: 'New Password', 2: '新しいパスワード' })}</Label>
+                <Label>{t({ 0: '新密碼', 1: '新密码', 2: 'New Password', 3: '新しいパスワード' })}</Label>
                 <Input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} minLength={6} />
               </div>
               <Button onClick={() => updatePassword.mutate()} disabled={updatePassword.isPending || newPassword.length < 6} className="w-full">
-                {t({ 0: '更新密碼', 1: 'Update Password', 2: 'パスワードを更新' })}
+                {t({ 0: '更新密碼', 1: '更新密码', 2: 'Update Password', 3: 'パスワードを更新' })}
               </Button>
             </div>
           )}

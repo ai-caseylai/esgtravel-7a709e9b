@@ -24,7 +24,7 @@ export default function PassportPage() {
   if (!user) {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center">
-        <p className="text-foreground">{t({ 0: '請先登入', 1: 'Please login first', 2: 'ログインしてください' })}</p>
+        <p className="text-foreground">{t({ 0: '請先登入', 1: '请先登录', 2: 'Please login first', 3: 'ログインしてください' })}</p>
         <Link to="/login">
           <button className="mt-4 bg-primary text-primary-foreground px-6 py-2 rounded-xl border-none">
             {t(ui.login)}
@@ -52,8 +52,10 @@ export default function PassportPage() {
 
   const getMonth = (dateStr: string) => {
     const [year, month] = dateStr.split('-');
-    const monthNames = lang === 1
+    const monthNames = lang === 2
       ? ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+      : lang === 3
+      ? ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
       : ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
     return monthNames[parseInt(month) - 1];
   };
@@ -62,18 +64,18 @@ export default function PassportPage() {
     <div className="min-h-screen bg-background text-center pt-4">
       {/* Header */}
       <h1 className="text-primary font-normal text-2xl mb-1">
-        {t({ 0: '我的護照', 1: 'My Passport', 2: 'マイパスポート' })}
+        {t({ 0: '我的護照', 1: '我的护照', 2: 'My Passport', 3: 'マイパスポート' })}
       </h1>
       <hr className="w-full h-1 bg-primary border-none mb-4" />
 
       <p className="text-foreground text-2xl font-normal mb-2">
-        {t({ 0: '你好', 1: 'Hi', 2: 'こんにちは' })}, {user.email?.split('@')[0]}
+        {t({ 0: '你好', 1: '你好', 2: 'Hi', 3: 'こんにちは' })}, {user.email?.split('@')[0]}
       </p>
 
       <p className="text-foreground text-lg mb-6">
-        {t({ 0: '你收集了共', 1: 'You collected total', 2: '合計' })}{' '}
+        {t({ 0: '你收集了共', 1: '你收集了共', 2: 'You collected total', 3: '合計' })}{' '}
         <span className="text-primary font-normal">{badgeCount}</span>{' '}
-        {t({ 0: '個徽章', 1: 'badges', 2: 'バッジを集めました' })}
+        {t({ 0: '個徽章', 1: '个徽章', 2: 'badges', 3: 'バッジを集めました' })}
       </p>
 
       {/* Badges grouped by date */}

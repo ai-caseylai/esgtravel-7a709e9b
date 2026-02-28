@@ -4,10 +4,10 @@ import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 
 const navItems = [
-  { path: '/site', labelKey: { 0: '首頁', 1: 'Home', 2: 'ホーム' } },
-  { path: '/site/how-it-works', labelKey: { 0: '如何獲得徽章', 1: 'How to Get Badges', 2: 'バッジの取得方法' } },
-  { path: '/site/events', labelKey: { 0: '活動與資訊', 1: 'Events & Activities', 2: 'イベント' } },
-  { path: '/site/contact', labelKey: { 0: '聯絡我們', 1: 'Contact Us', 2: 'お問い合わせ' } },
+  { path: '/site', labelKey: { 0: '首頁', 1: '首页', 2: 'Home', 3: 'ホーム' } },
+  { path: '/site/how-it-works', labelKey: { 0: '如何獲得徽章', 1: '如何获得徽章', 2: 'How to Get Badges', 3: 'バッジの取得方法' } },
+  { path: '/site/events', labelKey: { 0: '活動與資訊', 1: '活动与资讯', 2: 'Events & Activities', 3: 'イベント' } },
+  { path: '/site/contact', labelKey: { 0: '聯絡我們', 1: '联系我们', 2: 'Contact Us', 3: 'お問い合わせ' } },
 ];
 
 export default function SiteLayout() {
@@ -16,9 +16,10 @@ export default function SiteLayout() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const langOptions = [
-    { value: 0 as const, label: '中文' },
-    { value: 1 as const, label: 'EN' },
-    { value: 2 as const, label: '日本語' },
+    { value: 0 as const, label: '繁中' },
+    { value: 1 as const, label: '简中' },
+    { value: 2 as const, label: 'EN' },
+    { value: 3 as const, label: '日本語' },
   ];
 
   return (
@@ -60,7 +61,7 @@ export default function SiteLayout() {
               </button>
             ))}
             <Link to="/" className="ml-3 bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium no-underline">
-              {t({ 0: '開始使用', 1: 'Get Started', 2: '始める' })}
+              {t({ 0: '開始使用', 1: '开始使用', 2: 'Get Started', 3: '始める' })}
             </Link>
           </div>
 
@@ -101,7 +102,7 @@ export default function SiteLayout() {
               ))}
             </div>
             <Link to="/" onClick={() => setMenuOpen(false)} className="block bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium no-underline text-center">
-              {t({ 0: '開始使用', 1: 'Get Started', 2: '始める' })}
+              {t({ 0: '開始使用', 1: '开始使用', 2: 'Get Started', 3: '始める' })}
             </Link>
           </div>
         )}
@@ -117,12 +118,12 @@ export default function SiteLayout() {
             <div>
               <h3 className="text-primary font-bold text-lg mb-3">STAR SDG</h3>
               <p className="text-muted-foreground text-sm leading-relaxed">
-                {t({ 0: '推動可持續旅遊，為地球的未來出一分力。', 1: 'Promoting sustainable tourism for a better future.', 2: '持続可能な観光を推進し、より良い未来のために。' })}
+                {t({ 0: '推動可持續旅遊，為地球的未來出一分力。', 1: '推动可持续旅游，为地球的未来出一分力。', 2: 'Promoting sustainable tourism for a better future.', 3: '持続可能な観光を推進し、より良い未来のために。' })}
               </p>
             </div>
             <div>
               <h4 className="text-foreground font-semibold text-sm mb-3">
-                {t({ 0: '快速連結', 1: 'Quick Links', 2: 'クイックリンク' })}
+                {t({ 0: '快速連結', 1: '快速链接', 2: 'Quick Links', 3: 'クイックリンク' })}
               </h4>
               <div className="space-y-2">
                 {navItems.map(item => (
@@ -134,7 +135,7 @@ export default function SiteLayout() {
             </div>
             <div>
               <h4 className="text-foreground font-semibold text-sm mb-3">
-                {t({ 0: '聯絡方式', 1: 'Contact', 2: '連絡先' })}
+                {t({ 0: '聯絡方式', 1: '联系方式', 2: 'Contact', 3: '連絡先' })}
               </h4>
               <p className="text-muted-foreground text-sm">info@starsdg.com</p>
               <p className="text-muted-foreground text-sm">+852 1234-5678</p>

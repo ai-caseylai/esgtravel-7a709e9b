@@ -3,18 +3,17 @@ import { useI18n } from '@/lib/i18n';
 import { Home, Award, BookOpen, Ticket, Settings } from 'lucide-react';
 
 const navItems = [
-  { path: '/', icon: Home, labelKey: { 0: '首頁', 1: 'Home', 2: 'ホーム' } },
-  { path: '/badges', icon: Award, labelKey: { 0: '徽章', 1: 'Badges', 2: 'バッジ' } },
-  { path: '/passport', icon: BookOpen, labelKey: { 0: '護照', 1: 'Passport', 2: 'パスポート' } },
-  { path: '/coupons', icon: Ticket, labelKey: { 0: '優惠', 1: 'Coupons', 2: 'クーポン' } },
-  { path: '/settings', icon: Settings, labelKey: { 0: '設定', 1: 'Settings', 2: '設定' } },
+  { path: '/', icon: Home, labelKey: { 0: '首頁', 1: '首页', 2: 'Home', 3: 'ホーム' } },
+  { path: '/badges', icon: Award, labelKey: { 0: '徽章', 1: '徽章', 2: 'Badges', 3: 'バッジ' } },
+  { path: '/passport', icon: BookOpen, labelKey: { 0: '護照', 1: '护照', 2: 'Passport', 3: 'パスポート' } },
+  { path: '/coupons', icon: Ticket, labelKey: { 0: '優惠', 1: '优惠', 2: 'Coupons', 3: 'クーポン' } },
+  { path: '/settings', icon: Settings, labelKey: { 0: '設定', 1: '设置', 2: 'Settings', 3: '設定' } },
 ];
 
 export default function BottomNav() {
   const { t } = useI18n();
   const location = useLocation();
 
-  // Hide on admin pages
   if (location.pathname.startsWith('/admin')) return null;
 
   return (

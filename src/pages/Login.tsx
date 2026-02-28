@@ -22,11 +22,11 @@ export default function LoginPage() {
 
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!re.test(email)) {
-      setError(t({ 0: '無效電郵', 1: 'Invalid email', 2: '無効なメール' }));
+      setError(t({ 0: '無效電郵', 1: '无效邮箱', 2: 'Invalid email', 3: '無効なメール' }));
       return;
     }
     if (password.length < 6) {
-      setError(t({ 0: '密碼至少6位', 1: 'Password must be at least 6 characters', 2: 'パスワードは6文字以上' }));
+      setError(t({ 0: '密碼至少6位', 1: '密码至少6位', 2: 'Password must be at least 6 characters', 3: 'パスワードは6文字以上' }));
       return;
     }
     setError('');
@@ -35,9 +35,9 @@ export default function LoginPage() {
     const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
 
     if (authError) {
-      setError(t({ 0: '電郵或密碼不正確', 1: 'Incorrect email or password', 2: 'メールまたはパスワードが正しくありません' }));
+      setError(t({ 0: '電郵或密碼不正確', 1: '邮箱或密码不正确', 2: 'Incorrect email or password', 3: 'メールまたはパスワードが正しくありません' }));
     } else {
-      toast.success(t({ 0: '登入成功', 1: 'Login successful', 2: 'ログイン成功' }));
+      toast.success(t({ 0: '登入成功', 1: '登录成功', 2: 'Login successful', 3: 'ログイン成功' }));
       navigate('/passport');
     }
     setLoading(false);
@@ -49,7 +49,7 @@ export default function LoginPage() {
 
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!re.test(email)) {
-      setError(t({ 0: '無效電郵', 1: 'Invalid email', 2: '無効なメール' }));
+      setError(t({ 0: '無效電郵', 1: '无效邮箱', 2: 'Invalid email', 3: '無効なメール' }));
       return;
     }
     setError('');
@@ -65,7 +65,7 @@ export default function LoginPage() {
         toast.error(authError.message);
       } else {
         setOtpSent(true);
-        toast.success(t({ 0: '請檢查你的郵箱', 1: 'Check your email for the login link', 2: 'ログインリンクをメールで確認してください' }));
+        toast.success(t({ 0: '請檢查你的郵箱', 1: '请检查你的邮箱', 2: 'Check your email for the login link', 3: 'ログインリンクをメールで確認してください' }));
         setCountdown(29);
         const timer = setInterval(() => {
           setCountdown(prev => {
@@ -86,13 +86,13 @@ export default function LoginPage() {
       <div className="flex items-center justify-center pt-6 pb-2 relative">
         <button onClick={() => navigate(-1)} className="absolute left-5 top-6 text-primary text-2xl">←</button>
         <h1 className="text-primary font-normal text-2xl tracking-wide">
-          {t({ 0: '影響力護照', 1: 'Impact Passport', 2: 'インパクトパスポート' })}
+          {t({ 0: '影響力護照', 1: '影响力护照', 2: 'Impact Passport', 3: 'インパクトパスポート' })}
         </h1>
       </div>
 
       {/* Title */}
       <div className="mt-[8vh] px-[20%]">
-        {lang === 1 ? (
+        {lang === 2 ? (
           <>
             <span className="text-foreground font-bold text-[28px] leading-10">Give </span>
             <span className="text-primary font-bold text-[28px] leading-10">Your Impact!</span>
@@ -105,6 +105,12 @@ export default function LoginPage() {
             <span className="text-foreground font-bold text-[28px] leading-10">為你的</span>
             <br />
             <span className="text-primary font-bold text-[28px] leading-10">影響力賦予新意義</span>
+          </>
+        ) : lang === 1 ? (
+          <>
+            <span className="text-foreground font-bold text-[28px] leading-10">为你的</span>
+            <br />
+            <span className="text-primary font-bold text-[28px] leading-10">影响力赋予新意义</span>
           </>
         ) : (
           <>
@@ -121,13 +127,13 @@ export default function LoginPage() {
           onClick={() => { setMode('password'); setError(''); }}
           className={`text-sm pb-1 border-b-2 transition-colors ${mode === 'password' ? 'border-primary text-primary font-medium' : 'border-transparent text-muted-foreground'}`}
         >
-          {t({ 0: '密碼登入', 1: 'Password', 2: 'パスワード' })}
+          {t({ 0: '密碼登入', 1: '密码登录', 2: 'Password', 3: 'パスワード' })}
         </button>
         <button
           onClick={() => { setMode('otp'); setError(''); }}
           className={`text-sm pb-1 border-b-2 transition-colors ${mode === 'otp' ? 'border-primary text-primary font-medium' : 'border-transparent text-muted-foreground'}`}
         >
-          {t({ 0: 'Magic Link', 1: 'Magic Link', 2: 'Magic Link' })}
+          {t({ 0: 'Magic Link', 1: 'Magic Link', 2: 'Magic Link', 3: 'Magic Link' })}
         </button>
       </div>
 
@@ -135,7 +141,7 @@ export default function LoginPage() {
       <div className="mt-[3vh] px-[10%]">
         <form onSubmit={mode === 'password' ? handlePasswordLogin : handleOtpLogin}>
           <label className="text-primary text-lg block mb-2">
-            {t({ 0: '登入你的護照：', 1: 'Log in to your passport:', 2: 'パスポートにログイン：' })}
+            {t({ 0: '登入你的護照：', 1: '登录你的护照：', 2: 'Log in to your passport:', 3: 'パスポートにログイン：' })}
           </label>
           <input
             type="email"
@@ -154,7 +160,7 @@ export default function LoginPage() {
               value={password}
               onChange={e => setPassword(e.target.value)}
               className="w-full border-b-2 border-primary bg-transparent py-2 text-foreground text-lg outline-none mt-4"
-              placeholder={t({ 0: '密碼', 1: 'Password', 2: 'パスワード' })}
+              placeholder={t({ 0: '密碼', 1: '密码', 2: 'Password', 3: 'パスワード' })}
             />
           )}
 
@@ -168,15 +174,15 @@ export default function LoginPage() {
             >
               {mode === 'otp' && countdown > 0
                 ? `Resend in ${countdown}`
-                : t({ 0: '開始', 1: 'GET STARTED', 2: '始める' })}
+                : t({ 0: '開始', 1: '开始', 2: 'GET STARTED', 3: '始める' })}
             </button>
           </div>
         </form>
 
         <p className="mt-6 text-center text-sm text-muted-foreground">
-          {t({ 0: '還沒有帳號？', 1: "Don't have an account?", 2: 'アカウントをお持ちでない方' })}{' '}
+          {t({ 0: '還沒有帳號？', 1: '还没有帐号？', 2: "Don't have an account?", 3: 'アカウントをお持ちでない方' })}{' '}
           <Link to="/signup" className="text-primary font-medium hover:underline">
-            {t({ 0: '註冊', 1: 'Sign up', 2: 'サインアップ' })}
+            {t({ 0: '註冊', 1: '注册', 2: 'Sign up', 3: 'サインアップ' })}
           </Link>
         </p>
       </div>

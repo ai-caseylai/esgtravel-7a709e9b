@@ -11,7 +11,7 @@ export default function PaymentSuccessPage() {
         <div className="text-6xl mb-6">✅</div>
         <h1 className="text-primary text-3xl font-bold mb-3">{t(ui.thankYou)}</h1>
         <p className="text-foreground text-lg mb-8 text-center">
-          {t({ 0: '你的徽章已加入護照中', 1: 'Your badge has been added to your passport', 2: 'バッジがパスポートに追加されました' })}
+          {t({ 0: '你的徽章已加入護照中', 1: '你的徽章已加入护照中', 2: 'Your badge has been added to your passport', 3: 'バッジがパスポートに追加されました' })}
         </p>
         <div className="flex gap-3">
           <Link to="/passport">

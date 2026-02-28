@@ -33,7 +33,7 @@ export default function SignupPage() {
     if (error) {
       toast.error(error.message);
     } else {
-      toast.success(t({ 0: '請檢查郵箱以確認帳號', 1: 'Check your email to confirm your account', 2: 'メールを確認してアカウントを認証してください' }));
+      toast.success(t({ 0: '請檢查郵箱以確認帳號', 1: '请检查邮箱以确认帐号', 2: 'Check your email to confirm your account', 3: 'メールを確認してアカウントを認証してください' }));
       navigate('/login');
     }
     setLoading(false);
@@ -48,7 +48,7 @@ export default function SignupPage() {
           </div>
           <CardTitle className="text-2xl">{t(ui.signup)}</CardTitle>
           <CardDescription>
-            {t({ 0: '創建你的 ESG Travel 帳號', 1: 'Create your ESG Travel account', 2: 'ESG Travel アカウントを作成' })}
+            {t({ 0: '創建你的 ESG Travel 帳號', 1: '创建你的 ESG Travel 帐号', 2: 'Create your ESG Travel account', 3: 'ESG Travel アカウントを作成' })}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -75,7 +75,7 @@ export default function SignupPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">
-                {t({ 0: '密碼', 1: 'Password', 2: 'パスワード' })}
+                {t({ 0: '密碼', 1: '密码', 2: 'Password', 3: 'パスワード' })}
               </Label>
               <Input
                 id="password"
@@ -92,7 +92,7 @@ export default function SignupPage() {
           </form>
 
           <p className="mt-6 text-center text-sm text-muted-foreground">
-            {t({ 0: '已有帳號？', 1: 'Already have an account?', 2: 'すでにアカウントをお持ちですか？' })}{' '}
+            {t({ 0: '已有帳號？', 1: '已有帐号？', 2: 'Already have an account?', 3: 'すでにアカウントをお持ちですか？' })}{' '}
             <Link to="/login" className="text-primary font-medium hover:underline">
               {t(ui.login)}
             </Link>

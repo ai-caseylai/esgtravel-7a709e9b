@@ -28,7 +28,6 @@ export default function CertPage() {
     enabled: !!user,
   });
 
-  // Fetch SDG associations
   const { data: sdgIds } = useQuery({
     queryKey: ['sdg_badges', id],
     queryFn: async () => {
@@ -39,7 +38,7 @@ export default function CertPage() {
   });
 
   const tr = badge?.translation;
-  const holderName = profile?.contact_name || user?.email?.split('@')[0] || t({ 0: '持有者', 1: 'Holder', 2: '所有者' });
+  const holderName = profile?.contact_name || user?.email?.split('@')[0] || t({ 0: '持有者', 1: '持有者', 2: 'Holder', 3: '所有者' });
 
   const sdgLabels: Record<number, string> = {
     1: 'No Poverty', 2: 'Zero Hunger', 3: 'Good Health', 4: 'Quality Education',
@@ -66,10 +65,9 @@ export default function CertPage() {
       {/* Certificate card */}
       <div className="mx-4 mt-4 bg-card rounded-2xl border border-border shadow-lg p-6 text-center">
         <p className="text-muted-foreground text-xs uppercase tracking-widest mb-2">
-          {t({ 0: '數碼認證', 1: 'Digital Certificate', 2: 'デジタル認証' })}
+          {t({ 0: '數碼認證', 1: '数码认证', 2: 'Digital Certificate', 3: 'デジタル認証' })}
         </p>
 
-        {/* Badge image */}
         <div className="w-32 h-32 mx-auto bg-muted rounded-full flex items-center justify-center mb-4">
           {badge?.image_url ? (
             <img src={badge.image_url} alt="" className="w-full h-full object-cover rounded-full" />
@@ -78,23 +76,20 @@ export default function CertPage() {
           )}
         </div>
 
-        {/* Holder name */}
         <h2 className="text-foreground font-bold text-xl mb-1">{holderName}</h2>
         <p className="text-primary font-medium text-sm mb-1">
-          {t({ 0: '可持續旅遊大使', 1: 'Sustainable Travel Ambassador', 2: '持続可能な観光大使' })}
+          {t({ 0: '可持續旅遊大使', 1: '可持续旅游大使', 2: 'Sustainable Travel Ambassador', 3: '持続可能な観光大使' })}
         </p>
 
         <hr className="my-4 border-border" />
 
-        {/* Badge title */}
         <h3 className="text-foreground font-semibold text-lg">{tr?.home_header || badge?.code}</h3>
         <p className="text-muted-foreground text-sm mt-1">{tr?.title}</p>
 
-        {/* SDG icons */}
         {sdgIds && sdgIds.length > 0 && (
           <div className="mt-4">
             <p className="text-muted-foreground text-xs mb-2">
-              {t({ 0: '相關永續發展目標', 1: 'Related SDGs', 2: '関連するSDGs' })}
+              {t({ 0: '相關永續發展目標', 1: '相关可持续发展目标', 2: 'Related SDGs', 3: '関連するSDGs' })}
             </p>
             <div className="flex flex-wrap justify-center gap-2">
               {sdgIds.map(sdgId => (
@@ -111,11 +106,10 @@ export default function CertPage() {
           </div>
         )}
 
-        {/* Event info */}
         {tr?.summary && (
           <div className="mt-4 text-left">
             <p className="text-muted-foreground text-xs uppercase tracking-wider mb-1">
-              {t({ 0: '活動資訊', 1: 'Event Info', 2: 'イベント情報' })}
+              {t({ 0: '活動資訊', 1: '活动资讯', 2: 'Event Info', 3: 'イベント情報' })}
             </p>
             <p className="text-foreground text-sm leading-relaxed whitespace-pre-line">{tr.summary}</p>
           </div>

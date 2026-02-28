@@ -28,10 +28,10 @@ export default function ContactPage() {
           {t(ui.contactUs)}
         </h1>
         <p className="text-foreground text-lg mb-2">
-          {t({ 0: '聯繫電話：+852 1234-5678', 1: 'Contact: +852 1234-5678', 2: '連絡先：+852 1234-5678' })}
+          {t({ 0: '聯繫電話：+852 1234-5678', 1: '联系电话：+852 1234-5678', 2: 'Contact: +852 1234-5678', 3: '連絡先：+852 1234-5678' })}
         </p>
         <p className="text-foreground text-lg">
-          {t({ 0: '電郵：info@starsdg.com', 1: 'Email: info@starsdg.com', 2: 'メール：info@starsdg.com' })}
+          {t({ 0: '電郵：info@starsdg.com', 1: '邮箱：info@starsdg.com', 2: 'Email: info@starsdg.com', 3: 'メール：info@starsdg.com' })}
         </p>
       </div>
 
