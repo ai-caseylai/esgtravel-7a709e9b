@@ -3,9 +3,10 @@ import { useI18n } from '@/lib/i18n';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import heroImg from '@/assets/site-how-hero.jpg';
-import featureBadge from '@/assets/feature-badge.jpg';
-import featureImpact from '@/assets/feature-impact.jpg';
-import featureCommunity from '@/assets/feature-community.jpg';
+import stepExplore from '@/assets/step-explore.jpg';
+import stepPurchase from '@/assets/step-purchase.jpg';
+import stepCert from '@/assets/step-cert.jpg';
+import stepImpact from '@/assets/step-impact.jpg';
 
 export default function SiteHowItWorks() {
   const { lang, t } = useI18n();
@@ -13,25 +14,25 @@ export default function SiteHowItWorks() {
   const steps = [
     {
       num: '01',
-      image: featureBadge,
+      image: stepExplore,
       titleKey: { 0: '探索徽章', 1: 'Explore Badges', 2: 'バッジを探す' },
       descKey: { 0: '瀏覽各地區的可持續旅遊徽章，了解每個徽章背後的故事和影響。每個徽章代表一個地區的永續發展承諾。', 1: 'Browse sustainable tourism badges from different regions. Each badge represents a commitment to sustainable development in that area.', 2: '各地域の持続可能な観光バッジを閲覧し、各バッジの背景にあるストーリーと影響について学びましょう。' },
     },
     {
       num: '02',
-      image: featureImpact,
+      image: stepPurchase,
       titleKey: { 0: '購買徽章', 1: 'Purchase a Badge', 2: 'バッジを購入' },
       descKey: { 0: '選擇你喜歡的徽章並完成付款。你也可以額外捐助，為當地社區做出更大貢獻。付款安全有保障。', 1: 'Choose your favourite badge and complete the payment. You can also make an extra donation to contribute more. Payment is secure and protected.', 2: 'お気に入りのバッジを選んで支払いを完了しましょう。追加の寄付もできます。支払いは安全に保護されています。' },
     },
     {
       num: '03',
-      image: featureBadge,
+      image: stepCert,
       titleKey: { 0: '獲得數碼認證', 1: 'Receive Digital Certificate', 2: 'デジタル認証を受け取る' },
       descKey: { 0: '購買後你將獲得一個數碼認證徽章，記錄在你的旅遊護照中。認證包含你的姓名和相關的永續發展目標。', 1: 'After purchase, you receive a digital certificate badge recorded in your travel passport, including your name and related SDGs.', 2: '購入後、あなたの名前と関連するSDGsを含むデジタル認証バッジを受け取り、トラベルパスポートに記録されます。' },
     },
     {
       num: '04',
-      image: featureCommunity,
+      image: stepImpact,
       titleKey: { 0: '追蹤你的影響', 1: 'Track Your Impact', 2: 'インパクトを追跡' },
       descKey: { 0: '在護照頁面查看你所有收集的徽章和累計的社會影響。你可以分享你的成就，鼓勵更多人加入。', 1: 'View all your collected badges and cumulative social impact in your passport. Share your achievements and inspire others to join.', 2: 'パスポートページで集めたバッジと累積的な社会的影響を確認しましょう。あなたの成果を共有して、他の人にも参加を促しましょう。' },
     },
