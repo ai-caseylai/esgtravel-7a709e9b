@@ -5,6 +5,7 @@ import { useAuth } from '@/lib/auth';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Award, MapPin, ChevronRight, Sparkles } from 'lucide-react';
+import heroMobile from '@/assets/hero-mobile.jpg';
 
 export default function HomePage() {
   const { lang, setLang, t } = useI18n();
@@ -20,13 +21,6 @@ export default function HomePage() {
   const badgeId = searchParams.get('badge_id');
   const currentBadge = badges?.find(b => String(b.id) === badgeId) || badges?.[0];
   const tr = currentBadge?.translation;
-
-  const langFlags = [
-    { label: '繁', lang: 0 as const },
-    { label: '简', lang: 1 as const },
-    { label: 'EN', lang: 2 as const },
-    { label: '日', lang: 3 as const },
-  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -45,21 +39,6 @@ export default function HomePage() {
             {user ? user.email?.split('@')[0] : 'STAR SDG'}
           </h1>
         </div>
-        <div className="flex gap-1">
-          {langFlags.map(lf => (
-            <button
-              key={lf.lang}
-              onClick={() => setLang(lf.lang)}
-              className={`w-7 h-7 rounded-full text-[10px] font-semibold transition-all border-none ${
-                lang === lf.lang
-                  ? 'bg-primary text-primary-foreground'
-                  : 'bg-muted text-muted-foreground'
-              }`}
-            >
-              {lf.label}
-            </button>
-          ))}
-        </div>
       </div>
 
       <div className="px-5 space-y-4 pb-4">
@@ -70,10 +49,11 @@ export default function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
             onClick={() => navigate(`/mobile/badge/${currentBadge.id}`)}
-            className="relative rounded-2xl overflow-hidden bg-primary cursor-pointer"
-            style={{ background: 'var(--gradient-ocean)' }}
+            className="relative rounded-2xl overflow-hidden cursor-pointer"
           >
-            <div className="p-5 pb-6">
+            <img src={currentBadge.image_url || heroMobile} alt="" className="absolute inset-0 w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/10" />
+            <div className="relative p-5 pb-6">
               <div className="flex items-start justify-between mb-6">
                 <div className="bg-primary-foreground/20 rounded-xl px-3 py-1.5">
                   <span className="text-primary-foreground text-[11px] font-semibold tracking-wide uppercase">
@@ -185,30 +165,6 @@ export default function HomePage() {
           </motion.div>
         )}
 
-        {/* Reactions */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="bg-card rounded-2xl border border-border p-4"
-        >
-          <p className="text-foreground font-semibold text-[14px] mb-3">
-            {t({ 0: '支持者反應', 1: '支持者反应', 2: 'Reactions', 3: '反応' })}
-          </p>
-          <div className="flex justify-around">
-            {['😀', '😊', '😍', '🤩', '😎'].map((emoji, i) => (
-              <motion.div
-                key={i}
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.4 + i * 0.06, type: 'spring', stiffness: 400 }}
-                className="w-11 h-11 rounded-full bg-muted flex items-center justify-center text-xl cursor-pointer hover:bg-primary/10 transition-colors"
-              >
-                {emoji}
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
 
         {/* Login CTA */}
         {!user && (
