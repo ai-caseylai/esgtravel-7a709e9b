@@ -18,8 +18,10 @@ export default function BottomNav() {
   if (!location.pathname.startsWith('/mobile')) return null;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 glass-strong border-t-0 safe-area-bottom">
-      <div className="flex justify-around items-center h-16 max-w-lg mx-auto px-2">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-card/80 backdrop-blur-xl border-t border-border/50"
+      style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+    >
+      <div className="flex justify-around items-end h-14 max-w-lg mx-auto">
         {navItems.map(item => {
           const isActive = location.pathname === item.path ||
             (item.path !== '/mobile' && location.pathname.startsWith(item.path));
@@ -28,19 +30,19 @@ export default function BottomNav() {
             <Link
               key={item.path}
               to={item.path}
-              className={`relative flex flex-col items-center gap-0.5 px-3 py-1.5 no-underline transition-all duration-300 ${
-                isActive ? 'text-primary' : 'text-muted-foreground'
-              }`}
+              className="relative flex flex-col items-center gap-0.5 pt-1.5 pb-1 w-16 no-underline transition-colors"
             >
-              {isActive && (
-                <motion.div
-                  layoutId="activeTab"
-                  className="absolute -top-1 w-5 h-0.5 rounded-full bg-primary"
-                  transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                />
-              )}
-              <Icon className={`w-5 h-5 transition-transform duration-300 ${isActive ? 'scale-110' : ''}`} />
-              <span className={`text-[10px] font-medium transition-all ${isActive ? 'font-semibold' : ''}`}>
+              <div className="relative">
+                {isActive && (
+                  <motion.div
+                    layoutId="navDot"
+                    className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary"
+                    transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                  />
+                )}
+                <Icon className={`w-[22px] h-[22px] transition-colors ${isActive ? 'text-primary' : 'text-muted-foreground'}`} strokeWidth={isActive ? 2.2 : 1.8} />
+              </div>
+              <span className={`text-[10px] leading-tight transition-colors ${isActive ? 'text-primary font-semibold' : 'text-muted-foreground'}`}>
                 {t(item.labelKey)}
               </span>
             </Link>

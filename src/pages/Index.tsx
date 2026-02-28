@@ -1,11 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetchBadges } from '@/lib/api';
-import { useI18n, ui } from '@/lib/i18n';
+import { useI18n } from '@/lib/i18n';
 import { useAuth } from '@/lib/auth';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Award, Globe, Compass, ChevronRight } from 'lucide-react';
-import heroBg from '@/assets/mobile-hero-bg.jpg';
+import { Award, MapPin, ChevronRight, Sparkles } from 'lucide-react';
 
 export default function HomePage() {
   const { lang, setLang, t } = useI18n();
@@ -29,148 +28,172 @@ export default function HomePage() {
     { label: '日', lang: 3 as const },
   ];
 
-  const fadeUp = {
-    hidden: { opacity: 0, y: 20 },
-    visible: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.1, duration: 0.5 } }),
-  };
-
   return (
     <div className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <div className="relative w-full min-h-[55vh] overflow-hidden">
-        <img src={heroBg} alt="" className="absolute inset-0 w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-background" />
+      {/* Status bar spacer */}
+      <div className="h-2" />
 
-        {/* Language Selector */}
-        <div className="absolute top-4 right-4 z-20 flex gap-1.5">
+      {/* Top bar */}
+      <div className="flex items-center justify-between px-5 py-3">
+        <div>
+          <p className="text-[13px] text-muted-foreground">
+            {user
+              ? t({ 0: '你好', 1: '你好', 2: 'Hello', 3: 'こんにちは' })
+              : t({ 0: '歡迎', 1: '欢迎', 2: 'Welcome', 3: 'ようこそ' })}
+          </p>
+          <h1 className="text-[22px] font-bold text-foreground leading-tight">
+            {user ? user.email?.split('@')[0] : 'STAR SDG'}
+          </h1>
+        </div>
+        <div className="flex gap-1">
           {langFlags.map(lf => (
             <button
               key={lf.lang}
               onClick={() => setLang(lf.lang)}
-              className={`w-8 h-8 rounded-full text-[11px] font-semibold transition-all duration-300 ${
+              className={`w-7 h-7 rounded-full text-[10px] font-semibold transition-all border-none ${
                 lang === lf.lang
-                  ? 'glass-strong text-primary shadow-lg scale-110'
-                  : 'glass text-white/90 hover:scale-105'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-muted text-muted-foreground'
               }`}
             >
               {lf.label}
             </button>
           ))}
         </div>
-
-        {/* Hero Content */}
-        <div className="relative z-10 flex flex-col items-center justify-end h-[55vh] pb-8 px-6">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
-            className="text-center"
-          >
-            <h1 className="text-white text-3xl font-bold tracking-wider drop-shadow-lg">
-              STAR SDG
-            </h1>
-            <p className="text-white/80 text-sm mt-1 font-light tracking-wide">
-              {t({ 0: '可持續旅遊徽章平台', 1: '可持续旅游徽章平台', 2: 'Sustainable Travel Badge Platform', 3: '持続可能な旅行バッジプラットフォーム' })}
-            </p>
-          </motion.div>
-        </div>
       </div>
 
-      {/* Main Card - Glassmorphism */}
-      <div className="px-5 -mt-8 relative z-20 space-y-4 pb-28">
-        <motion.div
-          custom={0}
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          className="glass-strong rounded-2xl p-6 text-center"
-        >
-          <p className="text-primary text-sm font-medium tracking-wide uppercase">
-            {tr?.home_header || t({ 0: '高知觀光協會', 1: '高知观光协会', 2: 'Kochi Tourism Board', 3: '高知県観光協会' })}
-          </p>
-          <h2 className="text-foreground text-xl font-bold mt-2 leading-tight">
-            {t({ 0: '成為可持續旅行大使', 1: '成为可持续旅行大使', 2: 'Become a Sustainable Travel Ambassador', 3: '持続可能な旅行アンバサダーになろう' })}
-          </h2>
-          <div className="w-12 h-0.5 bg-primary/40 mx-auto my-3 rounded-full" />
-          <p className="text-muted-foreground text-sm leading-relaxed">
-            {tr?.show_more?.substring(0, 120) || t({ 0: '通過收集徽章支持當地社區的可持續發展項目', 1: '通过收集徽章支持当地社区的可持续发展项目', 2: 'Support local sustainability projects by collecting badges', 3: 'バッジを集めて地域の持続可能性プロジェクトを支援' })}
-          </p>
-        </motion.div>
+      <div className="px-5 space-y-4 pb-4">
+        {/* Featured badge card */}
+        {currentBadge && (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            onClick={() => navigate(`/mobile/badge/${currentBadge.id}`)}
+            className="relative rounded-2xl overflow-hidden bg-primary cursor-pointer"
+            style={{ background: 'var(--gradient-ocean)' }}
+          >
+            <div className="p-5 pb-6">
+              <div className="flex items-start justify-between mb-6">
+                <div className="bg-primary-foreground/20 rounded-xl px-3 py-1.5">
+                  <span className="text-primary-foreground text-[11px] font-semibold tracking-wide uppercase">
+                    {t({ 0: '精選徽章', 1: '精选徽章', 2: 'Featured', 3: 'おすすめ' })}
+                  </span>
+                </div>
+                <Sparkles className="w-5 h-5 text-primary-foreground/60" />
+              </div>
+              <h2 className="text-primary-foreground text-xl font-bold leading-tight mb-1">
+                {tr?.home_header || tr?.title || currentBadge.code}
+              </h2>
+              <p className="text-primary-foreground/70 text-[13px] leading-relaxed line-clamp-2 mb-4">
+                {tr?.show_more?.substring(0, 80) ||
+                  t({ 0: '支持當地可持續發展項目', 1: '支持当地可持续发展项目', 2: 'Support local sustainability projects', 3: '地域の持続可能性プロジェクトを支援' })}
+              </p>
+              <div className="flex items-center justify-between">
+                <span className="text-primary-foreground font-bold text-lg">${currentBadge.price} USD</span>
+                <div className="bg-primary-foreground/20 rounded-full p-2">
+                  <ChevronRight className="w-4 h-4 text-primary-foreground" />
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
 
-        {/* Action Buttons */}
-        <motion.button
-          custom={1}
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          onClick={() => currentBadge && navigate(`/mobile/payment/${currentBadge.id}`)}
-          className="w-full py-4 rounded-2xl font-semibold text-base text-primary-foreground border-none flex items-center justify-center gap-2"
-          style={{ background: 'var(--gradient-ocean)' }}
-        >
-          <Award className="w-5 h-5" />
-          {t({ 0: '支持及取得徽章', 1: '支持及取得徽章', 2: 'Support & Get Badge', 3: 'サポートしてバッジを取得' })}
-        </motion.button>
-
-        <motion.button
-          custom={2}
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          onClick={() => navigate('/mobile/passport')}
-          className="w-full py-4 rounded-2xl font-semibold text-base glass-strong text-foreground border-none flex items-center justify-center gap-2"
-        >
-          <Compass className="w-5 h-5 text-primary" />
-          {t({ 0: '我的徽章護照', 1: '我的徽章护照', 2: 'My Badge Passport', 3: 'マイバッジパスポート' })}
-        </motion.button>
-
-        {/* Quick Links Grid */}
-        <motion.div
-          custom={3}
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          className="grid grid-cols-2 gap-3"
-        >
-          <button
+        {/* Quick actions */}
+        <div className="grid grid-cols-2 gap-3">
+          <motion.button
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
             onClick={() => navigate('/mobile/badges')}
-            className="glass-strong rounded-2xl p-4 text-left group"
+            className="bg-card rounded-2xl border border-border p-4 text-left"
           >
             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-3">
               <Award className="w-5 h-5 text-primary" />
             </div>
-            <p className="text-foreground font-semibold text-sm">
-              {t({ 0: '探索徽章', 1: '探索徽章', 2: 'Explore Badges', 3: 'バッジを探索' })}
+            <p className="text-foreground font-semibold text-[14px]">
+              {t({ 0: '探索徽章', 1: '探索徽章', 2: 'Explore', 3: '探索' })}
             </p>
-            <p className="text-muted-foreground text-xs mt-1">
+            <p className="text-muted-foreground text-[12px] mt-0.5">
               {badges?.length ?? 0} {t({ 0: '個可用', 1: '个可用', 2: 'available', 3: '利用可能' })}
             </p>
-          </button>
-          <button
-            onClick={() => currentBadge?.map_url ? window.open(currentBadge.map_url, '_blank') : null}
-            className="glass-strong rounded-2xl p-4 text-left group"
+          </motion.button>
+
+          <motion.button
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
+            onClick={() => navigate('/mobile/passport')}
+            className="bg-card rounded-2xl border border-border p-4 text-left"
           >
             <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center mb-3">
-              <Globe className="w-5 h-5 text-accent" />
+              <MapPin className="w-5 h-5 text-accent" />
             </div>
-            <p className="text-foreground font-semibold text-sm">
-              {t({ 0: '官方網站', 1: '官方网站', 2: 'Official Site', 3: '公式サイト' })}
+            <p className="text-foreground font-semibold text-[14px]">
+              {t({ 0: '我的護照', 1: '我的护照', 2: 'Passport', 3: 'パスポート' })}
             </p>
-            <p className="text-muted-foreground text-xs mt-1">
-              {t({ 0: '了解更多', 1: '了解更多', 2: 'Learn more', 3: '詳しく見る' })}
+            <p className="text-muted-foreground text-[12px] mt-0.5">
+              {t({ 0: '查看收藏', 1: '查看收藏', 2: 'View collection', 3: 'コレクション' })}
             </p>
-          </button>
-        </motion.div>
+          </motion.button>
+        </div>
 
-        {/* Reactions Section */}
+        {/* Badge list preview */}
+        {badges && badges.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-[15px] font-semibold text-foreground">
+                {t({ 0: '所有徽章', 1: '所有徽章', 2: 'All Badges', 3: 'すべてのバッジ' })}
+              </h3>
+              <button
+                onClick={() => navigate('/mobile/badges')}
+                className="text-[13px] text-primary font-medium bg-transparent border-none"
+              >
+                {t({ 0: '查看全部', 1: '查看全部', 2: 'See all', 3: 'すべて見る' })}
+              </button>
+            </div>
+            <div className="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-hide">
+              {badges.slice(0, 6).map((badge, i) => (
+                <motion.div
+                  key={badge.id}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.25 + i * 0.05 }}
+                  onClick={() => navigate(`/mobile/badge/${badge.id}`)}
+                  className="shrink-0 w-[140px] bg-card rounded-xl border border-border overflow-hidden cursor-pointer"
+                >
+                  <div className="w-full aspect-square bg-muted flex items-center justify-center">
+                    {badge.image_url ? (
+                      <img src={badge.image_url} alt="" className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-4xl">🏅</span>
+                    )}
+                  </div>
+                  <div className="p-2.5">
+                    <p className="text-foreground text-[12px] font-semibold truncate">
+                      {badge.translation?.home_header || badge.code}
+                    </p>
+                    <p className="text-primary text-[12px] font-bold mt-0.5">${badge.price}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
+        {/* Reactions */}
         <motion.div
-          custom={4}
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          className="glass-strong rounded-2xl p-5"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="bg-card rounded-2xl border border-border p-4"
         >
-          <p className="text-foreground font-semibold text-sm mb-4">
-            {t({ 0: '支持者反應', 1: '支持者反应', 2: 'Supporter Reactions', 3: 'サポーターの反応' })}
+          <p className="text-foreground font-semibold text-[14px] mb-3">
+            {t({ 0: '支持者反應', 1: '支持者反应', 2: 'Reactions', 3: '反応' })}
           </p>
           <div className="flex justify-around">
             {['😀', '😊', '😍', '🤩', '😎'].map((emoji, i) => (
@@ -178,8 +201,8 @@ export default function HomePage() {
                 key={i}
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                transition={{ delay: 0.5 + i * 0.08, type: 'spring', stiffness: 300 }}
-                className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center text-2xl"
+                transition={{ delay: 0.4 + i * 0.06, type: 'spring', stiffness: 400 }}
+                className="w-11 h-11 rounded-full bg-muted flex items-center justify-center text-xl cursor-pointer hover:bg-primary/10 transition-colors"
               >
                 {emoji}
               </motion.div>
@@ -187,15 +210,14 @@ export default function HomePage() {
           </div>
         </motion.div>
 
-        {/* Login CTA for non-logged in users */}
+        {/* Login CTA */}
         {!user && (
           <motion.button
-            custom={5}
-            variants={fadeUp}
-            initial="hidden"
-            animate="visible"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.35 }}
             onClick={() => navigate('/mobile/login')}
-            className="w-full py-3.5 rounded-2xl glass-strong text-primary font-semibold text-sm flex items-center justify-center gap-1"
+            className="w-full py-3.5 rounded-2xl bg-card border border-border text-primary font-semibold text-[15px] flex items-center justify-center gap-1"
           >
             {t({ 0: '登入帳號', 1: '登录帐号', 2: 'Sign In', 3: 'ログイン' })}
             <ChevronRight className="w-4 h-4" />

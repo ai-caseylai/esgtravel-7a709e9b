@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import AppFooter from '@/components/AppFooter';
+import MobileHeader from '@/components/MobileHeader';
 import { User, Globe, Mail, LogOut, Lock, ChevronRight } from 'lucide-react';
 
 export default function SettingsPage() {
@@ -28,10 +28,7 @@ export default function SettingsPage() {
     queryFn: async () => {
       if (!user) return null;
       const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single();
-      if (data) {
-        setName(data.contact_name || '');
-        setMobile(data.mobile || '');
-      }
+      if (data) { setName(data.contact_name || ''); setMobile(data.mobile || ''); }
       return data;
     },
     enabled: !!user,
@@ -40,14 +37,11 @@ export default function SettingsPage() {
   const updateProfile = useMutation({
     mutationFn: async () => {
       if (!user) return;
-      const { error } = await supabase.from('profiles').update({
-        contact_name: name,
-        mobile: mobile,
-      }).eq('id', user.id);
+      const { error } = await supabase.from('profiles').update({ contact_name: name, mobile }).eq('id', user.id);
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success(t({ 0: '個人資料已更新', 1: '个人资料已更新', 2: 'Profile updated', 3: 'プロフィールを更新しました' }));
+      toast.success(t({ 0: '已更新', 1: '已更新', 2: 'Updated', 3: '更新しました' }));
       queryClient.invalidateQueries({ queryKey: ['profile'] });
       setEditingProfile(false);
     },
@@ -60,7 +54,7 @@ export default function SettingsPage() {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success(t({ 0: '密碼已更新', 1: '密码已更新', 2: 'Password updated', 3: 'パスワードを更新しました' }));
+      toast.success(t({ 0: '密碼已更新', 1: '密码已更新', 2: 'Password updated', 3: 'パスワード更新済み' }));
       setEditingPassword(false);
       setNewPassword('');
     },
@@ -72,10 +66,7 @@ export default function SettingsPage() {
     navigate('/mobile');
   };
 
-  if (!user) {
-    navigate('/mobile/login');
-    return null;
-  }
+  if (!user) { navigate('/mobile/login'); return null; }
 
   const langOptions = [
     { value: 0 as const, label: '繁體中文' },
@@ -84,62 +75,84 @@ export default function SettingsPage() {
     { value: 3 as const, label: '日本語' },
   ];
 
+  const SettingsRow = ({ icon: Icon, label, onClick, destructive, right }: {
+    icon: any; label: string; onClick?: () => void; destructive?: boolean; right?: React.ReactNode;
+  }) => (
+    <button
+      onClick={onClick}
+      className={`w-full flex items-center gap-3 px-4 py-3.5 bg-transparent border-none text-left transition-colors active:bg-muted/50 ${
+        destructive ? '' : ''
+      }`}
+    >
+      <Icon className={`w-[18px] h-[18px] ${destructive ? 'text-destructive' : 'text-primary'}`} />
+      <span className={`flex-1 text-[15px] ${destructive ? 'text-destructive' : 'text-foreground'}`}>{label}</span>
+      {right || (onClick && <ChevronRight className="w-4 h-4 text-muted-foreground" />)}
+    </button>
+  );
+
   return (
-    <div className="min-h-screen bg-background pb-20">
-      <div className="pt-6 pb-4 text-center">
-        <h1 className="text-primary font-bold text-2xl">
-          {t({ 0: '設定', 1: '设置', 2: 'Settings', 3: '設定' })}
-        </h1>
+    <div className="min-h-screen bg-background">
+      <MobileHeader title={t({ 0: '設定', 1: '设置', 2: 'Settings', 3: '設定' })} />
+
+      {/* Account info */}
+      <div className="px-5 py-4">
+        <div className="bg-card rounded-2xl border border-border p-4 flex items-center gap-3">
+          <div className="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center">
+            <User className="w-5 h-5 text-primary" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-foreground font-semibold text-[15px] truncate">{profile?.contact_name || user.email?.split('@')[0]}</p>
+            <p className="text-muted-foreground text-[12px] truncate">{user.email}</p>
+          </div>
+        </div>
       </div>
 
-      <div className="px-4 space-y-3">
-        {/* Personal Info */}
-        <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
-          <button
-            onClick={() => setEditingProfile(!editingProfile)}
-            className="w-full flex items-center gap-3 p-4 text-left bg-transparent border-none cursor-pointer"
-          >
-            <User className="w-5 h-5 text-primary" />
-            <span className="flex-1 text-foreground font-medium">
-              {t({ 0: '個人資料', 1: '个人资料', 2: 'Personal Info', 3: '個人情報' })}
-            </span>
-            <ChevronRight className={`w-4 h-4 text-muted-foreground transition-transform ${editingProfile ? 'rotate-90' : ''}`} />
-          </button>
+      {/* Settings groups */}
+      <div className="px-5 space-y-3">
+        {/* Profile section */}
+        <div className="bg-card rounded-2xl border border-border overflow-hidden divide-y divide-border">
+          <SettingsRow icon={User} label={t({ 0: '個人資料', 1: '个人资料', 2: 'Personal Info', 3: '個人情報' })} onClick={() => setEditingProfile(!editingProfile)} />
           {editingProfile && (
-            <div className="px-4 pb-4 space-y-3">
+            <div className="px-4 py-3 space-y-3 bg-muted/30">
               <div>
-                <Label>{t(ui.name)}</Label>
-                <Input value={name} onChange={e => setName(e.target.value)} />
+                <Label className="text-[12px]">{t(ui.name)}</Label>
+                <Input value={name} onChange={e => setName(e.target.value)} className="h-9 text-[14px]" />
               </div>
               <div>
-                <Label>{t(ui.phone)}</Label>
-                <Input value={mobile} onChange={e => setMobile(e.target.value)} />
+                <Label className="text-[12px]">{t(ui.phone)}</Label>
+                <Input value={mobile} onChange={e => setMobile(e.target.value)} className="h-9 text-[14px]" />
               </div>
-              <div>
-                <Label>{t(ui.email)}</Label>
-                <Input value={user.email || ''} disabled className="opacity-60" />
-              </div>
-              <Button onClick={() => updateProfile.mutate()} disabled={updateProfile.isPending} className="w-full">
+              <Button onClick={() => updateProfile.mutate()} disabled={updateProfile.isPending} size="sm" className="w-full">
                 {t({ 0: '儲存', 1: '保存', 2: 'Save', 3: '保存' })}
+              </Button>
+            </div>
+          )}
+          <SettingsRow icon={Lock} label={t({ 0: '更改密碼', 1: '更改密码', 2: 'Change Password', 3: 'パスワード変更' })} onClick={() => setEditingPassword(!editingPassword)} />
+          {editingPassword && (
+            <div className="px-4 py-3 space-y-3 bg-muted/30">
+              <div>
+                <Label className="text-[12px]">{t({ 0: '新密碼', 1: '新密码', 2: 'New Password', 3: '新しいパスワード' })}</Label>
+                <Input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} minLength={6} className="h-9 text-[14px]" />
+              </div>
+              <Button onClick={() => updatePassword.mutate()} disabled={updatePassword.isPending || newPassword.length < 6} size="sm" className="w-full">
+                {t({ 0: '更新', 1: '更新', 2: 'Update', 3: '更新' })}
               </Button>
             </div>
           )}
         </div>
 
         {/* Language */}
-        <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
-          <div className="flex items-center gap-3 p-4">
-            <Globe className="w-5 h-5 text-primary" />
-            <span className="flex-1 text-foreground font-medium">
-              {t({ 0: '語言', 1: '语言', 2: 'Language', 3: '言語' })}
-            </span>
+        <div className="bg-card rounded-2xl border border-border overflow-hidden">
+          <div className="flex items-center gap-3 px-4 pt-3.5 pb-2">
+            <Globe className="w-[18px] h-[18px] text-primary" />
+            <span className="text-foreground text-[15px]">{t({ 0: '語言', 1: '语言', 2: 'Language', 3: '言語' })}</span>
           </div>
-          <div className="px-4 pb-4 flex gap-2 flex-wrap">
+          <div className="px-4 pb-3.5 grid grid-cols-4 gap-2">
             {langOptions.map(opt => (
               <button
                 key={opt.value}
                 onClick={() => setLang(opt.value)}
-                className={`flex-1 py-2 rounded-xl text-sm font-medium border transition-colors ${
+                className={`py-2 rounded-lg text-[12px] font-medium border transition-colors ${
                   lang === opt.value
                     ? 'bg-primary text-primary-foreground border-primary'
                     : 'bg-background text-foreground border-border'
@@ -151,56 +164,16 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* Contact Us */}
-        <button
-          onClick={() => navigate('/mobile/contact')}
-          className="w-full bg-card rounded-2xl border border-border shadow-sm flex items-center gap-3 p-4 text-left cursor-pointer"
-        >
-          <Mail className="w-5 h-5 text-primary" />
-          <span className="flex-1 text-foreground font-medium">
-            {t(ui.contactUs)}
-          </span>
-          <ChevronRight className="w-4 h-4 text-muted-foreground" />
-        </button>
-
-        {/* Change Password */}
-        <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
-          <button
-            onClick={() => setEditingPassword(!editingPassword)}
-            className="w-full flex items-center gap-3 p-4 text-left bg-transparent border-none cursor-pointer"
-          >
-            <Lock className="w-5 h-5 text-primary" />
-            <span className="flex-1 text-foreground font-medium">
-              {t({ 0: '更改密碼', 1: '更改密码', 2: 'Change Password', 3: 'パスワード変更' })}
-            </span>
-            <ChevronRight className={`w-4 h-4 text-muted-foreground transition-transform ${editingPassword ? 'rotate-90' : ''}`} />
-          </button>
-          {editingPassword && (
-            <div className="px-4 pb-4 space-y-3">
-              <div>
-                <Label>{t({ 0: '新密碼', 1: '新密码', 2: 'New Password', 3: '新しいパスワード' })}</Label>
-                <Input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} minLength={6} />
-              </div>
-              <Button onClick={() => updatePassword.mutate()} disabled={updatePassword.isPending || newPassword.length < 6} className="w-full">
-                {t({ 0: '更新密碼', 1: '更新密码', 2: 'Update Password', 3: 'パスワードを更新' })}
-              </Button>
-            </div>
-          )}
+        {/* Actions */}
+        <div className="bg-card rounded-2xl border border-border overflow-hidden divide-y divide-border">
+          <SettingsRow icon={Mail} label={t(ui.contactUs)} onClick={() => navigate('/mobile/contact')} />
         </div>
 
         {/* Logout */}
-        <button
-          onClick={handleLogout}
-          className="w-full bg-card rounded-2xl border border-destructive/30 shadow-sm flex items-center gap-3 p-4 text-left cursor-pointer"
-        >
-          <LogOut className="w-5 h-5 text-destructive" />
-          <span className="flex-1 text-destructive font-medium">
-            {t(ui.logout)}
-          </span>
-        </button>
+        <div className="bg-card rounded-2xl border border-destructive/20 overflow-hidden">
+          <SettingsRow icon={LogOut} label={t(ui.logout)} onClick={handleLogout} destructive />
+        </div>
       </div>
-
-      <AppFooter />
     </div>
   );
 }
