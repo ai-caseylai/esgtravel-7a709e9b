@@ -1,19 +1,18 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { fetchBadgeDetail } from '@/lib/api';
 import { useI18n, ui } from '@/lib/i18n';
 import { useAuth } from '@/lib/auth';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { ArrowLeft, Leaf, MapPin, ShieldCheck } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import AppFooter from '@/components/AppFooter';
 
 export default function BadgeDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { lang, t } = useI18n();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [tabIdx, setTabIdx] = useState(1); // 0=impact, 1=badge, 2=event
+  const [eventTabIdx, setEventTabIdx] = useState(0); // 0=summary, 1=detail
 
   const { data: badge, isLoading } = useQuery({
     queryKey: ['badge', id, lang],
@@ -23,22 +22,18 @@ export default function BadgeDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="container py-16">
-        <div className="max-w-3xl mx-auto space-y-6">
-          <div className="h-8 w-32 bg-muted animate-pulse rounded" />
-          <div className="h-64 bg-muted animate-pulse rounded-xl" />
-          <div className="h-40 bg-muted animate-pulse rounded-xl" />
-        </div>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-pulse text-muted-foreground">Loading...</div>
       </div>
     );
   }
 
   if (!badge) {
     return (
-      <div className="container py-16 text-center">
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center">
         <p className="text-muted-foreground">Badge not found</p>
         <Link to="/">
-          <Button variant="outline" className="mt-4">{t(ui.backHome)}</Button>
+          <button className="mt-4 text-primary underline">{t(ui.backHome)}</button>
         </Link>
       </div>
     );
@@ -46,111 +41,138 @@ export default function BadgeDetailPage() {
 
   const tr = badge.translation;
 
-  return (
-    <div className="container py-8 md:py-16">
-      <Button variant="ghost" className="mb-6 gap-2" onClick={() => navigate(-1)}>
-        <ArrowLeft className="h-4 w-4" /> {t(ui.backHome)}
-      </Button>
+  const tabs = [
+    { idx: 1, label: t({ 0: '徽章', 1: 'Badge', 2: 'バッジ' }) },
+    { idx: 0, label: t({ 0: '影響', 1: 'Impact', 2: '影響' }) },
+    { idx: 2, label: t({ 0: '活動', 1: 'Event', 2: 'イベント' }) },
+  ];
 
-      <div className="max-w-3xl mx-auto space-y-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          {/* Badge Hero */}
-          <div className="relative h-64 md:h-80 rounded-2xl bg-gradient-to-br from-primary/20 via-ocean/10 to-earth/10 flex items-center justify-center overflow-hidden mb-8">
-            <Leaf className="h-32 w-32 text-primary/20" />
-            <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-card/80">
-              <h1 className="text-3xl md:text-4xl font-bold">{tr?.home_header || badge.code}</h1>
-              <p className="text-primary font-semibold mt-1">{tr?.title}</p>
+  return (
+    <div className="min-h-screen bg-background text-center">
+      {/* Back button */}
+      <div className="pt-4 px-4 flex items-center">
+        <button onClick={() => navigate(-1)} className="text-primary text-2xl">
+          ←
+        </button>
+      </div>
+
+      {/* Tabs */}
+      <div className="flex justify-center gap-6 py-4">
+        {tabs.map(tab => (
+          <button
+            key={tab.idx}
+            onClick={() => setTabIdx(tab.idx)}
+            className={`text-lg cursor-pointer bg-transparent border-none pb-1 ${
+              tabIdx === tab.idx
+                ? 'text-accent font-bold underline underline-offset-4 decoration-4'
+                : 'text-primary font-normal'
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Tab content */}
+      <div className="px-4 overflow-y-auto" style={{ height: '70vh' }}>
+        {/* Impact tab */}
+        {tabIdx === 0 && (
+          <div className="py-4">
+            {tr?.impact ? (
+              <div className="text-left px-4 text-foreground text-sm leading-6 whitespace-pre-line">
+                {tr.impact}
+              </div>
+            ) : (
+              <p className="text-muted-foreground">No impact data</p>
+            )}
+          </div>
+        )}
+
+        {/* Badge tab */}
+        {tabIdx === 1 && (
+          <div className="py-4 flex flex-col items-center">
+            {/* Badge image placeholder */}
+            <div className="w-[215px] h-[215px] bg-muted rounded-lg flex items-center justify-center mb-6">
+              <span className="text-6xl">🏅</span>
+            </div>
+
+            <h2 className="text-accent font-bold text-xl mb-4">{tr?.title}</h2>
+
+            <button
+              onClick={() => navigate('/passport')}
+              className="bg-primary text-primary-foreground font-medium text-lg py-2 rounded-[20px] w-[70%] border-none mb-6"
+            >
+              {t({ 0: '旅遊大使', 1: 'Travel Ambassador', 2: 'トラベルアンバサダー' })}
+            </button>
+
+            <div className="w-1/2 text-center">
+              <h3 className="text-foreground font-medium text-base">
+                {t({ 0: '影響力記錄', 1: 'Impact Record', 2: 'インパクト記録' })}
+              </h3>
+              <hr className="w-full h-1 bg-primary/60 border-none my-2" />
+            </div>
+
+            {tr?.content && (
+              <div className="mt-4 text-left px-4 text-foreground text-sm leading-6 whitespace-pre-line">
+                {tr.content}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Event tab */}
+        {tabIdx === 2 && (
+          <div className="py-4">
+            {/* Event background image placeholder */}
+            <div className="w-full h-40 bg-muted rounded-lg mb-4 flex items-center justify-center">
+              <span className="text-muted-foreground text-sm">Event Image</span>
+            </div>
+
+            <h2 className="text-accent font-bold text-xl mb-4">{tr?.title}</h2>
+
+            {/* Event sub-tabs */}
+            <div className="flex justify-center gap-4 mb-4">
+              <button
+                onClick={() => setEventTabIdx(0)}
+                className={`px-5 py-1 rounded text-lg border-none ${
+                  eventTabIdx === 0
+                    ? 'bg-accent/20 text-accent font-bold'
+                    : 'bg-muted text-muted-foreground'
+                }`}
+              >
+                {t({ 0: '摘要', 1: 'Summary', 2: '概要' })}
+              </button>
+              <button
+                onClick={() => setEventTabIdx(1)}
+                className={`px-5 py-1 rounded text-lg border-none ${
+                  eventTabIdx === 1
+                    ? 'bg-accent/20 text-accent font-bold'
+                    : 'bg-muted text-muted-foreground'
+                }`}
+              >
+                {t({ 0: '詳情', 1: 'Detail', 2: '詳細' })}
+              </button>
+            </div>
+
+            <div className="text-left px-4 text-foreground text-sm leading-6 whitespace-pre-line">
+              {eventTabIdx === 0 ? tr?.summary : tr?.details}
             </div>
           </div>
-
-          {/* Content */}
-          <Card className="border-0 shadow-md">
-            <CardContent className="p-6 md:p-8 space-y-6">
-              <div>
-                <h2 className="text-xl font-bold mb-3 flex items-center gap-2">
-                  <ShieldCheck className="h-5 w-5 text-primary" />
-                  {t({ 0: '計劃介紹', 1: 'About the Program', 2: 'プログラムについて' })}
-                </h2>
-                <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-                  {tr?.content}
-                </p>
-              </div>
-
-              <div>
-                <h2 className="text-xl font-bold mb-3">
-                  {t({ 0: '詳細資訊', 1: 'Details', 2: '詳細情報' })}
-                </h2>
-                <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-                  {tr?.details}
-                </p>
-              </div>
-
-              {tr?.summary && (
-                <div>
-                  <h2 className="text-xl font-bold mb-3">
-                    {t({ 0: '摘要', 1: 'Summary', 2: '概要' })}
-                  </h2>
-                  <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-                    {tr.summary}
-                  </p>
-                </div>
-              )}
-
-              {tr?.impact && (
-                <div className="bg-primary/5 rounded-xl p-6">
-                  <h2 className="text-xl font-bold mb-3 text-primary">
-                    {t({ 0: '影響領域', 1: 'Impact', 2: '影響' })}
-                  </h2>
-                  <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-                    {tr.impact}
-                  </p>
-                </div>
-              )}
-
-              {badge.map_url && (
-                <a
-                  href={badge.map_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-primary hover:underline"
-                >
-                  <MapPin className="h-4 w-4" />
-                  {t({ 0: '在地圖上查看', 1: 'View on Map', 2: '地図で見る' })}
-                </a>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Buy Section */}
-          <Card className="border-0 shadow-md bg-gradient-to-r from-primary/5 to-ocean/5">
-            <CardContent className="p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-4">
-              <div>
-                <h3 className="text-xl font-bold">{t(ui.buyBadge)}</h3>
-                <p className="text-muted-foreground">
-                  {t({ 0: '支持可持續旅遊發展', 1: 'Support sustainable tourism development', 2: '持続可能な観光開発を支援' })}
-                </p>
-                <p className="text-2xl font-bold text-primary mt-2">${badge.price} USD</p>
-              </div>
-              {user ? (
-                <Link to={`/payment/${badge.id}`}>
-                  <Button size="lg" className="gap-2">
-                    {t(ui.payNow)}
-                  </Button>
-                </Link>
-              ) : (
-                <Link to="/login">
-                  <Button size="lg" variant="outline" className="gap-2">
-                    {t({ 0: '登入後購買', 1: 'Login to Purchase', 2: 'ログインして購入' })}
-                  </Button>
-                </Link>
-              )}
-            </CardContent>
-          </Card>
-        </motion.div>
+        )}
       </div>
+
+      {/* Buy button */}
+      {user && (
+        <div className="px-[15%] py-4">
+          <Link to={`/payment/${badge.id}`}>
+            <button className="w-full py-3 bg-primary text-primary-foreground font-medium text-lg rounded-[20px] border-none">
+              ${badge.price} USD - {t(ui.buyBadge)}
+            </button>
+          </Link>
+        </div>
+      )}
+
+      <AppFooter />
     </div>
   );
 }
