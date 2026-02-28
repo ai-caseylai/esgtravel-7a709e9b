@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      agents: {
+        Row: {
+          agent_id: string
+          company_id: string
+          contact_name: string
+          country_code: string
+          created_at: string
+          email: string
+          id: number
+          mobile: string
+          status: number
+          user_type: number
+        }
+        Insert: {
+          agent_id: string
+          company_id: string
+          contact_name: string
+          country_code?: string
+          created_at?: string
+          email?: string
+          id?: number
+          mobile?: string
+          status?: number
+          user_type?: number
+        }
+        Update: {
+          agent_id?: string
+          company_id?: string
+          contact_name?: string
+          country_code?: string
+          created_at?: string
+          email?: string
+          id?: number
+          mobile?: string
+          status?: number
+          user_type?: number
+        }
+        Relationships: []
+      }
       badge_translations: {
         Row: {
           badge_id: number
@@ -88,6 +127,57 @@ export type Database = {
           is_active?: boolean
           map_url?: string | null
           price?: number
+        }
+        Relationships: []
+      }
+      companies: {
+        Row: {
+          address_1: string
+          address_2: string
+          address_3: string
+          company_id: string
+          company_name: string
+          contact_name: string
+          country: string
+          country_code: string
+          created_at: string
+          email: string
+          id: number
+          mobile: string
+          status: number
+          tel: string
+        }
+        Insert: {
+          address_1?: string
+          address_2?: string
+          address_3?: string
+          company_id: string
+          company_name: string
+          contact_name: string
+          country?: string
+          country_code?: string
+          created_at?: string
+          email?: string
+          id?: number
+          mobile?: string
+          status?: number
+          tel?: string
+        }
+        Update: {
+          address_1?: string
+          address_2?: string
+          address_3?: string
+          company_id?: string
+          company_name?: string
+          contact_name?: string
+          country?: string
+          country_code?: string
+          created_at?: string
+          email?: string
+          id?: number
+          mobile?: string
+          status?: number
+          tel?: string
         }
         Relationships: []
       }
@@ -448,6 +538,27 @@ export type Database = {
           tryother?: string
           verifyotp?: string
           website?: string
+        }
+        Relationships: []
+      }
+      user_links: {
+        Row: {
+          child_id: number
+          id: number
+          master_id: number
+          status: number
+        }
+        Insert: {
+          child_id: number
+          id?: number
+          master_id: number
+          status?: number
+        }
+        Update: {
+          child_id?: number
+          id?: number
+          master_id?: number
+          status?: number
         }
         Relationships: []
       }

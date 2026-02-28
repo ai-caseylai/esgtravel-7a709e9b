@@ -16,6 +16,13 @@ import Passport from "./pages/Passport";
 import Ranking from "./pages/Ranking";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminOverview from "./pages/admin/AdminOverview";
+import AdminUsers from "./pages/admin/AdminUsers";
+import AdminOrders from "./pages/admin/AdminOrders";
+import AdminBadges from "./pages/admin/AdminBadges";
+import AdminCompanies from "./pages/admin/AdminCompanies";
+import AdminAgents from "./pages/admin/AdminAgents";
 
 const queryClient = new QueryClient();
 
@@ -27,20 +34,29 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <Layout>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
-                <Route path="/badge/:id" element={<BadgeDetail />} />
-                <Route path="/payment/:badgeId" element={<Payment />} />
-                <Route path="/payment-success" element={<PaymentSuccess />} />
-                <Route path="/passport" element={<Passport />} />
-                <Route path="/ranking" element={<Ranking />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Layout>
+            <Routes>
+              {/* Admin routes - no Layout wrapper */}
+              <Route path="/admin" element={<AdminDashboard />}>
+                <Route index element={<AdminOverview />} />
+                <Route path="users" element={<AdminUsers />} />
+                <Route path="orders" element={<AdminOrders />} />
+                <Route path="badges" element={<AdminBadges />} />
+                <Route path="companies" element={<AdminCompanies />} />
+                <Route path="agents" element={<AdminAgents />} />
+              </Route>
+
+              {/* Public routes */}
+              <Route path="/" element={<Layout><Index /></Layout>} />
+              <Route path="/login" element={<Layout><Login /></Layout>} />
+              <Route path="/signup" element={<Layout><Signup /></Layout>} />
+              <Route path="/badge/:id" element={<Layout><BadgeDetail /></Layout>} />
+              <Route path="/payment/:badgeId" element={<Layout><Payment /></Layout>} />
+              <Route path="/payment-success" element={<Layout><PaymentSuccess /></Layout>} />
+              <Route path="/passport" element={<Layout><Passport /></Layout>} />
+              <Route path="/ranking" element={<Layout><Ranking /></Layout>} />
+              <Route path="/contact" element={<Layout><Contact /></Layout>} />
+              <Route path="*" element={<Layout><NotFound /></Layout>} />
+            </Routes>
           </BrowserRouter>
         </TooltipProvider>
       </AuthProvider>
