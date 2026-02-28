@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { I18nProvider } from "@/lib/i18n";
 import { AuthProvider } from "@/lib/auth";
 import Layout from "@/components/Layout";
@@ -61,7 +61,7 @@ const App = () => (
                 <Route path="events" element={<SiteEvents />} />
                 <Route path="contact" element={<SiteContact />} />
               </Route>
-              <Route path="/" element={<Layout><Index /></Layout>} />
+              <Route path="/" element={<Navigate to="/site" replace />} />
               <Route path="/login" element={<Layout><Login /></Layout>} />
               <Route path="/signup" element={<Layout><Signup /></Layout>} />
               <Route path="/badges" element={<Layout><BadgesList /></Layout>} />
