@@ -284,8 +284,10 @@ export type Database = {
       posts: {
         Row: {
           author_id: string | null
+          category: string
           cover_image: string | null
           created_at: string
+          event_date: string | null
           id: number
           is_published: boolean
           slug: string
@@ -293,8 +295,10 @@ export type Database = {
         }
         Insert: {
           author_id?: string | null
+          category?: string
           cover_image?: string | null
           created_at?: string
+          event_date?: string | null
           id?: number
           is_published?: boolean
           slug: string
@@ -302,8 +306,10 @@ export type Database = {
         }
         Update: {
           author_id?: string | null
+          category?: string
           cover_image?: string | null
           created_at?: string
+          event_date?: string | null
           id?: number
           is_published?: boolean
           slug?: string
