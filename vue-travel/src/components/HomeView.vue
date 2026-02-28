@@ -206,6 +206,8 @@ async function UpdateLanguage()
 onMounted(() => {
 
   document.body.style.backgroundColor = '#ffffff'; 
+  console.log("logout " + route.query.logout);
+  
   if(route.query.logout =='1')
   {
     store.commit('setSaveBadgeID',-1);
@@ -218,6 +220,7 @@ onMounted(() => {
   //store.commit('setState');
   if(route.query.badge_id>-1)
   {
+    console.log('badge_id ' + route.query.badge_id);
     if(route.query.company_id!='')
       store.commit('setCompanyID', route.query.company_id);
     
@@ -227,15 +230,16 @@ onMounted(() => {
     store.commit('setSaveBadgeID', route.query.badge_id);
     if(store.state.language=='-1')
       setDefaultLanguage();
-
     store.commit('setHomePath','/?badge_id='+route.query.badge_id+'&company_id='+route.query.company_id+'&agent_id='+route.query.agent_id);
+    
+    console.log('setHomePath ' + store.state.homepath);
     onClickLanguage(store.state.language);
   }else{
 
     //store.commit('setSaveBadgeID',-1);
     //router.push('/notfound');
-    store.commit('setHomePath','/');
-    window.location.href = "https://www.starsdg.com/notfound";
+    store.commit('setHomePath','/thankyou');
+    window.location.href = "/thankyou";
 
     return;
   }
@@ -296,7 +300,7 @@ function clearData()
 }
 
 function onClickWebsite(){
-  //console.log(store.state.badgeinfo.website);
+  console.log(store.state.badgeinfo);
   window.open(store.state.badgeinfo.website, '_blank');
 }
 
@@ -370,12 +374,12 @@ function getImageName(badge_id){
             <router-link to="/passport" class="no-underline"><text style="justify-content:center;font-family: Arial, Verdana, Helvetica, sans-serif;color: #1B78B5;">{{footerpassport_txt}} | </text></router-link>
             <router-link to="/contactus" class="no-underline"><text style="justify-content:center;font-family: Arial, Verdana, Helvetica, sans-serif;color: #1B78B5;">{{footercontactus_txt}}</text></router-link>
            
-  
+<!--   
             <router-view v-slot="{ Component }">
               <transition name="route" mode="out-in">
                 <component :is="Component" />
               </transition>
-            </router-view>
+            </router-view> -->
           </div>
         </div>
       </div>
@@ -404,6 +408,7 @@ function getImageName(badge_id){
   
 .background-image {  
   width: 100%;  
+  
 }  
   
 .overlay-container{

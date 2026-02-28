@@ -72,6 +72,7 @@ const cancelURL = ref('https://www.starsdg.com/orderfailed?lang='+ store.state.l
 
 function loadSiteContent()
 {
+  console.log("loadSiteContent");
   reaction_txt.value = store.state.sitecontent.reaction;
   desc_txt.value = store.state.sitecontent.formdesc;
   tnc_txt.value = store.state.sitecontent.formterm;
@@ -157,6 +158,8 @@ function handleSubmit() {
 
 
 async function loadCountryCodeList(){
+  
+  console.log("loadCountryCodeList");
   const formData = new FormData();
   formData.append('ActionType', 'GetCountryCode');
   try {
@@ -201,8 +204,8 @@ function onSlide(event){
   }
 }
 onMounted(() => {
-
-    if(store.state.countrycodes.length == 0 || store.state.countrycodes.length == 'undefined')
+console.log("======== " +store.state.homepath);
+    //if(store.state.countrycodes.length == 0 || store.state.countrycodes.length == 'undefined')
         loadCountryCodeList();
     isProcessing.value=false;
     loadSiteContent();
@@ -211,6 +214,8 @@ onMounted(() => {
 })
 
 function limitInputLength() {  
+  
+  console.log("limitInputLength");
   //console.log(String(mobile.value).length);
   if (String(mobile.value).length > 10) {  
       mobile.value = String(mobile.value).substring(0,10);
@@ -227,6 +232,7 @@ function limitInputLength() {
   
 async function CheckEmail(){
 
+  console.log("CheckEmail");
 if(String(email.value).indexOf('@') == -1 || String(email.value).indexOf('.') == -1){
     return;
 }
@@ -353,7 +359,7 @@ formData.append('mobile', mobile.value);;
 
 
 async function onSubmit(){
-
+console.log("onSubmit");
 const formData = new FormData();
 formData.append('ActionType', 'OrderBadge');
 
@@ -481,10 +487,151 @@ function loadItems(){
 
 <template>
   <div class="paymentformbackground" id="paymentformbackground">
-      <div style="position: absolute; top:2vh;  width: 90%; left: 5%; text-align: center; align-items:center;align-content: center; border:0px solid #1B78B5;background: #ffffff;">
+    <form class="paymentform" @submit.prevent="handleSubmit">
+    <table >
+       <tr>
+        <td colspan="2">
           <text style="font-family: Arial, Verdana, Helvetica, sans-serif; font-weight: bold;  color: #1B78B5;  font-size: 20px;">{{ header_txt }}</text>
-      </div>
-      <div style="position: absolute; top:7vh;  width: 90%; left: 5%; text-align: center; align-items:center;align-content: center; border:0px solid #1B78B5;background: #ffffff;">
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <img :src="'/images/icon_hand.png'"  @click="onClickRanking(rank.mark_id)" style="scale: 60%;" > 
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <text style="font-family: Arial, Verdana, Helvetica, sans-serif; font-weight: normal;  color: #000000;  font-size: 16px;">{{ desc_txt }}</text>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">          
+          <text style="font-family: Arial, Verdana, Helvetica, sans-serif; font-weight: bold; line-height: 40px; color: #1B78B5;  font-size: 20px;">{{ reaction_txt }}</text>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" >          
+          <ranking-page></ranking-page>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" style="text-align: left; padding-left: 5%;"><label for="email">{{email_txt}}</label></td>
+      </tr>
+      <tr>
+        <td colspan="2" style="text-align: left; padding-left: 5%;"><input required  v-model="email" type="email" id="inputa" v-on:keyup="CheckEmail()" ></td>
+      </tr>
+      <tr v-if="emailerror" >
+        <td colspan="2">
+          <label style=" color: red; font-size: 12px;font-family: Arial, Verdana, Helvetica, sans-serif;" >{{ emailerror_txt }}</label>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" style="text-align: left; padding-left: 5%;"><label for="confirmemail">{{confirmemail_txt}}</label></td>
+      </tr>
+      <tr>
+        <td colspan="2" style="text-align: left; padding-left: 5%;"><input required  v-model="confirmemail" type="email"></td>
+      </tr>
+
+      <tr>
+        <td colspan="2" style="text-align: left; padding-left: 5%;"> <label for="name">{{name_txt}}</label></td>
+      </tr>
+      <tr>
+        <td colspan="2" style="text-align: left; padding-left: 5%;"> <input required v-model="name" type="text" maxlength="50" minlength="4"></td>
+      </tr>
+      <tr v-if="nameerror" >
+        <td colspan="2">
+          <label style=" color: red; font-size: 12px;font-family: Arial, Verdana, Helvetica, sans-serif;" >{{ nameerror_txt }}</label>
+        </td>
+      </tr>
+
+      <tr>
+        <td colspan="2" style="text-align: left; padding-left: 5%;"><label>{{mobile_txt}}</label></td>
+      </tr>
+      <tr>
+        <td colspan="2" style="text-align: left; padding-left: 5%;">
+          <select required v-model="ccode" style="width:30%; background-color: #ffffff; height: 35px;" @change="CheckMobile()" >      
+            <option v-for="countrycode in store.state.countrycodes" :key="countrycode.id" :value="countrycode.country_code">{{countrycode.country_code}}</option>
+          </select>
+          <input required v-model="mobile" style="width: 48%; margin-left: 2%;" id="mobile" maxlength="10" type="string" @focus="changeType('number')" @focusout="changeType('string')" @input="limitInputLength()">
+        </td>
+      </tr>
+      
+      <tr v-if="mobileerror" >
+        <td colspan="2" >
+          <label style=" color: red; font-size: 12px;font-family: Arial, Verdana, Helvetica, sans-serif;" >{{ mobileerror_txt }}</label>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" style="text-align: left; padding-left: 5%;"><label >{{tnc_txt}}</label></td>
+      </tr>
+      <tr>
+        <td style="padding: 5px;text-align: left;border:0px solid #ee0000;width:15%; vertical-align: middle;"> <input required type="checkbox" @change="onAcceptTermA()" v-model="terma" > </td>
+        <td style="padding: 5px;text-align: left;border:0px solid #ee0000;width:85%;vertical-align: top;"><label  v-html="terma_txt" style="position: absolute; width:70%; font-size: 10px; color: #000000;"></label></td>
+      </tr>
+      <tr v-if="termerror" >
+        <td colspan="2" >
+          <label style=" color: red; font-size: 12px;font-family: Arial, Verdana, Helvetica, sans-serif;" >{{ termerror_txt }}</label>
+        </td>
+      </tr>
+      
+      <tr>
+        <td colspan="2" style="text-align: left;height: 2vh; padding-left: 5%;"></td>
+      </tr>
+      <tr>
+        <td style="padding: 5px; text-align: left;border:0px solid #ee0000;width:15%; vertical-align: middle;"><input type="checkbox" @change="onAcceptTermB()" v-model="termb" >  </td>
+        <td style="padding: 5px; text-align: left;border:0px solid #ee0000;width:85%;vertical-align: top;"><label  v-html="termb_txt" style="position: absolute; width:70%; font-size: 10px; color: #000000;"></label></td>
+      </tr>
+      <tr>
+        <td colspan="2" style="padding: 20px;">
+          <input type="range" min="1" max="100" v-model="slideValue" @input="onSlide" value="0" class="slider" id="myRange" style="border:0px solid #000000; background-size: 100% 100%;">
+        </td>
+      </tr>
+
+      <tr>
+        <td colspan="2" style="padding: 20px;">
+          <stripe-checkout v-if="store.state.language == 0"
+                ref="checkoutRef"
+                locale="zh-HK"
+                mode="payment"
+                :pk="publishableKey"
+                :line-items="lineItems"
+                :success-url="successURL"
+                :cancel-url="cancelURL"
+                @loading="v => loading = v"
+              />
+              <stripe-checkout v-if="store.state.language == 1"
+                ref="checkoutRef"
+                locale="en"
+                mode="payment"
+                :pk="publishableKey"
+                :line-items="lineItems"
+                :success-url="successURL"
+                :cancel-url="cancelURL"
+                @loading="v => loading = v"
+              />
+              <stripe-checkout v-if="store.state.language == 2"
+                ref="checkoutRef"
+                locale="ja"
+                mode="payment"
+                :pk="publishableKey"
+                :line-items="lineItems"
+                :success-url="successURL"
+                :cancel-url="cancelURL"
+                @loading="v => loading = v"
+              />
+            <button v-if="slider" type="submit" style="background:#1B78B5; width:150px; height:40px; border-radius: 12px;border: 0px solid #ced4da;"><label style="font-family: Arial, Verdana, Helvetica, sans-serif;color: #ffffff; font-weight:normal; font-size: 16px; line-height: 0px; letter-spacing: 0px; padding-left: 0px; padding-top: 0px;">{{submit_txt}}</label></button>
+            
+        </td>
+      </tr>
+    </table>
+  </form>
+
+<!-- 
+
+    <div style="position: absolute; top:2vh;  width: 90%; left: 5%; text-align: center; align-items:center;align-content: center; border:0px solid #1B78B5;background: #ffffff;">
+        <text style="font-family: Arial, Verdana, Helvetica, sans-serif; font-weight: bold;  color: #1B78B5;  font-size: 20px;">{{ header_txt }}</text>
+    </div>
+    <div style="position: absolute; top:7vh;  width: 90%; left: 5%; text-align: center; align-items:center;align-content: center; border:0px solid #1B78B5;background: #ffffff;">
           <img :src="'/images/icon_hand.png'"  @click="onClickRanking(rank.mark_id)" style="scale: 60%;" > 
     </div>
     <div style="position: absolute; top:22vh;  width: 90%; left: 5%; text-align: center; align-items:center;align-content: center; border:0px solid #1B78B5;background: #ffffff;">
@@ -492,13 +639,13 @@ function loadItems(){
     </div>
     <div style="position: absolute; top:30vh;  width: 90%; left: 5%; text-align: center; align-items:center;align-content: center; border:0px solid #1B78B5;background: #ffffff;">
           <text style="font-family: Arial, Verdana, Helvetica, sans-serif; font-weight: bold; line-height: 40px; color: #1B78B5;  font-size: 20px;">{{ reaction_txt }}</text>
-      </div>
-      <div class="paymentranking-container">
-          <ranking-page></ranking-page>
-      </div>
+    </div>
+    <div class="paymentranking-container">
+        <ranking-page></ranking-page>
+    </div>
        
-        <label v-if="errorduplicate" style=" color: red; font-size: 12px;font-family: Arial, Verdana, Helvetica, sans-serif;background: #ffffff;" > {{ errorduplicate_txt }}</label><br v-if="errorduplicate">
-          <form class="paymentform" @submit.prevent="handleSubmit">
+    <label v-if="errorduplicate" style=" color: red; font-size: 12px;font-family: Arial, Verdana, Helvetica, sans-serif;background: #ffffff;" > {{ errorduplicate_txt }}</label><br v-if="errorduplicate">
+           <form class="paymentform" @submit.prevent="handleSubmit">
            
             <div style="background: #ffffff;position: absolute;width: 90%; top: 50vh; left:5%; border:0px solid #1B78B5;">
               <label for="email">{{email_txt}}</label><br>
@@ -546,21 +693,21 @@ function loadItems(){
             <div v-html="termb_txt" :style="{position: 'absolute', width: '80%', top: (105 + bufferhigh+termbufferhigh) +'vh', left: '12%', fontSize: '12px', color: '#000000', fontFamily: 'Arial, Verdana, Helvetica, sans-serif'}"></div>
 
 
-            <!--<div class="submit" style="position: absolute; top:80vh;">
+            <div class="submit" style="position: absolute; top:80vh;">
                 <button type="submit" @click="handleSubmit()">Submit</button>
             </div>-->
 
 
+            <!--
             <div class="slidecontainer" :style="{position: 'absolute', top: (115+ bufferhigh + termbufferhigh) + 'vh', left: '10%', width:'80%' }">
                 <input type="range" min="1" max="100" v-model="slideValue" @input="onSlide" value="0" class="slider" id="myRange" style="border:0px solid #000000; background-size: 100% 100%;">
             </div>
-            <!--
             <div :style="{display: 'flex', justifyContent:'center', position: 'absolute', top: (62 + bufferhigh) + 'vh', width:'90%' }"> 
               <button v-if="slider" type="submit" @click="handleSubmit()" style="background:#1B78B5; width:150px; height:40px; border-radius: 12px;border: 0px solid #ced4da;"><label style="font-family: Arial, Verdana, Helvetica, sans-serif;color: #ffffff; font-weight:normal; font-size: 14px; line-height: 0px; letter-spacing: 0px; padding-left: 0px; padding-top: 0px;">Submit</label></button>
             </div>-->
             
-          <div :style="{display: 'flex', justifyContent:'center', position: 'absolute', top: (125 + bufferhigh+ termbufferhigh) + 'vh', width:'100%' }">
-            <StripeCheckout v-if="store.state.language == 0"
+          <!--<div :style="{display: 'flex', justifyContent:'center', position: 'absolute', top: (125 + bufferhigh+ termbufferhigh) + 'vh', width:'100%' }">
+            <stripe-checkout v-if="store.state.language == 0"
                 ref="checkoutRef"
                 locale="zh-HK"
                 mode="payment"
@@ -570,7 +717,7 @@ function loadItems(){
                 :cancel-url="cancelURL"
                 @loading="v => loading = v"
               />
-              <StripeCheckout v-if="store.state.language == 1"
+              <stripe-checkout v-if="store.state.language == 1"
                 ref="checkoutRef"
                 locale="en"
                 mode="payment"
@@ -580,7 +727,7 @@ function loadItems(){
                 :cancel-url="cancelURL"
                 @loading="v => loading = v"
               />
-              <StripeCheckout v-if="store.state.language == 2"
+              <stripe-checkout v-if="store.state.language == 2"
                 ref="checkoutRef"
                 locale="ja"
                 mode="payment"
@@ -592,31 +739,32 @@ function loadItems(){
               />
             <button v-if="slider" type="submit" style="background:#1B78B5; width:150px; height:40px; border-radius: 12px;border: 0px solid #ced4da;"><label style="font-family: Arial, Verdana, Helvetica, sans-serif;color: #ffffff; font-weight:normal; font-size: 16px; line-height: 0px; letter-spacing: 0px; padding-left: 0px; padding-top: 0px;">{{submit_txt}}</label></button>
           </div>
-          </form>
+          </form> 
 
 
         <div class="paymentformfooter-container" id="paymentformfooter-container">
-          <router-link :to=store.state.homepath class="no-underline"><text style="justify-content:center;font-family: Arial, Verdana, Helvetica, sans-serif;color: #1B78B5;">{{footerhome_txt}} | </text></router-link>
+            <router-link to="/" class="no-underline"><text style="justify-content:center;font-family: Arial, Verdana, Helvetica, sans-serif;color: #1B78B5;">{{footerhome_txt}} | </text></router-link>
+        
             <router-link to="/passport" class="no-underline"><text style="justify-content:center;font-family: Arial, Verdana, Helvetica, sans-serif;color: #1B78B5;">{{footerpassport_txt}} | </text></router-link>
             <router-link to="/contactus" class="no-underline"><text style="justify-content:center;font-family: Arial, Verdana, Helvetica, sans-serif;color: #1B78B5;">{{footercontactus_txt}}</text></router-link>
           
   
-            <router-view v-slot="{ Component }">
+             <router-view v-slot="{ Component }">
               <transition name="route" mode="out-in">
                 <component :is="Component" />
               </transition>
             </router-view>
-        </div>
+
+        </div> -->
   </div>
   
 </template>
 
-<style>
+<style scroped>
 .paymentformbackground {
   background: #ffffff;
   background-color: #ffffff;
-  height: 130vh;
-  width: 100vw;
+  
   align-content: top;
   align-items: top;
 }
@@ -664,12 +812,11 @@ function loadItems(){
   border:1px solid #ee0000;
 }
 .paymentform{
-  width: 100%;
+  width: 100vw;
   padding: 0px;
-  margin: 10px auto;
+  margin: 0px auto;
   background: rgb(255, 255, 255);
   border-radius: 0px;
-  text-align: left;
 }
 
 .paymentform label{
@@ -683,7 +830,7 @@ function loadItems(){
 }
 .paymentform input, select{
     color: #555;
-  width: 100%;
+  width: 80%;
   padding: 10px;
   margin: 1px 0 10px;
   border: none;
@@ -705,9 +852,8 @@ function loadItems(){
 .paymentranking-container {  
   position: absolute;  
   background-color: #ffffff;
-  width: 100%;  
+  width: 100vw;  
   height: 10vh;
-  top: 35vh;  
   border: 0px solid #ced4da;  
   text-align: center; align-items:center; align-content: center;
 }  
@@ -721,4 +867,19 @@ function loadItems(){
   text-align: center;
   border: 0px solid #ced4da;  
 }  
+
+table {
+      width: 100vw;
+      border: 0px solid #ccc;
+  }
+  td{
+      text-align: center;
+      justify-content: center;
+      border: 0px solid #ccc;
+
+  }
+  tr{
+    justify-content: center;
+    border: 0px solid #ccc;
+  }
 </style>

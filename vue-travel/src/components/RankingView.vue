@@ -1,6 +1,7 @@
 <template>
 
-    <div class="responsive-table">  
+    <!-- <div class="responsive-table">   -->
+      <div>  
       <table>  
         <tr>  
            <td v-for="rank in store.state.ranking" :key="rank.mark_id">
@@ -124,38 +125,25 @@ async function loadRankInfo(){
 
 
   .responsive-img {  
-    max-width: 87px;  
-    height: 87px;
+    max-width: 57px;  
+    height: 57px;
     background: white;
     background-color: rgb(255, 255, 255);
     border: 0px solid #ced4da;
 }  
-  .responsive-table {  
-    position: absolute;
-    top: -2vh;
-    height: 10vh;
-    width:100vw;
-    background: white;
-    border: 0px solid #ced4da;  
-    margin: 0px auto;
-    scale:0.65;
-    padding: 0; 
-    padding: 0em 0;  
-  }  
 
-  .responsive-table table{
-    position: relative;
+  table{
+    
     padding:0px;
-    width:100%;
+    width:100vw;
     text-align: center;
     background: white;
     border: 0px solid #ced4da;
-    display: flex;
     justify-content: center;
   }
 
-  .responsive-table td{
-    padding: 10px;
+  td{
+    padding: 0px;
     text-align: center;
     background: white;
     border: 0px solid #ced4da;

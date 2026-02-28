@@ -145,7 +145,7 @@ onMounted(() => {
     store.commit('setOTPCountryCode', '');
     startCountdown();  
    
-    if(store.state.countrycodes.length == 0 || store.state.countrycodes.length == 'undefined')
+    //if(store.state.countrycodes.length == 0 || store.state.countrycodes.length == 'undefined')
         loadCountryCodeList();
 })
 

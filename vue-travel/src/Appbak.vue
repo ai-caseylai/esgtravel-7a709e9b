@@ -4,11 +4,11 @@
     <router-link to="/helloworld">Hello World</router-link> |
     <router-link to="/signup">Signup</router-link>
   </div>
-<router-view v-slot="{ Component }">
+<!-- <router-view v-slot="{ Component }">
   <transition name="route" mode="out-in">
     <component :is="Component" />
   </transition>
-</router-view>
+</router-view> -->
 
 </template>
 <!--

@@ -1,15 +1,15 @@
 <template>
   <div id="nav" style="background-color: white;border:0px solid #ced4da;">
-    <router-link to="/" class="no-underline"><text style="justify-content:center;font-family: Arial, Verdana, Helvetica, sans-serif;color: #1B78B5;">{{home_txt}} | </text></router-link>
+    <router-link :to=store.state.homepath class="no-underline"><text style="justify-content:center;font-family: Arial, Verdana, Helvetica, sans-serif;color: #1B78B5;">{{home_txt}} | </text></router-link>
     <router-link to="/passport" class="no-underline"><text style="justify-content:center;font-family: Arial, Verdana, Helvetica, sans-serif;color: #1B78B5;">{{passport_txt}} | </text></router-link>
     <router-link to="/contactus" class="no-underline"><text style="justify-content:center;font-family: Arial, Verdana, Helvetica, sans-serif;color: #1B78B5;">{{contactus_txt}}</text></router-link>
   </div>
   
-<router-view v-slot="{ Component }">
+<!-- <router-view v-slot="{ Component }">
   <transition name="route" mode="out-in">
     <component :is="Component" />
   </transition>
-</router-view>
+</router-view> -->
 
 </template>
 

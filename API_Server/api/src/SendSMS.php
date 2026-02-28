@@ -11,8 +11,8 @@ class SendSMS
     
     function processSend(UserInfo $info, string $otpcode)
     {
-        $account_name = 'markettrend_hkjc@marketing2.big-famous.com';
-        $api_key = '262ffe5aaa7f1566';
+        $account_name = 'markettrend_sdg@marketing2.big-famous.com';
+        $api_key = 'd88a5117ba591cbe';
         $sms_content_eng = '[STARSDG]'.', Your OTP is : ' . $otpcode ;
         $sms_content_chi = '[STARSDG]'.', 你的一次性密碼是 : ' . $otpcode;
         $sms_content_jp = '[STARSDG]'.', あなたの OTP は : ' . $otpcode ." です。";
@@ -24,7 +24,7 @@ class SendSMS
             $sms_content = $sms_content_jp;
         
         $meta_json = json_encode(array(
-        "sender" => "HKJC",
+        "sender" => "STARSDG",
         "sms_content" => $sms_content,
         "send_also_ofca_registers" => 1,
         "country_code" => strval($info->countrycode)

@@ -8,6 +8,7 @@ import { useStore } from 'vuex';
 
 const router = useRouter();
 const store = useStore();
+const checked = ref(false);
 const isShowMore = ref(false);
 const extraHelp = ref(false);
 const extraAmount = ref(0);
@@ -54,7 +55,6 @@ const showmore_txt = ref('Show more');
     }
 
     function onExtraHelp(event){
-      console.log('Extra help ' + event.value);
         extraHelp.value = !extraHelp.value;
         if(extraHelp.value ===false){
             extraAmount.value =0;
@@ -69,6 +69,7 @@ const showmore_txt = ref('Show more');
   function onClickSupport(){
 
     router.push('/paymentform');
+    console.log("onClickSupport");
   }
     
 onMounted(() => {
@@ -132,19 +133,19 @@ function getImageName(badge_id){
         <div class="button-showmore">
             <button @click="onShowMore" class="whitebtn"><text style="color: #1B78B5; font-family: Arial, Verdana, Helvetica, sans-serif;font-weight:normal; font-size: 28px; ">{{showmore_txt}}</text></button><br>
           </div>
-        <div style="position: absolute; top: 105vh; left: 10%; width: 80%; display: flex; justify-content: space-around; padding: 0em 0; align-items: center; text-align: left; align-content: center; border:0px solid #ced4da;">
-            <input type="checkbox" v-model="checked" name="checkme" value="yes" @change="onExtraHelp" style=" padding: 0px 0px; top: 100%; width:10%;  align-content: center; align-items: right; border:0px solid #ced4da;">
-            <h1 style="color: #000000; font-family: Arial, Verdana, Helvetica, sans-serif;font-weight:normal; font-size: 20px; padding: 0px 0px; line-height: 0px;vertical-align: top; text-align: left;  width:90%; ">{{addmore_txt}}</h1>        
-        </div>
-            <div style="position: absolute; background-color: #ffffff; height:6vh; top: 110vh; left: 0%; width: 100%; display: flex; justify-content: space-around; padding: 0em 0; align-items: center; text-align: left; align-content: center; border:0px solid #ced4da;">
+          <div style="position: absolute; top: 100vh; display: flex; width:100%; justify-content: center; align-items: center; text-align: center; align-content: center;border:0px solid #ced4da;">
+            <input type="checkbox" v-model="checked" name="checkme" value="yes" @change="onExtraHelp" style=" border:0px solid #ced4da;">
+            <h1 style="color: #000000; font-family: Arial, Verdana, Helvetica, sans-serif;font-weight:normal; font-size: 18px;width:60%; ">{{addmore_txt}}</h1>        
+          </div>
+             <div style="position: absolute; background-color: #ffffff; height:6vh; top: 110vh; left: 0%; width: 100%; display: flex; justify-content: space-around; padding: 0em 0; align-items: center; text-align: left; align-content: center; border:0px solid #ced4da;">
 
                 <button style="width:100px; height:50px;" @click="onAddExtra(1)" v-bind:disabled="extraHelp.value" :class="{ 'extrabluebtn':  extraAmount ===1, 'extrawhitebtn':  extraAmount !==1 }"><text :class="{ 'whitetext':  extraAmount ===1, 'bluetext':  extraAmount !==1 }">{{currency_txt}} 1 </text></button>
                 <button style="width:100px; height:50px;" @click="onAddExtra(5)" v-bind:disabled="extraHelp.value" :class="{ 'extrabluebtn':  extraAmount ===5, 'extrawhitebtn':  extraAmount !==5 }"><text  :class="{ 'whitetext':  extraAmount ===5, 'bluetext':  extraAmount !==5 }">{{currency_txt}} 5</text></button>
                 <button style="width:100px; height:50px;" @click="onAddExtra(10)" v-bind:disabled="extraHelp.value" :class="{ 'extrabluebtn':  extraAmount ===10, 'extrawhitebtn':  extraAmount !==10 }"><text  :class="{ 'whitetext':  extraAmount ===10, 'bluetext':  extraAmount !==10 }">{{currency_txt}} 10</text></button>
-            </div>
+            </div> 
 
             <div style="position: absolute; background-color: #ffffff; top: 120vh; height: 6vh; left: 0%; width: 100%;  padding: 0em 0; align-items: center; text-align: center; align-content: center; border:0px solid #ced4da;">
-                <button  @click="onClickSupport()" class="bluebtn"><text style="color: #ffffff; ">{{give_txt}} {{currency_txt}} {{Amount + extraAmount}}</text></button><br>
+                <button @click="onClickSupport()" class="bluebtn"><text style="color: #ffffff; ">{{give_txt}} {{currency_txt}} {{Amount + extraAmount}}</text></button><br>
             </div>
 
         <div class="paymentfooter-container" id="footer">
@@ -153,7 +154,7 @@ function getImageName(badge_id){
             <router-link to="/contactus" class="no-underline"><text style="justify-content:center;font-family: Arial, Verdana, Helvetica, sans-serif;color: #1B78B5;">{{footercontactus_txt}}</text></router-link>
           
   
-            <router-view v-slot="{ Component }">
+             <router-view v-slot="{ Component }">
               <transition name="route" mode="out-in">
                 <component :is="Component" />
               </transition>
@@ -256,8 +257,8 @@ function getImageName(badge_id){
 .about-container {  
   position: absolute;  
   top: 55vh;  
-  left: 0%;  
-  width: 100%;  
+  left: 5%;  
+  width: 90%;  
   display: flex;  
   justify-content: space-around;  
   padding: 0em 0;  
@@ -401,7 +402,7 @@ function getImageName(badge_id){
   background: rgb(102, 102, 102, 0.5);
   top: 0vh;  
   width: 100%;  
-  height: 140vh;
+  height: 150vh;
   left:0%;
   padding: 1em 0;  
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);

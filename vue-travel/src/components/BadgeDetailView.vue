@@ -350,7 +350,7 @@ function getImageName(sdg_id){
         <router-link to="/passport" class="no-underline"><text style="justify-content:center;font-family: Arial, Verdana, Helvetica, sans-serif;color: #1B78B5;">{{footerpassport_txt}} | </text></router-link>
         <router-link to="/contactus" class="no-underline"><text style="justify-content:center;font-family: Arial, Verdana, Helvetica, sans-serif;color: #1B78B5;">{{footercontactus_txt}}</text></router-link>
       
-
+ 
         <router-view v-slot="{ Component }">
           <transition name="route" mode="out-in">
             <component :is="Component" />

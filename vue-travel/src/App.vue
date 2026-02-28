@@ -53,24 +53,12 @@
     -->
 </template>
 
-<script>
-import Modal from './components/Modal.vue';
-export default {
-  name: 'App',
-  components: {
-    Modal,
-  },
-  data() {
-    return {
-      showModal: false,
-      showModalTwo: false,
-      showLayer: false,  
 
-    }
-  },
+<script setup>
+import { ref } from 'vue';
 
-}
+// 全局處理狀態
+const isProcessing = ref(false);
 </script>
-
 
 

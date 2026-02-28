@@ -116,7 +116,7 @@ function ClearData() {
 }
 
 onMounted(() => {
-    if(store.state.countrycodes==null)
+    //if(store.state.countrycodes==null)
         loadCountryCodeList();
 })
 

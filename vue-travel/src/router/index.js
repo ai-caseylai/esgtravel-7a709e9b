@@ -23,7 +23,7 @@ import OrderFailedView from '@/components/OrderFailedView.vue'
 //import Modalcontent from '@/components/ModalContent.vue'
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
         {
             path: '/',
@@ -125,17 +125,18 @@ const router = createRouter({
             path: '/contactus',
             name: 'ContactUsView',
             component: ContactUsView,
-        },
-        {
-            path: '/notfound',
-            name: 'NotFoundView',
-            component: NotFoundView,
-        },
-        {
-            path: '/:catchAll(.*)',
-            name: 'NotFoundView',
-            component: NotFoundView,
         }
+        // ,
+        // {
+        //     path: '/notfound',
+        //     name: 'NotFoundView',
+        //     component: NotFoundView,
+        // },
+        // {
+        //     path: '/:catchAll(.*)',
+        //     name: 'NotFoundView',
+        //     component: NotFoundView,
+        // }
         ]
     })
 

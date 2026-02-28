@@ -134,7 +134,8 @@ onMounted(() => {
     {
         router.push('/admincompany');
     }else{
-        if(store.state.countrycodes==null)
+        //if(store.state.countrycodes==null)
+
             loadCountryCodeList();
     }
 })

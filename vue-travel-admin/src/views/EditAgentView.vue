@@ -135,7 +135,7 @@ onMounted(() => {
     {
         router.push('/agentlist');
     }else{
-        if(store.state.countrycodes==null)
+        //if(store.state.countrycodes==null)
             loadCountryCodeList();
     }
 })

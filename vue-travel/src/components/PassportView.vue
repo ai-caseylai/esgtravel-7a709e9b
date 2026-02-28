@@ -270,9 +270,70 @@ async function onClickPassport(){
 
 
 <template>
-    <div class="passportbackground">
+    <div class="passportbackground"><br>
+        <table>
+            <tr>
+                <td style="text-align: center;"><label style="font-family: Arial, Verdana, Helvetica, sans-serif;color: #1B78B5; font-weight:normal; font-size: 24px; line-height: 5px; letter-spacing: 0px; padding-left: 0px; padding-top: 0px;"> {{header_txt}}</label></td>
+            </tr>
+            <tr>
+                <td><hr class="passport-line"></td>
+            </tr>
+            <tr>
+                <td style="text-align: center;"><label style="font-family: Arial, Verdana, Helvetica, sans-serif;color: #000000; font-weight:normal; font-size: 24px; line-height: 5px; letter-spacing: 0px; padding-left: 0px; padding-top: 0px;"> {{greeting_txt}}, {{ store.state.logininfo.displayname}}</label></td>
+            </tr>
+            
+            <tr>
+                <td style="text-align: center;"> <label v-html="getTitle(badgecount)" :style="{justifyContent: 'center', color: '#000000', width: '100%', fontSize: '18px', border:'0px solid #ced4da', fontFamily: 'Arial, Verdana, Helvetica, sans-serif'}"></label></td>
+            </tr>
+            <tr v-for="(list, index) in badgeList" :key="index">
+                <td >
+                    <h2 style="position: absolute; width: 90%; left:5%;font-family: Arial, Verdana, Helvetica, sans-serif;color: #000000; font-weight:normal; font-size: 18px; border:0px solid #ced4da; text-align: left; padding-top: 0px; line-height: 5px;">{{ getYear(list.orderdate) }}</h2> <br>
+                    <h2 v-if="store.state.language ==1" style="position: absolute; width: 90%; left:5%;font-family: Arial, Verdana, Helvetica, sans-serif;color: #000000; font-weight:normal; font-size: 18px; border:0px solid #ced4da; text-align: left; padding-top: 0px; line-height: 5px;">{{ getEMonth(list.orderdate) }}</h2>
+                    <h2  v-if="store.state.language !=1" style="position: absolute; width: 90%; left:5%;font-family: Arial, Verdana, Helvetica, sans-serif;color: #000000; font-weight:normal; font-size: 18px; border:0px solid #ced4da; text-align: left; padding-top: 0px; line-height: 5px;">{{ getCMonth(list.orderdate) }}</h2>
+                    <table>
+                        <tr><td style="height:5px;"></td></tr>
+                        <tr v-for="(chunk, i) in chunk(list.badges, 6)" :key="i">
+                            <td  v-for="(badge, j) in chunk" :key="j">
+                                <img :src="getImageName(badge.badge_id)" class="badge-img" @click="onClickBadge(badge.badge_id, badge.order_id)" > 
+                            </td>
+                        </tr>
+                        <tr><td style="height:5px;"></td></tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
         
-        <div style="position: absolute; top:3vh; width: 90%; left:2%; border:0px solid #ced4da; text-align: left;">  
+        <div class="passportfooter-container" id="passportfooter-container">
+                <router-link :to=store.state.homepath class="no-underline"><text style="justify-content:center;font-family: Arial, Verdana, Helvetica, sans-serif;color: #1B78B5;">{{footerhome_txt}} | </text></router-link>
+                <router-link to="/passport" class="no-underline"><text style="justify-content:center;font-family: Arial, Verdana, Helvetica, sans-serif;color: #1B78B5;">{{footerpassport_txt}} | </text></router-link>
+                <router-link to="/contactus" class="no-underline"><text style="justify-content:center;font-family: Arial, Verdana, Helvetica, sans-serif;color: #1B78B5;">{{footercontactus_txt}}</text></router-link>
+            
+   
+                <router-view v-slot="{ Component }">
+                <transition name="route" mode="out-in">
+                    <component :is="Component" />
+                </transition>
+                </router-view>
+            </div>
+        <!-- <table>
+            <tr>
+                <td style="text-align: center;">
+                    <router-link :to=store.state.homepath class="no-underline"><text style="justify-content:center;font-family: Arial, Verdana, Helvetica, sans-serif;color: #1B78B5;">{{footerhome_txt}} | </text></router-link>
+                    <router-link to="/passport" class="no-underline"><text style="justify-content:center;font-family: Arial, Verdana, Helvetica, sans-serif;color: #1B78B5;">{{footerpassport_txt}} | </text></router-link>
+                    <router-link to="/contactus" class="no-underline"><text style="justify-content:center;font-family: Arial, Verdana, Helvetica, sans-serif;color: #1B78B5;">{{footercontactus_txt}}</text></router-link>
+                
+    
+                    <router-view v-slot="{ Component }">
+                    <transition name="route" mode="out-in">
+                        <component :is="Component" />
+                    </transition>
+                    </router-view>
+                </td>
+            </tr>
+
+        </table> -->
+
+        <!-- <div style="position: absolute; top:3vh; width: 90%; left:2%; border:0px solid #ced4da; text-align: left;">  
             <label style="font-family: Arial, Verdana, Helvetica, sans-serif;color: #1B78B5; font-weight:normal; font-size: 24px; line-height: 5px; letter-spacing: 0px; padding-left: 0px; padding-top: 0px;"> {{header_txt}}</label><br>
         </div>
         
@@ -308,14 +369,14 @@ async function onClickPassport(){
                 <router-link to="/passport" class="no-underline"><text style="justify-content:center;font-family: Arial, Verdana, Helvetica, sans-serif;color: #1B78B5;">{{footerpassport_txt}} | </text></router-link>
                 <router-link to="/contactus" class="no-underline"><text style="justify-content:center;font-family: Arial, Verdana, Helvetica, sans-serif;color: #1B78B5;">{{footercontactus_txt}}</text></router-link>
             
-    
+   
                 <router-view v-slot="{ Component }">
                 <transition name="route" mode="out-in">
                     <component :is="Component" />
                 </transition>
                 </router-view>
             </div>
-        </div>
+        </div> -->
     </div>  
 </template>
 
@@ -327,8 +388,10 @@ background: #ffffff;
 background-color: #ffffff;
 height: 100vh;
 width: 100vw;
-align-content: top;
-align-items: top;
+justify-content: center;
+vertical-align: center;
+border: 1px solid #ced4da;  
+text-align: center; align-items:top; align-content: top;
 }
 
 .passport-line {  
@@ -357,4 +420,23 @@ align-items: top;
   text-align: center;
   border: 0px solid #ced4da;  
 }  
+
+.passportbackground table {
+      width: 90vw;
+      border: 0px solid #ccc;
+       
+  }
+  .passportbackground td{
+      text-align: left;
+      justify-content: center;
+      border: 0px solid #ccc;
+      padding: 5px;
+      padding-left: 5px;
+
+  }
+  .passportbackground tr{
+    justify-content: center;
+    border: 0px solid #ccc;
+    padding: 5px;
+  }
 </style>

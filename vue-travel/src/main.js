@@ -156,5 +156,5 @@ app.use(router)
 app.use(store)
 app.component('footer-page', footerPage)
 app.component('ranking-page', rankingPage)
-.mount('#app')
+app.mount('#app')
 
