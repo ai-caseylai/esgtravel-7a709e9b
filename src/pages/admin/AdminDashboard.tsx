@@ -1,6 +1,6 @@
 import { useAuth } from '@/lib/auth';
 import { Navigate, Link, Outlet, useLocation } from 'react-router-dom';
-import { Users, ShoppingCart, Award, Building2, UserCheck, LayoutDashboard, FileText, Shield } from 'lucide-react';
+import { Users, ShoppingCart, Award, Building2, UserCheck, LayoutDashboard, FileText, Shield, ImageIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
@@ -9,6 +9,7 @@ const navItems = [
   { path: '/admin/orders', label: '訂單管理', icon: ShoppingCart },
   { path: '/admin/badges', label: '徽章管理', icon: Award },
   { path: '/admin/posts', label: '文章管理', icon: FileText },
+  { path: '/admin/media', label: '媒體庫', icon: ImageIcon },
   { path: '/admin/companies', label: '公司管理', icon: Building2 },
   { path: '/admin/agents', label: '代理管理', icon: UserCheck },
   { path: '/admin/roles', label: '角色管理', icon: Shield },

@@ -29,6 +29,7 @@ import AdminCompanies from "./pages/admin/AdminCompanies";
 import AdminAgents from "./pages/admin/AdminAgents";
 import AdminPosts from "./pages/admin/AdminPosts";
 import AdminRoles from "./pages/admin/AdminRoles";
+import AdminMedia from "./pages/admin/AdminMedia";
 import SiteLayout from "./pages/site/SiteLayout";
 import SiteHome from "./pages/site/SiteHome";
 import SiteHowItWorks from "./pages/site/SiteHowItWorks";
@@ -54,6 +55,7 @@ const App = () => (
                 <Route path="orders" element={<AdminOrders />} />
                 <Route path="badges" element={<AdminBadges />} />
                 <Route path="posts" element={<AdminPosts />} />
+                <Route path="media" element={<AdminMedia />} />
                 <Route path="companies" element={<AdminCompanies />} />
                 <Route path="agents" element={<AdminAgents />} />
                 <Route path="roles" element={<AdminRoles />} />

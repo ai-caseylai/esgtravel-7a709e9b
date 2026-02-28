@@ -167,11 +167,16 @@ export default function AdminPosts() {
           {posts.map(post => (
             <Card key={post.id}>
               <CardContent className="flex items-center justify-between py-4">
-                <div>
-                  <p className="font-medium text-foreground">{post.slug}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {post.is_published ? '✅ 已發佈' : '📝 草稿'} · {new Date(post.created_at).toLocaleDateString()}
-                  </p>
+                <div className="flex items-center gap-3">
+                  {post.cover_image && (
+                    <img src={post.cover_image} alt="" className="w-12 h-12 rounded object-cover shrink-0" />
+                  )}
+                  <div>
+                    <p className="font-medium text-foreground">{post.slug}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {post.is_published ? '✅ 已發佈' : '📝 草稿'} · {new Date(post.created_at).toLocaleDateString()}
+                    </p>
+                  </div>
                 </div>
                 <div className="flex gap-2">
                   <Button variant="outline" size="sm" onClick={() => openEdit(post)}>
