@@ -1,20 +1,25 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { useI18n } from '@/lib/i18n';
+import { useSiteContent } from '@/hooks/use-site-content';
 import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 
 const navItems = [
-  { path: '/site', labelKey: { 0: '首頁', 1: '首页', 2: 'Home', 3: 'ホーム' } },
-  { path: '/site/how-it-works', labelKey: { 0: '如何獲得徽章', 1: '如何获得徽章', 2: 'How to Get Badges', 3: 'バッジの取得方法' } },
-  { path: '/site/events', labelKey: { 0: '活動與資訊', 1: '活动与资讯', 2: 'Events & Activities', 3: 'イベント' } },
-  { path: '/site/blog', labelKey: { 0: '文章', 1: '文章', 2: 'Blog', 3: 'ブログ' } },
-  { path: '/site/contact', labelKey: { 0: '聯絡我們', 1: '联系我们', 2: 'Contact Us', 3: 'お問い合わせ' } },
+  { path: '/site', contentKey: 'home', fallbackKey: { 0: '首頁', 1: '首页', 2: 'Home', 3: 'ホーム' } },
+  { path: '/site/how-it-works', contentKey: '', fallbackKey: { 0: '如何獲得徽章', 1: '如何获得徽章', 2: 'How to Get Badges', 3: 'バッジの取得方法' } },
+  { path: '/site/events', contentKey: 'event', fallbackKey: { 0: '活動與資訊', 1: '活动与资讯', 2: 'Events & Activities', 3: 'イベント' } },
+  { path: '/site/blog', contentKey: '', fallbackKey: { 0: '文章', 1: '文章', 2: 'Blog', 3: 'ブログ' } },
+  { path: '/site/contact', contentKey: 'contactus', fallbackKey: { 0: '聯絡我們', 1: '联系我们', 2: 'Contact Us', 3: 'お問い合わせ' } },
 ];
 
 export default function SiteLayout() {
   const { lang, setLang, t } = useI18n();
+  const { tc } = useSiteContent();
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const getLabel = (item: typeof navItems[0]) =>
+    item.contentKey ? tc(item.contentKey, t(item.fallbackKey)) : t(item.fallbackKey);
 
   const langOptions = [
     { value: 0 as const, label: '繁中' },
@@ -32,7 +37,6 @@ export default function SiteLayout() {
             STAR SDG
           </Link>
 
-          {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-6">
             {navItems.map(item => (
               <Link
@@ -42,7 +46,7 @@ export default function SiteLayout() {
                   location.pathname === item.path ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                {t(item.labelKey)}
+                {getLabel(item)}
               </Link>
             ))}
           </nav>
@@ -63,13 +67,11 @@ export default function SiteLayout() {
             ))}
           </div>
 
-          {/* Mobile menu toggle */}
           <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden text-foreground">
             {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
 
-        {/* Mobile menu */}
         {menuOpen && (
           <div className="md:hidden border-t border-border bg-card px-4 py-4 space-y-3">
             {navItems.map(item => (
@@ -81,7 +83,7 @@ export default function SiteLayout() {
                   location.pathname === item.path ? 'text-primary' : 'text-muted-foreground'
                 }`}
               >
-                {t(item.labelKey)}
+                {getLabel(item)}
               </Link>
             ))}
             <div className="flex gap-2 pt-2">
@@ -103,10 +105,8 @@ export default function SiteLayout() {
         )}
       </header>
 
-      {/* Content */}
       <Outlet />
 
-      {/* Footer */}
       <footer className="bg-card border-t border-border mt-16">
         <div className="max-w-6xl mx-auto px-4 py-10">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -123,17 +123,17 @@ export default function SiteLayout() {
               <div className="space-y-2">
                 {navItems.map(item => (
                   <Link key={item.path} to={item.path} className="block text-muted-foreground text-sm no-underline hover:text-primary">
-                    {t(item.labelKey)}
+                    {getLabel(item)}
                   </Link>
                 ))}
               </div>
             </div>
             <div>
               <h4 className="text-foreground font-semibold text-sm mb-3">
-                {t({ 0: '聯絡方式', 1: '联系方式', 2: 'Contact', 3: '連絡先' })}
+                {tc('contactus', t({ 0: '聯絡方式', 1: '联系方式', 2: 'Contact', 3: '連絡先' }))}
               </h4>
-              <p className="text-muted-foreground text-sm">info@starsdg.com</p>
-              <p className="text-muted-foreground text-sm">+852 1234-5678</p>
+              <p className="text-muted-foreground text-sm">{tc('email', 'info@starsdg.com')}</p>
+              <p className="text-muted-foreground text-sm">{tc('contact', '+852 1234-5678')}</p>
             </div>
           </div>
           <div className="border-t border-border mt-8 pt-6 text-center text-muted-foreground text-xs">
