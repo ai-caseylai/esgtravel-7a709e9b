@@ -60,9 +60,6 @@ export default function SiteLayout() {
                 {opt.label}
               </button>
             ))}
-            <Link to="/" className="ml-3 bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium no-underline">
-              {t({ 0: '開始使用', 1: '开始使用', 2: 'Get Started', 3: '始める' })}
-            </Link>
           </div>
 
           {/* Mobile menu toggle */}
@@ -101,9 +98,6 @@ export default function SiteLayout() {
                 </button>
               ))}
             </div>
-            <Link to="/" onClick={() => setMenuOpen(false)} className="block bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium no-underline text-center">
-              {t({ 0: '開始使用', 1: '开始使用', 2: 'Get Started', 3: '始める' })}
-            </Link>
           </div>
         )}
       </header>
