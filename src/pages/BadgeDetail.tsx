@@ -99,10 +99,10 @@ export default function BadgeDetailPage() {
             <h2 className="text-accent font-bold text-xl mb-4">{tr?.title}</h2>
 
             <button
-              onClick={() => navigate('/passport')}
+              onClick={() => navigate(`/cert/${id}`)}
               className="bg-primary text-primary-foreground font-medium text-lg py-2 rounded-[20px] w-[70%] border-none mb-6"
             >
-              {t({ 0: '旅遊大使', 1: 'Travel Ambassador', 2: 'トラベルアンバサダー' })}
+              {t({ 0: '查看認證', 1: 'View Certificate', 2: '認証を見る' })}
             </button>
 
             <div className="w-1/2 text-center">
