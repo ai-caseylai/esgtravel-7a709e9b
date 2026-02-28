@@ -14,16 +14,214 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      badge_translations: {
+        Row: {
+          badge_id: number
+          content: string | null
+          details: string | null
+          home_header: string | null
+          id: number
+          impact: string | null
+          lang: number
+          show_more: string | null
+          summary: string | null
+          title: string | null
+        }
+        Insert: {
+          badge_id: number
+          content?: string | null
+          details?: string | null
+          home_header?: string | null
+          id?: number
+          impact?: string | null
+          lang?: number
+          show_more?: string | null
+          summary?: string | null
+          title?: string | null
+        }
+        Update: {
+          badge_id?: number
+          content?: string | null
+          details?: string | null
+          home_header?: string | null
+          id?: number
+          impact?: string | null
+          lang?: number
+          show_more?: string | null
+          summary?: string | null
+          title?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "badge_translations_badge_id_fkey"
+            columns: ["badge_id"]
+            isOneToOne: false
+            referencedRelation: "badges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      badges: {
+        Row: {
+          code: string | null
+          created_at: string
+          id: number
+          image_url: string | null
+          is_active: boolean
+          map_url: string | null
+          price: number
+        }
+        Insert: {
+          code?: string | null
+          created_at?: string
+          id?: number
+          image_url?: string | null
+          is_active?: boolean
+          map_url?: string | null
+          price?: number
+        }
+        Update: {
+          code?: string | null
+          created_at?: string
+          id?: number
+          image_url?: string | null
+          is_active?: boolean
+          map_url?: string | null
+          price?: number
+        }
+        Relationships: []
+      }
+      country_codes: {
+        Row: {
+          country_name: string
+          dial_code: string
+          id: number
+          is_active: boolean
+        }
+        Insert: {
+          country_name: string
+          dial_code: string
+          id?: number
+          is_active?: boolean
+        }
+        Update: {
+          country_name?: string
+          dial_code?: string
+          id?: number
+          is_active?: boolean
+        }
+        Relationships: []
+      }
+      orders: {
+        Row: {
+          badge_id: number
+          created_at: string
+          extra_help: number
+          id: number
+          payment_method: string | null
+          payment_status: string
+          price: number
+          stripe_payment_id: string | null
+          user_id: string
+        }
+        Insert: {
+          badge_id: number
+          created_at?: string
+          extra_help?: number
+          id?: number
+          payment_method?: string | null
+          payment_status?: string
+          price?: number
+          stripe_payment_id?: string | null
+          user_id: string
+        }
+        Update: {
+          badge_id?: number
+          created_at?: string
+          extra_help?: number
+          id?: number
+          payment_method?: string | null
+          payment_status?: string
+          price?: number
+          stripe_payment_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_badge_id_fkey"
+            columns: ["badge_id"]
+            isOneToOne: false
+            referencedRelation: "badges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          contact_name: string | null
+          country_code: string | null
+          created_at: string
+          id: string
+          lang: number
+          mobile: string | null
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          contact_name?: string | null
+          country_code?: string | null
+          created_at?: string
+          id: string
+          lang?: number
+          mobile?: string | null
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          contact_name?: string | null
+          country_code?: string | null
+          created_at?: string
+          id?: string
+          lang?: number
+          mobile?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "user" | "agent" | "company_admin" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +348,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["user", "agent", "company_admin", "admin"],
+    },
   },
 } as const
