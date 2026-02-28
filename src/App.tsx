@@ -27,6 +27,11 @@ import AdminOrders from "./pages/admin/AdminOrders";
 import AdminBadges from "./pages/admin/AdminBadges";
 import AdminCompanies from "./pages/admin/AdminCompanies";
 import AdminAgents from "./pages/admin/AdminAgents";
+import SiteLayout from "./pages/site/SiteLayout";
+import SiteHome from "./pages/site/SiteHome";
+import SiteHowItWorks from "./pages/site/SiteHowItWorks";
+import SiteEvents from "./pages/site/SiteEvents";
+import SiteContact from "./pages/site/SiteContact";
 
 const queryClient = new QueryClient();
 
@@ -49,7 +54,13 @@ const App = () => (
                 <Route path="agents" element={<AdminAgents />} />
               </Route>
 
-              {/* App routes with bottom nav */}
+              {/* Website / intro site */}
+              <Route path="/site" element={<SiteLayout />}>
+                <Route index element={<SiteHome />} />
+                <Route path="how-it-works" element={<SiteHowItWorks />} />
+                <Route path="events" element={<SiteEvents />} />
+                <Route path="contact" element={<SiteContact />} />
+              </Route>
               <Route path="/" element={<Layout><Index /></Layout>} />
               <Route path="/login" element={<Layout><Login /></Layout>} />
               <Route path="/signup" element={<Layout><Signup /></Layout>} />
