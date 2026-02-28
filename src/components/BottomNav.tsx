@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useI18n } from '@/lib/i18n';
 import { Home, Award, BookOpen, Ticket, Settings } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const navItems = [
   { path: '/mobile', icon: Home, labelKey: { 0: '首頁', 1: '首页', 2: 'Home', 3: 'ホーム' } },
@@ -17,22 +18,31 @@ export default function BottomNav() {
   if (!location.pathname.startsWith('/mobile')) return null;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-card border-t border-border shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
-      <div className="flex justify-around items-center h-16 max-w-lg mx-auto">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 glass-strong border-t-0 safe-area-bottom">
+      <div className="flex justify-around items-center h-16 max-w-lg mx-auto px-2">
         {navItems.map(item => {
-          const isActive = location.pathname === item.path || 
-            (item.path !== '/' && location.pathname.startsWith(item.path));
+          const isActive = location.pathname === item.path ||
+            (item.path !== '/mobile' && location.pathname.startsWith(item.path));
           const Icon = item.icon;
           return (
             <Link
               key={item.path}
               to={item.path}
-              className={`flex flex-col items-center gap-0.5 px-2 py-1 no-underline transition-colors ${
+              className={`relative flex flex-col items-center gap-0.5 px-3 py-1.5 no-underline transition-all duration-300 ${
                 isActive ? 'text-primary' : 'text-muted-foreground'
               }`}
             >
-              <Icon className="w-5 h-5" />
-              <span className="text-[10px] font-medium">{t(item.labelKey)}</span>
+              {isActive && (
+                <motion.div
+                  layoutId="activeTab"
+                  className="absolute -top-1 w-5 h-0.5 rounded-full bg-primary"
+                  transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                />
+              )}
+              <Icon className={`w-5 h-5 transition-transform duration-300 ${isActive ? 'scale-110' : ''}`} />
+              <span className={`text-[10px] font-medium transition-all ${isActive ? 'font-semibold' : ''}`}>
+                {t(item.labelKey)}
+              </span>
             </Link>
           );
         })}

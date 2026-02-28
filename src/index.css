@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,43 +6,54 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 13%;
+    --background: 210 20% 98%;
+    --foreground: 210 20% 10%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 13%;
+    --card-foreground: 210 20% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 13%;
+    --popover-foreground: 210 20% 10%;
 
     --primary: 204 74% 41%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 13%;
+    --secondary: 170 40% 94%;
+    --secondary-foreground: 204 74% 30%;
 
-    --muted: 0 0% 93%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 210 15% 93%;
+    --muted-foreground: 210 10% 45%;
 
-    --accent: 0 61% 53%;
+    --accent: 160 50% 42%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 83%;
-    --input: 0 0% 83%;
+    --border: 210 15% 90%;
+    --input: 210 15% 90%;
     --ring: 204 74% 41%;
 
-    --radius: 1.25rem;
+    --radius: 1rem;
+
+    /* Glassmorphism tokens */
+    --glass-bg: 0 0% 100% / 0.6;
+    --glass-border: 0 0% 100% / 0.3;
+    --glass-blur: 20px;
+    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.12);
+
+    /* Gradient tokens */
+    --gradient-ocean: linear-gradient(135deg, hsl(204 74% 41%), hsl(180 60% 45%));
+    --gradient-hero: linear-gradient(180deg, hsl(204 74% 41% / 0.9), hsl(170 50% 42% / 0.7));
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 100% / 0.7), hsl(0 0% 100% / 0.4));
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 204 74% 41%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 204 30% 95%;
-    --sidebar-accent-foreground: 0 0% 13%;
-    --sidebar-border: 0 0% 83%;
+    --sidebar-accent-foreground: 210 20% 10%;
+    --sidebar-border: 210 15% 90%;
     --sidebar-ring: 204 74% 41%;
 
     --ocean: 204 74% 41%;
@@ -53,41 +64,49 @@
   }
 
   .dark {
-    --background: 0 0% 8%;
-    --foreground: 0 0% 95%;
+    --background: 220 20% 6%;
+    --foreground: 210 20% 95%;
 
-    --card: 0 0% 12%;
-    --card-foreground: 0 0% 95%;
+    --card: 220 20% 10%;
+    --card-foreground: 210 20% 95%;
 
-    --popover: 0 0% 12%;
-    --popover-foreground: 0 0% 95%;
+    --popover: 220 20% 10%;
+    --popover-foreground: 210 20% 95%;
 
     --primary: 204 65% 48%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 18%;
-    --secondary-foreground: 0 0% 95%;
+    --secondary: 170 30% 15%;
+    --secondary-foreground: 170 40% 80%;
 
-    --muted: 0 0% 18%;
-    --muted-foreground: 0 0% 60%;
+    --muted: 220 15% 15%;
+    --muted-foreground: 210 10% 55%;
 
-    --accent: 7 57% 52%;
+    --accent: 160 50% 40%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 20%;
-    --input: 0 0% 20%;
+    --border: 220 15% 18%;
+    --input: 220 15% 18%;
     --ring: 204 65% 48%;
 
-    --sidebar-background: 0 0% 10%;
-    --sidebar-foreground: 0 0% 95%;
+    --glass-bg: 220 20% 12% / 0.6;
+    --glass-border: 220 20% 20% / 0.3;
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+
+    --gradient-ocean: linear-gradient(135deg, hsl(204 65% 48%), hsl(180 50% 35%));
+    --gradient-hero: linear-gradient(180deg, hsl(204 65% 30% / 0.9), hsl(170 40% 25% / 0.7));
+    --gradient-card: linear-gradient(135deg, hsl(220 20% 14% / 0.7), hsl(220 20% 10% / 0.4));
+
+    --sidebar-background: 220 20% 8%;
+    --sidebar-foreground: 210 20% 95%;
     --sidebar-primary: 204 65% 48%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 15%;
-    --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 0 0% 20%;
+    --sidebar-accent: 220 15% 15%;
+    --sidebar-accent-foreground: 210 20% 95%;
+    --sidebar-border: 220 15% 18%;
     --sidebar-ring: 204 65% 48%;
 
     --ocean: 204 65% 50%;
@@ -104,11 +123,41 @@
   }
 
   body {
-    @apply bg-background text-foreground;
-    font-family: Arial, 'Noto Sans TC', Verdana, Helvetica, sans-serif;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', 'Noto Sans TC', system-ui, -apple-system, sans-serif;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: Arial, 'Noto Sans TC', Verdana, Helvetica, sans-serif;
+    font-family: 'Inter', 'Noto Sans TC', system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer utilities {
+  .glass {
+    background: hsl(var(--glass-bg));
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid hsl(var(--glass-border));
+    box-shadow: var(--glass-shadow);
+  }
+
+  .glass-strong {
+    background: hsl(0 0% 100% / 0.75);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid hsl(0 0% 100% / 0.4);
+    box-shadow: var(--glass-shadow);
+  }
+
+  .dark .glass-strong {
+    background: hsl(220 20% 12% / 0.75);
+    border: 1px solid hsl(220 20% 20% / 0.4);
+  }
+
+  .gradient-text {
+    background: var(--gradient-ocean);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 }
