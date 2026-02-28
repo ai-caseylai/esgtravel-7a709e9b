@@ -2,6 +2,10 @@ import { Link } from 'react-router-dom';
 import { useI18n } from '@/lib/i18n';
 import { motion } from 'framer-motion';
 import { ArrowRight, Globe, Award, Heart, Users } from 'lucide-react';
+import siteHero from '@/assets/site-hero.jpg';
+import featureBadge from '@/assets/feature-badge.jpg';
+import featureCommunity from '@/assets/feature-community.jpg';
+import featureImpact from '@/assets/feature-impact.jpg';
 
 const sdgs = [
   { id: 1, color: '#E5243B', en: 'No Poverty', zh: '消除貧窮', ja: '貧困をなくそう' },
@@ -29,35 +33,38 @@ export default function SiteHome() {
   const getSdgName = (s: typeof sdgs[0]) => lang === 0 ? s.zh : lang === 2 ? s.ja : s.en;
 
   const features = [
-    { icon: Globe, titleKey: { 0: '可持續旅遊', 1: 'Sustainable Tourism', 2: '持続可能な観光' }, descKey: { 0: '通過數碼徽章推動負責任的旅遊方式，保護我們的地球。', 1: 'Promote responsible tourism through digital badges to protect our planet.', 2: 'デジタルバッジを通じて責任ある観光を推進し、地球を守ります。' } },
-    { icon: Award, titleKey: { 0: '數碼徽章', 1: 'Digital Badges', 2: 'デジタルバッジ' }, descKey: { 0: '收集各地的可持續旅遊徽章，記錄你的影響力。', 1: 'Collect sustainable tourism badges from around the world.', 2: '世界中の持続可能な観光バッジを集めましょう。' } },
-    { icon: Heart, titleKey: { 0: '社會影響', 1: 'Social Impact', 2: '社会的影響' }, descKey: { 0: '70% 的費用投放於當地可持續發展項目。', 1: '70% of proceeds go to local sustainable development projects.', 2: '収益の70%は地域の持続可能な開発プロジェクトに使われます。' } },
-    { icon: Users, titleKey: { 0: '全球社群', 1: 'Global Community', 2: 'グローバルコミュニティ' }, descKey: { 0: '加入全球可持續旅遊大使社群。', 1: 'Join a global community of sustainable travel ambassadors.', 2: '持続可能な旅行大使のグローバルコミュニティに参加しましょう。' } },
+    { icon: Globe, image: siteHero, titleKey: { 0: '可持續旅遊', 1: 'Sustainable Tourism', 2: '持続可能な観光' }, descKey: { 0: '通過數碼徽章推動負責任的旅遊方式，保護我們的地球。', 1: 'Promote responsible tourism through digital badges to protect our planet.', 2: 'デジタルバッジを通じて責任ある観光を推進し、地球を守ります。' } },
+    { icon: Award, image: featureBadge, titleKey: { 0: '數碼徽章', 1: 'Digital Badges', 2: 'デジタルバッジ' }, descKey: { 0: '收集各地的可持續旅遊徽章，記錄你的影響力。', 1: 'Collect sustainable tourism badges from around the world.', 2: '世界中の持続可能な観光バッジを集めましょう。' } },
+    { icon: Heart, image: featureImpact, titleKey: { 0: '社會影響', 1: 'Social Impact', 2: '社会的影響' }, descKey: { 0: '70% 的費用投放於當地可持續發展項目。', 1: '70% of proceeds go to local sustainable development projects.', 2: '収益の70%は地域の持続可能な開発プロジェクトに使われます。' } },
+    { icon: Users, image: featureCommunity, titleKey: { 0: '全球社群', 1: 'Global Community', 2: 'グローバルコミュニティ' }, descKey: { 0: '加入全球可持續旅遊大使社群。', 1: 'Join a global community of sustainable travel ambassadors.', 2: '持続可能な旅行大使のグローバルコミュニティに参加しましょう。' } },
   ];
 
   return (
     <div>
-      {/* Hero */}
+      {/* Hero with background image */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-primary/5 to-transparent" />
-        <div className="max-w-6xl mx-auto px-4 pt-20 pb-24 relative">
+        <div className="absolute inset-0">
+          <img src={siteHero} alt="" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/50 to-background" />
+        </div>
+        <div className="max-w-6xl mx-auto px-4 pt-24 pb-32 relative">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
             className="text-center max-w-3xl mx-auto"
           >
-            <h1 className="text-foreground text-4xl md:text-6xl font-bold leading-tight mb-6">
+            <h1 className="text-foreground text-4xl md:text-6xl font-bold leading-tight mb-6 drop-shadow-lg">
               {t({ 0: '用旅遊改變世界', 1: 'Change the World Through Travel', 2: '旅行で世界を変えよう' })}
             </h1>
-            <p className="text-muted-foreground text-lg md:text-xl mb-8 leading-relaxed">
+            <p className="text-foreground/80 text-lg md:text-xl mb-8 leading-relaxed drop-shadow">
               {t({ 0: 'STAR SDG 計劃透過數碼徽章，將旅遊與聯合國永續發展目標結合，讓每一次旅行都成為對地球的貢獻。', 1: 'The STAR SDG programme connects tourism with UN Sustainable Development Goals through digital badges, making every trip a contribution to the planet.', 2: 'STAR SDGプログラムはデジタルバッジを通じて観光と国連の持続可能な開発目標を結びつけ、すべての旅を地球への貢献にします。' })}
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link to="/" className="bg-primary text-primary-foreground px-8 py-3 rounded-xl text-lg font-medium no-underline flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+              <Link to="/" className="bg-primary text-primary-foreground px-8 py-3 rounded-xl text-lg font-medium no-underline flex items-center justify-center gap-2 hover:opacity-90 transition-opacity shadow-lg">
                 {t({ 0: '立即開始', 1: 'Get Started', 2: '今すぐ始める' })} <ArrowRight className="w-5 h-5" />
               </Link>
-              <Link to="/site/how-it-works" className="bg-card text-foreground px-8 py-3 rounded-xl text-lg font-medium no-underline border border-border flex items-center justify-center hover:bg-muted transition-colors">
+              <Link to="/site/how-it-works" className="bg-card/90 backdrop-blur text-foreground px-8 py-3 rounded-xl text-lg font-medium no-underline border border-border flex items-center justify-center hover:bg-card transition-colors shadow-lg">
                 {t({ 0: '了解更多', 1: 'Learn More', 2: '詳しく見る' })}
               </Link>
             </div>
@@ -84,13 +91,18 @@ export default function SiteHome() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="bg-card rounded-2xl border border-border p-6 text-center hover:shadow-md transition-shadow"
+              className="bg-card rounded-2xl border border-border overflow-hidden hover:shadow-md transition-shadow"
             >
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                <f.icon className="w-6 h-6 text-primary" />
+              <div className="w-full h-40 overflow-hidden">
+                <img src={f.image} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
               </div>
-              <h3 className="text-foreground font-semibold mb-2">{t(f.titleKey)}</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">{t(f.descKey)}</p>
+              <div className="p-5 text-center">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-3">
+                  <f.icon className="w-5 h-5 text-primary" />
+                </div>
+                <h3 className="text-foreground font-semibold mb-2">{t(f.titleKey)}</h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">{t(f.descKey)}</p>
+              </div>
             </motion.div>
           ))}
         </div>
@@ -129,14 +141,23 @@ export default function SiteHome() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="max-w-6xl mx-auto px-4 py-16 text-center">
-        <h2 className="text-foreground text-3xl font-bold mb-4">
-          {t({ 0: '準備好成為可持續旅遊大使了嗎？', 1: 'Ready to become a Sustainable Travel Ambassador?', 2: '持続可能な観光大使になる準備はできましたか？' })}
-        </h2>
-        <Link to="/" className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-8 py-3 rounded-xl text-lg font-medium no-underline hover:opacity-90 transition-opacity">
-          {t({ 0: '立即開始', 1: 'Get Started Now', 2: '今すぐ始める' })} <ArrowRight className="w-5 h-5" />
-        </Link>
+      {/* CTA with background */}
+      <section className="relative overflow-hidden py-20">
+        <div className="absolute inset-0">
+          <img src={featureCommunity} alt="" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />
+        </div>
+        <div className="max-w-6xl mx-auto px-4 text-center relative">
+          <h2 className="text-foreground text-3xl font-bold mb-4">
+            {t({ 0: '準備好成為可持續旅遊大使了嗎？', 1: 'Ready to become a Sustainable Travel Ambassador?', 2: '持続可能な観光大使になる準備はできましたか？' })}
+          </h2>
+          <p className="text-muted-foreground text-lg mb-6 max-w-xl mx-auto">
+            {t({ 0: '加入我們，一起為地球的可持續未來出一分力。', 1: 'Join us and contribute to a sustainable future for our planet.', 2: '私たちと一緒に、地球の持続可能な未来に貢献しましょう。' })}
+          </p>
+          <Link to="/" className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-8 py-3 rounded-xl text-lg font-medium no-underline hover:opacity-90 transition-opacity shadow-lg">
+            {t({ 0: '立即開始', 1: 'Get Started Now', 2: '今すぐ始める' })} <ArrowRight className="w-5 h-5" />
+          </Link>
+        </div>
       </section>
     </div>
   );
