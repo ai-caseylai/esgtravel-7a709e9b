@@ -3,7 +3,9 @@ import { fetchUserOrders, fetchBadges } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import { useI18n, ui } from '@/lib/i18n';
 import { Link, useNavigate } from 'react-router-dom';
-import AppFooter from '@/components/AppFooter';
+import MobileHeader from '@/components/MobileHeader';
+import { motion } from 'framer-motion';
+import { Award } from 'lucide-react';
 
 export default function PassportPage() {
   const { user } = useAuth();
@@ -23,92 +25,92 @@ export default function PassportPage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center">
-        <p className="text-foreground">{t({ 0: '請先登入', 1: '请先登录', 2: 'Please login first', 3: 'ログインしてください' })}</p>
-        <Link to="/mobile/login">
-          <button className="mt-4 bg-primary text-primary-foreground px-6 py-2 rounded-xl border-none">
-            {t(ui.login)}
-          </button>
-        </Link>
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4 px-8">
+        <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+          <Award className="w-8 h-8 text-primary" />
+        </div>
+        <p className="text-foreground font-semibold text-lg">{t({ 0: '請先登入', 1: '请先登录', 2: 'Please sign in', 3: 'ログインしてください' })}</p>
+        <button
+          onClick={() => navigate('/mobile/login')}
+          className="bg-primary text-primary-foreground px-8 py-2.5 rounded-xl border-none text-[15px] font-medium"
+        >
+          {t(ui.login)}
+        </button>
       </div>
     );
   }
 
   const userBadgeIds = [...new Set(orders?.map(o => o.badge_id) || [])];
   const collectedBadges = badges?.filter(b => userBadgeIds.includes(b.id)) || [];
-  const badgeCount = userBadgeIds.length;
-
-  // Group by month
-  const groupedOrders = new Map<string, typeof collectedBadges>();
-  orders?.forEach(order => {
-    const date = new Date(order.created_at);
-    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-    if (!groupedOrders.has(key)) groupedOrders.set(key, []);
-    const badge = badges?.find(b => b.id === order.badge_id);
-    if (badge && !groupedOrders.get(key)!.find(b => b.id === badge.id)) {
-      groupedOrders.get(key)!.push(badge);
-    }
-  });
-
-  const getMonth = (dateStr: string) => {
-    const [year, month] = dateStr.split('-');
-    const monthNames = lang === 2
-      ? ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-      : lang === 3
-      ? ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
-      : ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
-    return monthNames[parseInt(month) - 1];
-  };
 
   return (
-    <div className="min-h-screen bg-background text-center pt-4">
-      {/* Header */}
-      <h1 className="text-primary font-normal text-2xl mb-1">
-        {t({ 0: '我的護照', 1: '我的护照', 2: 'My Passport', 3: 'マイパスポート' })}
-      </h1>
-      <hr className="w-full h-1 bg-primary border-none mb-4" />
+    <div className="min-h-screen bg-background">
+      <MobileHeader title={t({ 0: '我的護照', 1: '我的护照', 2: 'My Passport', 3: 'マイパスポート' })} />
 
-      <p className="text-foreground text-2xl font-normal mb-2">
-        {t({ 0: '你好', 1: '你好', 2: 'Hi', 3: 'こんにちは' })}, {user.email?.split('@')[0]}
-      </p>
-
-      <p className="text-foreground text-lg mb-6">
-        {t({ 0: '你收集了共', 1: '你收集了共', 2: 'You collected total', 3: '合計' })}{' '}
-        <span className="text-primary font-normal">{badgeCount}</span>{' '}
-        {t({ 0: '個徽章', 1: '个徽章', 2: 'badges', 3: 'バッジを集めました' })}
-      </p>
-
-      {/* Badges grouped by date */}
-      <div className="px-[5%] text-left">
-        {Array.from(groupedOrders.entries()).map(([dateKey, dateBadges]) => (
-          <div key={dateKey} className="mb-6">
-            <p className="text-foreground text-lg mb-1">{dateKey.split('-')[0]}</p>
-            <p className="text-foreground text-lg mb-2">{getMonth(dateKey)}</p>
-            <div className="flex flex-wrap gap-2">
-              {dateBadges.map(badge => (
-                <Link key={badge.id} to={`/mobile/badge/${badge.id}`}>
-                  <div className="w-[50px] h-[50px] bg-muted rounded flex items-center justify-center cursor-pointer hover:ring-2 hover:ring-primary">
-                    <span className="text-2xl">🏅</span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        ))}
+      {/* Stats */}
+      <div className="px-5 py-5">
+        <div className="bg-card rounded-2xl border border-border p-5">
+          <p className="text-muted-foreground text-[13px]">
+            {t({ 0: '已收集徽章', 1: '已收集徽章', 2: 'Badges collected', 3: '収集済みバッジ' })}
+          </p>
+          <p className="text-[36px] font-bold text-foreground leading-tight">{userBadgeIds.length}</p>
+        </div>
       </div>
 
-      {collectedBadges.length === 0 && (
-        <div className="py-16">
-          <p className="text-muted-foreground">{t(ui.noBadges)}</p>
-          <Link to="/">
-            <button className="mt-4 bg-primary text-primary-foreground px-6 py-2 rounded-xl border-none">
-              {t(ui.exploreBadges)}
-            </button>
-          </Link>
+      {/* Collected badges */}
+      {collectedBadges.length > 0 ? (
+        <div className="px-5 space-y-3">
+          <h3 className="text-[15px] font-semibold text-foreground">
+            {t({ 0: '我的徽章', 1: '我的徽章', 2: 'My Badges', 3: 'マイバッジ' })}
+          </h3>
+          {collectedBadges.map((badge, i) => (
+            <motion.div
+              key={badge.id}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.05 }}
+            >
+              <Link to={`/mobile/badge/${badge.id}`} className="no-underline">
+                <div className="bg-card rounded-xl border border-border p-3 flex items-center gap-3 active:bg-muted transition-colors">
+                  <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center shrink-0">
+                    {badge.image_url ? (
+                      <img src={badge.image_url} alt="" className="w-full h-full object-cover rounded-lg" />
+                    ) : (
+                      <span className="text-2xl">🏅</span>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-foreground font-semibold text-[14px] truncate">
+                      {badge.translation?.home_header || badge.code}
+                    </p>
+                    <p className="text-muted-foreground text-[12px] truncate">
+                      {badge.translation?.title}
+                    </p>
+                  </div>
+                  <span className="text-primary text-[13px] font-medium shrink-0">
+                    {t({ 0: '查看', 1: '查看', 2: 'View', 3: '見る' })}
+                  </span>
+                </div>
+              </Link>
+            </motion.div>
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center py-16 px-8">
+          <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mb-4">
+            <Award className="w-10 h-10 text-muted-foreground" />
+          </div>
+          <p className="text-muted-foreground text-center mb-4">
+            {t({ 0: '還沒有收集任何徽章', 1: '还没有收集任何徽章', 2: 'No badges collected yet', 3: 'まだバッジを収集していません' })}
+          </p>
+          <button
+            onClick={() => navigate('/mobile/badges')}
+            className="bg-primary text-primary-foreground px-6 py-2.5 rounded-xl border-none text-[14px] font-medium"
+          >
+            {t({ 0: '探索徽章', 1: '探索徽章', 2: 'Explore Badges', 3: 'バッジを探す' })}
+          </button>
         </div>
       )}
-
-      <AppFooter />
     </div>
   );
 }

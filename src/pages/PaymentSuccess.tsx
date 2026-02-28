@@ -1,32 +1,43 @@
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useI18n, ui } from '@/lib/i18n';
-import AppFooter from '@/components/AppFooter';
+import { motion } from 'framer-motion';
+import { CheckCircle2 } from 'lucide-react';
 
 export default function PaymentSuccessPage() {
   const { t } = useI18n();
+  const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <div className="flex-1 flex flex-col items-center justify-center px-4">
-        <div className="text-6xl mb-6">✅</div>
-        <h1 className="text-primary text-3xl font-bold mb-3">{t(ui.thankYou)}</h1>
-        <p className="text-foreground text-lg mb-8 text-center">
-          {t({ 0: '你的徽章已加入護照中', 1: '你的徽章已加入护照中', 2: 'Your badge has been added to your passport', 3: 'バッジがパスポートに追加されました' })}
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center px-8 gap-5">
+      <motion.div
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+      >
+        <CheckCircle2 className="w-20 h-20 text-accent" />
+      </motion.div>
+
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-center">
+        <h1 className="text-foreground text-[22px] font-bold mb-1">{t(ui.thankYou)}</h1>
+        <p className="text-muted-foreground text-[14px]">
+          {t({ 0: '徽章已加入護照', 1: '徽章已加入护照', 2: 'Badge added to passport', 3: 'バッジがパスポートに追加されました' })}
         </p>
-        <div className="flex gap-3">
-          <Link to="/mobile/passport">
-            <button className="bg-primary text-primary-foreground px-6 py-3 rounded-xl border-none text-lg">
-              {t(ui.passport)}
-            </button>
-          </Link>
-          <Link to="/mobile">
-            <button className="bg-card text-foreground px-6 py-3 rounded-xl border border-primary text-lg">
-              {t(ui.backHome)}
-            </button>
-          </Link>
-        </div>
-      </div>
-      <AppFooter />
+      </motion.div>
+
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="flex gap-3 w-full max-w-xs">
+        <button
+          onClick={() => navigate('/mobile/passport')}
+          className="flex-1 h-11 rounded-xl bg-primary text-primary-foreground font-medium text-[14px] border-none"
+        >
+          {t(ui.passport)}
+        </button>
+        <button
+          onClick={() => navigate('/mobile')}
+          className="flex-1 h-11 rounded-xl bg-card border border-border text-foreground font-medium text-[14px]"
+        >
+          {t(ui.backHome)}
+        </button>
+      </motion.div>
     </div>
   );
 }

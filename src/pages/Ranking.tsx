@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetchRanking } from '@/lib/api';
 import { useI18n, ui } from '@/lib/i18n';
-import AppFooter from '@/components/AppFooter';
+import MobileHeader from '@/components/MobileHeader';
+import { motion } from 'framer-motion';
 
 const faceEmojis = ['😀', '😊', '😍', '🤩', '😎'];
 
@@ -14,55 +15,53 @@ export default function RankingPage() {
   });
 
   return (
-    <div className="min-h-screen bg-background text-center pt-8">
-      <h1 className="text-primary font-normal text-2xl mb-4">
-        {t({ 0: '支持者的反應', 1: '支持者的反应', 2: 'Reactions by other supporters', 3: 'サポーターの反応' })}
-      </h1>
+    <div className="min-h-screen bg-background">
+      <MobileHeader title={t({ 0: '排行榜', 1: '排行榜', 2: 'Leaderboard', 3: 'ランキング' })} showBack />
 
-      {/* Face emoji ranking */}
-      <div className="flex justify-center gap-4 mb-8">
+      {/* Reactions */}
+      <div className="flex justify-center gap-4 py-6">
         {faceEmojis.map((emoji, i) => (
-          <div key={i} className="flex flex-col items-center gap-1">
-            <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center text-3xl cursor-pointer hover:bg-primary/10 transition-colors">
-              {emoji}
-            </div>
-          </div>
+          <motion.div
+            key={i}
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: i * 0.06, type: 'spring', stiffness: 400 }}
+            className="w-12 h-12 rounded-full bg-muted flex items-center justify-center text-2xl cursor-pointer hover:bg-primary/10 transition-colors"
+          >
+            {emoji}
+          </motion.div>
         ))}
       </div>
 
       {/* Leaderboard */}
-      {isLoading ? (
-        <p className="text-muted-foreground">Loading...</p>
-      ) : ranking && ranking.length > 0 ? (
-        <div className="px-[5%]">
-          <table className="w-full text-left">
-            <thead>
-              <tr className="border-b">
-                <th className="py-2 text-primary text-sm">#</th>
-                <th className="py-2 text-primary text-sm">{t(ui.name)}</th>
-                <th className="py-2 text-primary text-sm text-right">{t(ui.badgesCollected)}</th>
-                <th className="py-2 text-primary text-sm text-right">{t(ui.totalDonation)}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {ranking.map((entry, i) => (
-                <tr key={entry.user_id} className="border-b border-muted">
-                  <td className="py-3 text-foreground">{i + 1}</td>
-                  <td className="py-3 text-foreground">{entry.contact_name}</td>
-                  <td className="py-3 text-foreground text-right">{entry.badge_count}</td>
-                  <td className="py-3 text-primary font-bold text-right">${entry.total_donated}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : (
-        <p className="text-muted-foreground py-8">
-          {t({ 0: '還沒有排名資料', 1: '还没有排名数据', 2: 'No ranking data yet', 3: 'ランキングデータがまだありません' })}
-        </p>
-      )}
-
-      <AppFooter />
+      <div className="px-5">
+        {isLoading ? (
+          <div className="flex justify-center py-10">
+            <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+          </div>
+        ) : ranking && ranking.length > 0 ? (
+          <div className="bg-card rounded-2xl border border-border overflow-hidden">
+            {ranking.map((entry, i) => (
+              <div key={entry.user_id} className={`flex items-center gap-3 px-4 py-3 ${i < ranking.length - 1 ? 'border-b border-border' : ''}`}>
+                <span className={`w-7 h-7 rounded-full flex items-center justify-center text-[12px] font-bold shrink-0 ${
+                  i === 0 ? 'bg-yellow-100 text-yellow-700' : i === 1 ? 'bg-gray-100 text-gray-600' : i === 2 ? 'bg-orange-100 text-orange-700' : 'bg-muted text-muted-foreground'
+                }`}>
+                  {i + 1}
+                </span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-foreground text-[14px] font-medium truncate">{entry.contact_name}</p>
+                  <p className="text-muted-foreground text-[11px]">{entry.badge_count} {t({ 0: '徽章', 1: '徽章', 2: 'badges', 3: 'バッジ' })}</p>
+                </div>
+                <span className="text-primary font-bold text-[14px]">${entry.total_donated}</span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-muted-foreground text-center py-10 text-[14px]">
+            {t({ 0: '還沒有排名資料', 1: '还没有排名数据', 2: 'No data yet', 3: 'データがありません' })}
+          </p>
+        )}
+      </div>
     </div>
   );
 }

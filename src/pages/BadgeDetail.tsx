@@ -4,7 +4,8 @@ import { fetchBadgeDetail } from '@/lib/api';
 import { useI18n, ui } from '@/lib/i18n';
 import { useAuth } from '@/lib/auth';
 import { useState } from 'react';
-import AppFooter from '@/components/AppFooter';
+import MobileHeader from '@/components/MobileHeader';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function BadgeDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -12,7 +13,6 @@ export default function BadgeDetailPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [tabIdx, setTabIdx] = useState(1);
-  const [eventTabIdx, setEventTabIdx] = useState(0);
 
   const { data: badge, isLoading } = useQuery({
     queryKey: ['badge', id, lang],
@@ -23,24 +23,21 @@ export default function BadgeDetailPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-pulse text-muted-foreground">Loading...</div>
+        <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   if (!badge) {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center">
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-3">
         <p className="text-muted-foreground">Badge not found</p>
-        <Link to="/mobile">
-          <button className="mt-4 text-primary underline">{t(ui.backHome)}</button>
-        </Link>
+        <button onClick={() => navigate('/mobile')} className="text-primary text-[14px] bg-transparent border-none">{t(ui.backHome)}</button>
       </div>
     );
   }
 
   const tr = badge.translation;
-
   const tabs = [
     { idx: 1, label: t({ 0: '徽章', 1: '徽章', 2: 'Badge', 3: 'バッジ' }) },
     { idx: 0, label: t({ 0: '影響', 1: '影响', 2: 'Impact', 3: '影響' }) },
@@ -48,24 +45,19 @@ export default function BadgeDetailPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-background text-center">
-      {/* Back button */}
-      <div className="pt-4 px-4 flex items-center">
-        <button onClick={() => navigate(-1)} className="text-primary text-2xl">
-          ←
-        </button>
-      </div>
+    <div className="min-h-screen bg-background flex flex-col">
+      <MobileHeader title={tr?.home_header || badge.code || ''} showBack />
 
       {/* Tabs */}
-      <div className="flex justify-center gap-6 py-4">
+      <div className="flex border-b border-border">
         {tabs.map(tab => (
           <button
             key={tab.idx}
             onClick={() => setTabIdx(tab.idx)}
-            className={`text-lg cursor-pointer bg-transparent border-none pb-1 ${
+            className={`flex-1 py-3 text-[14px] font-medium border-b-2 transition-colors bg-transparent ${
               tabIdx === tab.idx
-                ? 'text-accent font-bold underline underline-offset-4 decoration-4'
-                : 'text-primary font-normal'
+                ? 'border-primary text-primary'
+                : 'border-transparent text-muted-foreground'
             }`}
           >
             {tab.label}
@@ -74,98 +66,82 @@ export default function BadgeDetailPage() {
       </div>
 
       {/* Tab content */}
-      <div className="px-4 overflow-y-auto" style={{ height: '70vh' }}>
-        {tabIdx === 0 && (
-          <div className="py-4">
-            {tr?.impact ? (
-              <div className="text-left px-4 text-foreground text-sm leading-6 whitespace-pre-line">
-                {tr.impact}
-              </div>
-            ) : (
-              <p className="text-muted-foreground">No impact data</p>
-            )}
-          </div>
-        )}
-
-        {tabIdx === 1 && (
-          <div className="py-4 flex flex-col items-center">
-            <div className="w-[215px] h-[215px] bg-muted rounded-lg flex items-center justify-center mb-6">
-              <span className="text-6xl">🏅</span>
-            </div>
-
-            <h2 className="text-accent font-bold text-xl mb-4">{tr?.title}</h2>
-
-            <button
-              onClick={() => navigate(`/mobile/cert/${id}`)}
-              className="bg-primary text-primary-foreground font-medium text-lg py-2 rounded-[20px] w-[70%] border-none mb-6"
-            >
-              {t({ 0: '查看認證', 1: '查看认证', 2: 'View Certificate', 3: '認証を見る' })}
-            </button>
-
-            <div className="w-1/2 text-center">
-              <h3 className="text-foreground font-medium text-base">
-                {t({ 0: '影響力記錄', 1: '影响力记录', 2: 'Impact Record', 3: 'インパクト記録' })}
-              </h3>
-              <hr className="w-full h-1 bg-primary/60 border-none my-2" />
-            </div>
-
-            {tr?.content && (
-              <div className="mt-4 text-left px-4 text-foreground text-sm leading-6 whitespace-pre-line">
-                {tr.content}
+      <div className="flex-1 overflow-y-auto px-5 py-5">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={tabIdx}
+            initial={{ opacity: 0, x: 10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -10 }}
+            transition={{ duration: 0.2 }}
+          >
+            {tabIdx === 1 && (
+              <div className="flex flex-col items-center">
+                <div className="w-48 h-48 bg-muted rounded-2xl flex items-center justify-center mb-5">
+                  {badge.image_url ? (
+                    <img src={badge.image_url} alt="" className="w-full h-full object-cover rounded-2xl" />
+                  ) : (
+                    <span className="text-6xl">🏅</span>
+                  )}
+                </div>
+                <h2 className="text-foreground font-bold text-lg mb-2 text-center">{tr?.title}</h2>
+                <button
+                  onClick={() => navigate(`/mobile/cert/${id}`)}
+                  className="bg-card border border-border text-primary font-medium text-[14px] py-2.5 px-6 rounded-xl mb-5"
+                >
+                  {t({ 0: '查看認證', 1: '查看认证', 2: 'View Certificate', 3: '認証を見る' })}
+                </button>
+                {tr?.content && (
+                  <div className="w-full text-foreground text-[14px] leading-relaxed whitespace-pre-line">
+                    {tr.content}
+                  </div>
+                )}
               </div>
             )}
-          </div>
-        )}
 
-        {tabIdx === 2 && (
-          <div className="py-4">
-            <div className="w-full h-40 bg-muted rounded-lg mb-4 flex items-center justify-center">
-              <span className="text-muted-foreground text-sm">Event Image</span>
-            </div>
+            {tabIdx === 0 && (
+              <div className="text-foreground text-[14px] leading-relaxed whitespace-pre-line">
+                {tr?.impact || <p className="text-muted-foreground text-center py-8">No impact data</p>}
+              </div>
+            )}
 
-            <h2 className="text-accent font-bold text-xl mb-4">{tr?.title}</h2>
-
-            <div className="flex justify-center gap-4 mb-4">
-              <button
-                onClick={() => setEventTabIdx(0)}
-                className={`px-5 py-1 rounded text-lg border-none ${
-                  eventTabIdx === 0
-                    ? 'bg-accent/20 text-accent font-bold'
-                    : 'bg-muted text-muted-foreground'
-                }`}
-              >
-                {t({ 0: '摘要', 1: '摘要', 2: 'Summary', 3: '概要' })}
-              </button>
-              <button
-                onClick={() => setEventTabIdx(1)}
-                className={`px-5 py-1 rounded text-lg border-none ${
-                  eventTabIdx === 1
-                    ? 'bg-accent/20 text-accent font-bold'
-                    : 'bg-muted text-muted-foreground'
-                }`}
-              >
-                {t({ 0: '詳情', 1: '详情', 2: 'Detail', 3: '詳細' })}
-              </button>
-            </div>
-
-            <div className="text-left px-4 text-foreground text-sm leading-6 whitespace-pre-line">
-              {eventTabIdx === 0 ? tr?.summary : tr?.details}
-            </div>
-          </div>
-        )}
+            {tabIdx === 2 && (
+              <div>
+                <h2 className="text-foreground font-bold text-lg mb-3">{tr?.title}</h2>
+                {tr?.summary && (
+                  <div className="mb-4">
+                    <h4 className="text-[13px] font-semibold text-muted-foreground uppercase tracking-wide mb-2">
+                      {t({ 0: '摘要', 1: '摘要', 2: 'Summary', 3: '概要' })}
+                    </h4>
+                    <p className="text-foreground text-[14px] leading-relaxed whitespace-pre-line">{tr.summary}</p>
+                  </div>
+                )}
+                {tr?.details && (
+                  <div>
+                    <h4 className="text-[13px] font-semibold text-muted-foreground uppercase tracking-wide mb-2">
+                      {t({ 0: '詳情', 1: '详情', 2: 'Details', 3: '詳細' })}
+                    </h4>
+                    <p className="text-foreground text-[14px] leading-relaxed whitespace-pre-line">{tr.details}</p>
+                  </div>
+                )}
+              </div>
+            )}
+          </motion.div>
+        </AnimatePresence>
       </div>
 
+      {/* Buy button */}
       {user && (
-        <div className="px-[15%] py-4">
-          <Link to={`/mobile/payment/${badge.id}`}>
-            <button className="w-full py-3 bg-primary text-primary-foreground font-medium text-lg rounded-[20px] border-none">
-              ${badge.price} USD - {t(ui.buyBadge)}
-            </button>
-          </Link>
+        <div className="px-5 py-4 bg-background border-t border-border">
+          <button
+            onClick={() => navigate(`/mobile/payment/${badge.id}`)}
+            className="w-full h-12 rounded-xl font-semibold text-[15px] text-primary-foreground border-none"
+            style={{ background: 'var(--gradient-ocean)' }}
+          >
+            ${badge.price} USD — {t(ui.buyBadge)}
+          </button>
         </div>
       )}
-
-      <AppFooter />
     </div>
   );
 }
