@@ -41,6 +41,10 @@ const FIXED_PAGES: { path: string; label: string; fields: { key: string; label: 
       { key: 'site_cta_title', label: 'CTA 標題' },
       { key: 'site_cta_desc', label: 'CTA 描述', multiline: true },
       { key: 'site_cta_img', label: 'CTA 背景圖片', image: true },
+      { key: 'site_appstore_label', label: 'App Store 按鈕文字' },
+      { key: 'site_appstore_url', label: 'App Store 連結' },
+      { key: 'site_googleplay_label', label: 'Google Play 按鈕文字' },
+      { key: 'site_googleplay_url', label: 'Google Play 連結' },
     ],
   },
   {
@@ -101,6 +105,9 @@ const FIXED_PAGES: { path: string; label: string; fields: { key: string; label: 
       { key: 'site_footer_contact', label: '頁尾聯絡標題' },
       { key: 'email', label: '頁尾電郵' },
       { key: 'contact', label: '頁尾電話' },
+      { key: 'site_brand', label: '品牌名稱' },
+      { key: 'site_copyright', label: '版權聲明' },
+      { key: 'site_loading', label: '載入中文字' },
     ],
   },
 ];

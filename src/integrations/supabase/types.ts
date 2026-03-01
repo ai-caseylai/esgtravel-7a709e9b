@@ -559,7 +559,10 @@ export type Database = {
           resendotp: string
           sdg: string
           showmore: string
+          site_appstore_label: string
+          site_appstore_url: string
           site_articles_label: string
+          site_brand: string
           site_contact_addr: string
           site_contact_addr_label: string
           site_contact_desc: string
@@ -568,6 +571,7 @@ export type Database = {
           site_contact_phone: string
           site_contact_phone_label: string
           site_contact_title: string
+          site_copyright: string
           site_cta_desc: string
           site_cta_img: string
           site_cta_title: string
@@ -590,6 +594,8 @@ export type Database = {
           site_footer_contact: string
           site_footer_desc: string
           site_footer_links: string
+          site_googleplay_label: string
+          site_googleplay_url: string
           site_hero_desc: string
           site_hero_img: string
           site_hero_title: string
@@ -597,6 +603,7 @@ export type Database = {
           site_how_hero_img: string
           site_how_title: string
           site_learnmore: string
+          site_loading: string
           site_nav_how: string
           site_no_articles: string
           site_no_events: string
@@ -684,7 +691,10 @@ export type Database = {
           resendotp?: string
           sdg?: string
           showmore?: string
+          site_appstore_label?: string
+          site_appstore_url?: string
           site_articles_label?: string
+          site_brand?: string
           site_contact_addr?: string
           site_contact_addr_label?: string
           site_contact_desc?: string
@@ -693,6 +703,7 @@ export type Database = {
           site_contact_phone?: string
           site_contact_phone_label?: string
           site_contact_title?: string
+          site_copyright?: string
           site_cta_desc?: string
           site_cta_img?: string
           site_cta_title?: string
@@ -715,6 +726,8 @@ export type Database = {
           site_footer_contact?: string
           site_footer_desc?: string
           site_footer_links?: string
+          site_googleplay_label?: string
+          site_googleplay_url?: string
           site_hero_desc?: string
           site_hero_img?: string
           site_hero_title?: string
@@ -722,6 +735,7 @@ export type Database = {
           site_how_hero_img?: string
           site_how_title?: string
           site_learnmore?: string
+          site_loading?: string
           site_nav_how?: string
           site_no_articles?: string
           site_no_events?: string
@@ -809,7 +823,10 @@ export type Database = {
           resendotp?: string
           sdg?: string
           showmore?: string
+          site_appstore_label?: string
+          site_appstore_url?: string
           site_articles_label?: string
+          site_brand?: string
           site_contact_addr?: string
           site_contact_addr_label?: string
           site_contact_desc?: string
@@ -818,6 +835,7 @@ export type Database = {
           site_contact_phone?: string
           site_contact_phone_label?: string
           site_contact_title?: string
+          site_copyright?: string
           site_cta_desc?: string
           site_cta_img?: string
           site_cta_title?: string
@@ -840,6 +858,8 @@ export type Database = {
           site_footer_contact?: string
           site_footer_desc?: string
           site_footer_links?: string
+          site_googleplay_label?: string
+          site_googleplay_url?: string
           site_hero_desc?: string
           site_hero_img?: string
           site_hero_title?: string
@@ -847,6 +867,7 @@ export type Database = {
           site_how_hero_img?: string
           site_how_title?: string
           site_learnmore?: string
+          site_loading?: string
           site_nav_how?: string
           site_no_articles?: string
           site_no_events?: string

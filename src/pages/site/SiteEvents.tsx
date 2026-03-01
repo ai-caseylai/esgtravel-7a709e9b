@@ -101,7 +101,7 @@ export default function SiteEvents() {
 
       {loading ? (
         <div className="max-w-4xl mx-auto px-4 py-12">
-          <p className="text-center text-muted-foreground">Loading...</p>
+          <p className="text-center text-muted-foreground">{tc('site_loading', 'Loading...')}</p>
         </div>
       ) : (
         <>
