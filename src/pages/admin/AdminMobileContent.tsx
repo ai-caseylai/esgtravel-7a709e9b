@@ -257,10 +257,7 @@ export default function AdminMobileContent() {
 
           {/* ── Right: content editor ── */}
           <div>
-            <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
-              <h3 className="text-foreground font-semibold text-base">
-                {SECTION_LABELS[activeSection] || activeSection}
-              </h3>
+            <div className="mb-4">
               <Tabs value={activeLang} onValueChange={setActiveLang}>
                 <TabsList>
                   {LANGS.map(l => (
