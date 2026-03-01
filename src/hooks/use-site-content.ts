@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { useI18n } from '@/lib/i18n';
+import { useI18n, toDbLang } from '@/lib/i18n';
 
 type ContentMap = Record<number, Record<string, string>>;
 
@@ -15,11 +15,12 @@ async function fetchSiteContent(): Promise<ContentMap> {
 
 export function useSiteContent() {
   const { lang } = useI18n();
+  const dbLang = toDbLang(lang);
 
   const { data: content } = useQuery({
     queryKey: ['site_content'],
     queryFn: fetchSiteContent,
-    staleTime: 5 * 60 * 1000, // cache 5 min
+    staleTime: 5 * 60 * 1000,
   });
 
   /**
@@ -28,7 +29,7 @@ export function useSiteContent() {
    */
   const tc = (key: string, fallback = ''): string => {
     if (!content) return fallback;
-    return content[lang]?.[key] || content[0]?.[key] || fallback;
+    return content[dbLang]?.[key] || content[0]?.[key] || fallback;
   };
 
   return { tc, content, isLoaded: !!content };
