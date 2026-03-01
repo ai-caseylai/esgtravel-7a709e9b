@@ -7,9 +7,17 @@ import { Switch } from '@/components/ui/switch';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Trash2, GripVertical, ArrowUp, ArrowDown, Eye, FileText, Image as ImageIcon, Type, AlignLeft, LayoutList } from 'lucide-react';
+import { Plus, Trash2, GripVertical, ArrowUp, ArrowDown, Eye, FileText, Image as ImageIcon, Type, AlignLeft, LayoutList, Globe, ExternalLink } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { MediaPickerButton } from '@/components/MediaPickerButton';
+
+const FIXED_PAGES = [
+  { path: '/site', label: '首頁 Home' },
+  { path: '/site/how-it-works', label: '如何獲得徽章' },
+  { path: '/site/events', label: '活動與資訊' },
+  { path: '/site/contact', label: '聯絡我們' },
+];
+
 
 type Block = {
   id?: number;
@@ -220,36 +228,63 @@ export default function AdminPages() {
 
       <div className="grid grid-cols-1 md:grid-cols-[260px_1fr] gap-6">
         {/* Left: page list */}
-        <div className="space-y-2">
-          <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-            <DialogTrigger asChild>
-              <Button size="sm" className="w-full"><Plus className="h-4 w-4 mr-1" /> 新增頁面</Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader><DialogTitle>新增頁面</DialogTitle></DialogHeader>
-              <div className="space-y-3 pt-2">
-                <Input placeholder="Slug (如 about-us)" value={newSlug} onChange={e => setNewSlug(e.target.value)} />
-                <Input placeholder="標題" value={newTitle} onChange={e => setNewTitle(e.target.value)} />
-                <Button onClick={createPage} className="w-full">建立</Button>
-              </div>
-            </DialogContent>
-          </Dialog>
+        <div className="space-y-4">
+          {/* Fixed site pages */}
+          <div>
+            <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-1">現有頁面</h4>
+            <div className="space-y-1">
+              {FIXED_PAGES.map(fp => (
+                <a
+                  key={fp.path}
+                  href={fp.path}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 no-underline bg-card text-muted-foreground hover:bg-muted"
+                >
+                  <Globe className="h-4 w-4 shrink-0" />
+                  <span className="truncate">{fp.label}</span>
+                  <ExternalLink className="h-3 w-3 ml-auto shrink-0 opacity-50" />
+                </a>
+              ))}
+            </div>
+          </div>
 
-          {pages.map(p => (
-            <button
-              key={p.id}
-              onClick={() => selectPage(p.id)}
-              className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium transition-colors border-none cursor-pointer ${
-                selectedId === p.id ? 'bg-primary text-primary-foreground' : 'bg-card text-muted-foreground hover:bg-muted'
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <FileText className="h-4 w-4 shrink-0" />
-                <span className="truncate">{p.title || p.slug}</span>
-                {p.is_published && <span className="ml-auto text-[10px] bg-primary/20 text-primary px-1.5 py-0.5 rounded">已發佈</span>}
-              </div>
-            </button>
-          ))}
+          {/* Dynamic pages */}
+          <div>
+            <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-1">自訂頁面</h4>
+            <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+              <DialogTrigger asChild>
+                <Button size="sm" className="w-full mb-2"><Plus className="h-4 w-4 mr-1" /> 新增頁面</Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader><DialogTitle>新增頁面</DialogTitle></DialogHeader>
+                <div className="space-y-3 pt-2">
+                  <Input placeholder="Slug (如 about-us)" value={newSlug} onChange={e => setNewSlug(e.target.value)} />
+                  <Input placeholder="標題" value={newTitle} onChange={e => setNewTitle(e.target.value)} />
+                  <Button onClick={createPage} className="w-full">建立</Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            <div className="space-y-1">
+              {pages.map(p => (
+                <button
+                  key={p.id}
+                  onClick={() => selectPage(p.id)}
+                  className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium transition-colors border-none cursor-pointer ${
+                    selectedId === p.id ? 'bg-primary text-primary-foreground' : 'bg-card text-muted-foreground hover:bg-muted'
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <FileText className="h-4 w-4 shrink-0" />
+                    <span className="truncate">{p.title || p.slug}</span>
+                    {p.is_published && <span className="ml-auto text-[10px] bg-primary/20 text-primary px-1.5 py-0.5 rounded">已發佈</span>}
+                  </div>
+                </button>
+              ))}
+              {pages.length === 0 && <p className="text-xs text-muted-foreground text-center py-3">尚無自訂頁面</p>}
+            </div>
+          </div>
         </div>
 
         {/* Right: editor */}
