@@ -30,7 +30,7 @@ export default function SiteLayout() {
       <header className="sticky top-0 z-50 bg-card/95 backdrop-blur border-b border-border">
         <div className="max-w-6xl mx-auto flex items-center justify-between px-4 h-16">
           <Link to="/site" className="text-primary font-bold text-xl no-underline tracking-wide">
-            STAR SDG
+            {tc('site_brand', 'STAR SDG')}
           </Link>
 
           <nav className="hidden md:flex items-center gap-6">
@@ -107,7 +107,7 @@ export default function SiteLayout() {
         <div className="max-w-6xl mx-auto px-4 py-10">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-              <h3 className="text-primary font-bold text-lg mb-3">STAR SDG</h3>
+              <h3 className="text-primary font-bold text-lg mb-3">{tc('site_brand', 'STAR SDG')}</h3>
               <p className="text-muted-foreground text-sm leading-relaxed">
                 {tc('site_footer_desc', t({ 0: '推動可持續旅遊，為地球的未來出一分力。', 1: '推动可持续旅游，为地球的未来出一分力。', 2: 'Promoting sustainable tourism for a better future.', 3: '持続可能な観光を推進し、より良い未来のために。' }))}
               </p>
@@ -133,7 +133,7 @@ export default function SiteLayout() {
             </div>
           </div>
           <div className="border-t border-border mt-8 pt-6 text-center text-muted-foreground text-xs">
-            © 2026 STAR SDG. All rights reserved.
+            {tc('site_copyright', '© 2026 STAR SDG. All rights reserved.')}
           </div>
         </div>
       </footer>
