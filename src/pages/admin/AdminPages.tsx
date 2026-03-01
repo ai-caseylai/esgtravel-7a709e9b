@@ -75,6 +75,8 @@ function FixedPageEditor({ page }: { page: typeof FIXED_PAGES[0] }) {
   const [data, setData] = useState<Record<number, Record<string, string>>>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [viewMode, setViewMode] = useState<'edit' | 'preview'>('edit');
+  const [previewKey, setPreviewKey] = useState(0);
 
   useEffect(() => {
     (async () => {
@@ -101,6 +103,8 @@ function FixedPageEditor({ page }: { page: typeof FIXED_PAGES[0] }) {
       const { error } = await supabase.from('site_content').update(updates as any).eq('id', Number(row.id));
       if (error) throw error;
       toast({ title: `已儲存 ${LANGS.find(l => l.id === lang)?.label} 內容` });
+      // Refresh preview after save
+      setPreviewKey(k => k + 1);
     } catch (e: any) {
       toast({ title: '儲存失敗', description: e.message, variant: 'destructive' });
     } finally {
@@ -115,54 +119,94 @@ function FixedPageEditor({ page }: { page: typeof FIXED_PAGES[0] }) {
       <Card>
         <CardContent className="p-4 flex items-center justify-between">
           <h3 className="font-semibold text-foreground">{page.label}</h3>
-          <Button variant="outline" size="sm" asChild>
-            <a href={page.path} target="_blank" rel="noreferrer"><Eye className="h-3.5 w-3.5 mr-1" /> 預覽</a>
-          </Button>
+          <div className="flex items-center gap-2">
+            <div className="flex bg-muted rounded-lg p-0.5">
+              <button
+                onClick={() => setViewMode('edit')}
+                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors border-none cursor-pointer ${
+                  viewMode === 'edit' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                <FileText className="h-3.5 w-3.5 inline mr-1" />編輯
+              </button>
+              <button
+                onClick={() => { setViewMode('preview'); setPreviewKey(k => k + 1); }}
+                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors border-none cursor-pointer ${
+                  viewMode === 'preview' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                <Eye className="h-3.5 w-3.5 inline mr-1" />預覽
+              </button>
+            </div>
+            <Button variant="outline" size="sm" asChild>
+              <a href={page.path} target="_blank" rel="noreferrer"><ExternalLink className="h-3.5 w-3.5 mr-1" /> 開新頁</a>
+            </Button>
+          </div>
         </CardContent>
       </Card>
 
-      <Tabs defaultValue="0">
-        <TabsList>
-          {LANGS.map(l => <TabsTrigger key={l.id} value={String(l.id)}>{l.label}</TabsTrigger>)}
-        </TabsList>
-        {LANGS.map(l => (
-          <TabsContent key={l.id} value={String(l.id)}>
-            {data[l.id] ? (
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {page.fields.map(field => (
-                    <div key={field.key} className={field.multiline ? 'md:col-span-2' : ''}>
-                      <Label className="text-xs text-muted-foreground mb-1.5 block">
-                        {field.label}
-                        <span className="text-[10px] ml-1.5 opacity-40 font-mono">({field.key})</span>
-                      </Label>
-                      {field.multiline ? (
-                        <Textarea
-                          value={data[l.id]?.[field.key] ?? ''}
-                          onChange={e => updateField(l.id, field.key, e.target.value)}
-                          rows={3} className="text-sm"
-                        />
-                      ) : (
-                        <Input
-                          value={data[l.id]?.[field.key] ?? ''}
-                          onChange={e => updateField(l.id, field.key, e.target.value)}
-                          className="text-sm"
-                        />
-                      )}
-                    </div>
-                  ))}
+      {viewMode === 'preview' ? (
+        <div className="border border-border rounded-xl overflow-hidden bg-background">
+          <div className="bg-muted/50 px-3 py-2 flex items-center gap-2 border-b border-border">
+            <div className="flex gap-1.5">
+              <span className="w-3 h-3 rounded-full bg-destructive/40" />
+              <span className="w-3 h-3 rounded-full bg-yellow-400/40" />
+              <span className="w-3 h-3 rounded-full bg-green-500/40" />
+            </div>
+            <span className="text-xs text-muted-foreground font-mono ml-2 truncate">{window.location.origin}{page.path}</span>
+          </div>
+          <iframe
+            key={previewKey}
+            src={page.path}
+            className="w-full border-0"
+            style={{ height: '70vh' }}
+            title={`Preview: ${page.label}`}
+          />
+        </div>
+      ) : (
+        <Tabs defaultValue="0">
+          <TabsList>
+            {LANGS.map(l => <TabsTrigger key={l.id} value={String(l.id)}>{l.label}</TabsTrigger>)}
+          </TabsList>
+          {LANGS.map(l => (
+            <TabsContent key={l.id} value={String(l.id)}>
+              {data[l.id] ? (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {page.fields.map(field => (
+                      <div key={field.key} className={field.multiline ? 'md:col-span-2' : ''}>
+                        <Label className="text-xs text-muted-foreground mb-1.5 block">
+                          {field.label}
+                          <span className="text-[10px] ml-1.5 opacity-40 font-mono">({field.key})</span>
+                        </Label>
+                        {field.multiline ? (
+                          <Textarea
+                            value={data[l.id]?.[field.key] ?? ''}
+                            onChange={e => updateField(l.id, field.key, e.target.value)}
+                            rows={3} className="text-sm"
+                          />
+                        ) : (
+                          <Input
+                            value={data[l.id]?.[field.key] ?? ''}
+                            onChange={e => updateField(l.id, field.key, e.target.value)}
+                            className="text-sm"
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  <Button onClick={() => handleSave(l.id)} disabled={saving} className="w-full">
+                    <Save className="h-4 w-4 mr-1" />
+                    {saving ? '儲存中...' : `儲存 ${l.label}`}
+                  </Button>
                 </div>
-                <Button onClick={() => handleSave(l.id)} disabled={saving} className="w-full">
-                  <Save className="h-4 w-4 mr-1" />
-                  {saving ? '儲存中...' : `儲存 ${l.label}`}
-                </Button>
-              </div>
-            ) : (
-              <p className="text-muted-foreground py-4">此語言尚無內容記錄。</p>
-            )}
-          </TabsContent>
-        ))}
-      </Tabs>
+              ) : (
+                <p className="text-muted-foreground py-4">此語言尚無內容記錄。</p>
+              )}
+            </TabsContent>
+          ))}
+        </Tabs>
+      )}
     </div>
   );
 }
