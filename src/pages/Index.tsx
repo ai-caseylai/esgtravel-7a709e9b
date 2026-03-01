@@ -30,11 +30,6 @@ export default function HomePage() {
       {/* Greeting */}
       <div className="flex items-center justify-between px-5 py-3">
         <div>
-          <p className="text-[13px] text-muted-foreground">
-            {user
-              ? t({ 0: '你好', 1: '你好', 2: 'Hello', 3: 'こんにちは' })
-              : t({ 0: '歡迎', 1: '欢迎', 2: 'Welcome', 3: 'ようこそ' })}
-          </p>
           <h1 className="text-[22px] font-bold text-foreground leading-tight">
             {user ? user.email?.split('@')[0] : 'STAR SDG'}
           </h1>
