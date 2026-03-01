@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Plus, Trash2, GripVertical, ArrowUp, ArrowDown, Eye, FileText, Image as ImageIcon, Type, AlignLeft, LayoutList } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { MediaPickerButton } from '@/components/MediaPickerButton';
 
 type Block = {
   id?: number;
@@ -80,11 +81,11 @@ function BlockEditor({ block, onChange, onRemove, onMoveUp, onMoveDown, isFirst,
 
         {block.block_type === 'image' && (
           <div className="space-y-2">
-            <div className="flex gap-2 items-end">
+            <div className="flex gap-2 items-center">
               <div className="flex-1">
                 <Input placeholder="圖片 URL" value={block.content.url ?? ''} onChange={e => update({ url: e.target.value })} />
               </div>
-              
+              <MediaPickerButton onSelect={(url) => update({ url })} />
             </div>
             <Input placeholder="圖片說明 (alt)" value={block.content.alt ?? ''} onChange={e => update({ alt: e.target.value })} />
             {block.content.url && (
@@ -97,11 +98,11 @@ function BlockEditor({ block, onChange, onRemove, onMoveUp, onMoveDown, isFirst,
           <div className="space-y-2">
             <Input placeholder="標題" value={block.content.title ?? ''} onChange={e => update({ title: e.target.value })} />
             <Input placeholder="副標題" value={block.content.subtitle ?? ''} onChange={e => update({ subtitle: e.target.value })} />
-            <div className="flex gap-2 items-end">
+            <div className="flex gap-2 items-center">
               <div className="flex-1">
                 <Input placeholder="背景圖片 URL" value={block.content.bg ?? ''} onChange={e => update({ bg: e.target.value })} />
               </div>
-              
+              <MediaPickerButton onSelect={(url) => update({ bg: url })} />
             </div>
             {block.content.bg && (
               <img src={block.content.bg} alt="bg preview" className="max-h-32 rounded border object-cover w-full" />
