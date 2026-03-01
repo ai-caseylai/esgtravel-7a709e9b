@@ -9,8 +9,10 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Pencil, Trash2, Calendar, FileText } from 'lucide-react';
+import { Plus, Pencil, Trash2, Calendar, FileText, Image as ImageIcon } from 'lucide-react';
 import { toast } from 'sonner';
+
+const SUPABASE_URL = 'https://jbfybrxpdippdsettdgv.supabase.co';
 
 const LANGS = [
   { id: 0, label: '繁中' },
@@ -42,6 +44,53 @@ interface TranslationForm {
 }
 
 const emptyTranslation = (): TranslationForm => ({ title: '', summary: '', content: '' });
+
+function CoverImagePicker({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const [mediaList, setMediaList] = useState<{ name: string; url: string }[]>([]);
+  const [showPicker, setShowPicker] = useState(false);
+
+  const loadMedia = async () => {
+    const { data } = await supabase.storage.from('media').list('', { limit: 200, sortBy: { column: 'created_at', order: 'desc' } });
+    const items = (data ?? [])
+      .filter(f => /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(f.name))
+      .map(f => ({
+        name: f.name,
+        url: `${SUPABASE_URL}/storage/v1/object/public/media/${f.name}`,
+      }));
+    setMediaList(items);
+    setShowPicker(true);
+  };
+
+  return (
+    <div className="space-y-2">
+      <div className="flex gap-2">
+        <Input value={value} onChange={e => onChange(e.target.value)} placeholder="圖片 URL" className="text-sm flex-1" />
+        <Button type="button" variant="outline" size="sm" onClick={loadMedia}>
+          <ImageIcon className="h-4 w-4 mr-1" /> 選擇
+        </Button>
+      </div>
+      {value && (
+        <img src={value} alt="" className="w-24 h-16 object-cover rounded-lg border" />
+      )}
+      {showPicker && (
+        <div className="grid grid-cols-4 gap-2 max-h-48 overflow-y-auto border rounded-lg p-2 bg-background">
+          {mediaList.length === 0 ? (
+            <p className="col-span-4 text-xs text-muted-foreground text-center py-4">媒體庫無圖片</p>
+          ) : mediaList.map(item => (
+            <img
+              key={item.name}
+              src={item.url}
+              alt={item.name}
+              title={item.name}
+              className="w-full aspect-square object-cover rounded cursor-pointer hover:ring-2 ring-primary"
+              onClick={() => { onChange(item.url); setShowPicker(false); }}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function AdminPosts() {
   const [posts, setPosts] = useState<PostRow[]>([]);
@@ -279,8 +328,8 @@ export default function AdminPosts() {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label>封面圖片 URL</Label>
-                <Input value={coverImage} onChange={e => setCoverImage(e.target.value)} placeholder="https://..." />
+                <Label>封面圖片</Label>
+                <CoverImagePicker value={coverImage} onChange={setCoverImage} />
               </div>
               {category === 'event' && (
                 <div>
