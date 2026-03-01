@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
-import { Plus, Trash2, GripVertical, ArrowUp, ArrowDown, Eye, FileText, Image as ImageIcon, Type, AlignLeft, LayoutList, Globe, ExternalLink, Save } from 'lucide-react';
+import { Plus, Trash2, GripVertical, ArrowUp, ArrowDown, Eye, FileText, Image as ImageIcon, Type, AlignLeft, LayoutList, Globe, ExternalLink, Save, Upload } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { MediaPickerButton } from '@/components/MediaPickerButton';
 
@@ -119,6 +119,54 @@ const LANGS = [
   { id: 3, dbLang: 2, label: 'JP' },
 ];
 
+/* ── Image field with upload + media picker + preview ── */
+function ImageFieldEditor({ value, onChange }: { value: string; onChange: (url: string) => void }) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const ext = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+      const { error } = await supabase.storage.from('media').upload(fileName, file);
+      if (error) throw error;
+      const url = `https://jbfybrxpdippdsettdgv.supabase.co/storage/v1/object/public/media/${fileName}`;
+      onChange(url);
+    } catch (err: any) {
+      console.error(err);
+    } finally {
+      setUploading(false);
+      if (inputRef.current) inputRef.current.value = '';
+    }
+  };
+
+  return (
+    <div className="space-y-2">
+      <div className="flex gap-2 items-center flex-wrap">
+        <div className="flex-1 min-w-[200px]">
+          <Input
+            placeholder="圖片 URL（留空則使用預設圖片）"
+            value={value}
+            onChange={e => onChange(e.target.value)}
+            className="text-sm"
+          />
+        </div>
+        <input ref={inputRef} type="file" accept="image/*" className="hidden" onChange={handleUpload} />
+        <Button type="button" variant="outline" size="sm" onClick={() => inputRef.current?.click()} disabled={uploading}>
+          <Upload className="h-4 w-4 mr-1" /> {uploading ? '上傳中...' : '上傳'}
+        </Button>
+        <MediaPickerButton onSelect={onChange} />
+      </div>
+      {value && (
+        <img src={value} alt="" className="max-h-32 rounded border border-border object-cover" />
+      )}
+    </div>
+  );
+}
+
 /* ── Fixed page editor (site_content fields) ── */
 function FixedPageEditor({ page }: { page: typeof FIXED_PAGES[0] }) {
   const { toast } = useToast();
@@ -143,6 +191,19 @@ function FixedPageEditor({ page }: { page: typeof FIXED_PAGES[0] }) {
     setData(prev => ({ ...prev, [lang]: { ...prev[lang], [key]: value } }));
   };
 
+  // Sync image URL across ALL languages so images are consistent
+  const updateImageField = (key: string, value: string) => {
+    setData(prev => {
+      const next = { ...prev };
+      LANGS.forEach(l => {
+        if (next[l.dbLang]) {
+          next[l.dbLang] = { ...next[l.dbLang], [key]: value };
+        }
+      });
+      return next;
+    });
+  };
+
   const handleSave = async (dbLang: number) => {
     setSaving(true);
     try {
@@ -152,8 +213,20 @@ function FixedPageEditor({ page }: { page: typeof FIXED_PAGES[0] }) {
       page.fields.forEach(f => { updates[f.key] = row[f.key] ?? ''; });
       const { error } = await supabase.from('site_content').update(updates as any).eq('id', Number(row.id));
       if (error) throw error;
+
+      // Sync image fields to all other languages
+      const imageUpdates: Record<string, string> = {};
+      page.fields.filter(f => f.image).forEach(f => { imageUpdates[f.key] = row[f.key] ?? ''; });
+      if (Object.keys(imageUpdates).length > 0) {
+        for (const l of LANGS) {
+          if (l.dbLang === dbLang) continue;
+          const otherRow = data[l.dbLang];
+          if (!otherRow) continue;
+          await supabase.from('site_content').update(imageUpdates as any).eq('id', Number(otherRow.id));
+        }
+      }
+
       toast({ title: `已儲存 ${LANGS.find(l => l.dbLang === dbLang)?.label} 內容` });
-      // Refresh preview after save
       setPreviewKey(k => k + 1);
     } catch (e: any) {
       toast({ title: '儲存失敗', description: e.message, variant: 'destructive' });
@@ -230,22 +303,10 @@ function FixedPageEditor({ page }: { page: typeof FIXED_PAGES[0] }) {
                           <span className="text-[10px] ml-1.5 opacity-40 font-mono">({field.key})</span>
                         </Label>
                         {field.image ? (
-                          <div className="space-y-2">
-                            <div className="flex gap-2 items-center">
-                              <div className="flex-1">
-                                <Input
-                                  placeholder="圖片 URL（留空則使用預設圖片）"
-                                  value={data[l.dbLang]?.[field.key] ?? ''}
-                                  onChange={e => updateField(l.dbLang, field.key, e.target.value)}
-                                  className="text-sm"
-                                />
-                              </div>
-                              <MediaPickerButton onSelect={(url) => updateField(l.dbLang, field.key, url)} />
-                            </div>
-                            {data[l.dbLang]?.[field.key] && (
-                              <img src={data[l.dbLang][field.key]} alt="" className="max-h-32 rounded border border-border object-cover" />
-                            )}
-                          </div>
+                          <ImageFieldEditor
+                            value={data[l.dbLang]?.[field.key] ?? ''}
+                            onChange={(url) => updateImageField(field.key, url)}
+                          />
                         ) : field.multiline ? (
                           <Textarea
                             value={data[l.dbLang]?.[field.key] ?? ''}
