@@ -371,7 +371,7 @@ export default function AdminBadges() {
 
                 <div>
                   <Label className="mb-2 block">預覽</Label>
-                  <div className="w-full h-40 rounded-xl border border-border bg-muted overflow-hidden flex items-center justify-center">
+                  <div className="w-full aspect-[16/9] rounded-xl border border-border bg-muted overflow-hidden flex items-center justify-center">
                     {resolveBadgeImageUrl(badgeForm.image_url) ? (
                       <img
                         src={resolveBadgeImageUrl(badgeForm.image_url)!}
