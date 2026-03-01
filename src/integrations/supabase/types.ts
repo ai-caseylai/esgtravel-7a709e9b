@@ -559,6 +559,23 @@ export type Database = {
           resendotp: string
           sdg: string
           showmore: string
+          site_cta_desc: string
+          site_cta_title: string
+          site_feature1_desc: string
+          site_feature1_title: string
+          site_feature2_desc: string
+          site_feature2_title: string
+          site_feature3_desc: string
+          site_feature3_title: string
+          site_feature4_desc: string
+          site_feature4_title: string
+          site_hero_desc: string
+          site_hero_title: string
+          site_learnmore: string
+          site_programme_desc: string
+          site_programme_title: string
+          site_sdg_desc: string
+          site_sdg_title: string
           subheader: string
           submit: string
           successtitle: string
@@ -626,6 +643,23 @@ export type Database = {
           resendotp?: string
           sdg?: string
           showmore?: string
+          site_cta_desc?: string
+          site_cta_title?: string
+          site_feature1_desc?: string
+          site_feature1_title?: string
+          site_feature2_desc?: string
+          site_feature2_title?: string
+          site_feature3_desc?: string
+          site_feature3_title?: string
+          site_feature4_desc?: string
+          site_feature4_title?: string
+          site_hero_desc?: string
+          site_hero_title?: string
+          site_learnmore?: string
+          site_programme_desc?: string
+          site_programme_title?: string
+          site_sdg_desc?: string
+          site_sdg_title?: string
           subheader?: string
           submit?: string
           successtitle?: string
@@ -693,6 +727,23 @@ export type Database = {
           resendotp?: string
           sdg?: string
           showmore?: string
+          site_cta_desc?: string
+          site_cta_title?: string
+          site_feature1_desc?: string
+          site_feature1_title?: string
+          site_feature2_desc?: string
+          site_feature2_title?: string
+          site_feature3_desc?: string
+          site_feature3_title?: string
+          site_feature4_desc?: string
+          site_feature4_title?: string
+          site_hero_desc?: string
+          site_hero_title?: string
+          site_learnmore?: string
+          site_programme_desc?: string
+          site_programme_title?: string
+          site_sdg_desc?: string
+          site_sdg_title?: string
           subheader?: string
           submit?: string
           successtitle?: string
