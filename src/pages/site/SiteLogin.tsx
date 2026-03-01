@@ -9,7 +9,7 @@ export default function SiteLogin() {
   const { t } = useI18n();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const redirectTo = searchParams.get('redirect') || '/site';
+  const redirectTo = searchParams.get('redirect') || '/admin';
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
