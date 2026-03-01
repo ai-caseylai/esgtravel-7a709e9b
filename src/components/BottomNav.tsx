@@ -27,8 +27,8 @@ export default function BottomNav() {
   if (!location.pathname.startsWith('/mobile')) return null;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-card/80 backdrop-blur-xl border-t border-border/50"
-      style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+    <nav className="fixed bottom-0 left-0 right-0 z-50"
+      style={{ background: 'hsl(var(--teal))', paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
     >
       <div className="flex justify-around items-end h-14 max-w-lg mx-auto">
         {navItems.map(item => {
@@ -48,13 +48,14 @@ export default function BottomNav() {
                 {isActive && (
                   <motion.div
                     layoutId="navDot"
-                    className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary"
+                    className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full"
+                    style={{ background: 'hsl(0 0% 100%)' }}
                     transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                   />
                 )}
-                <Icon className={`w-[22px] h-[22px] transition-colors ${isActive ? 'text-primary' : 'text-muted-foreground'}`} strokeWidth={isActive ? 2.2 : 1.8} />
+                <Icon className={`w-[22px] h-[22px] transition-colors ${isActive ? 'text-[hsl(0_0%_100%)]' : 'text-[hsl(0_0%_100%/0.6)]'}`} strokeWidth={isActive ? 2.2 : 1.8} />
               </div>
-              <span className={`text-[10px] leading-tight transition-colors ${isActive ? 'text-primary font-semibold' : 'text-muted-foreground'}`}>
+              <span className={`text-[10px] leading-tight transition-colors ${isActive ? 'text-[hsl(0_0%_100%)] font-semibold' : 'text-[hsl(0_0%_100%/0.6)]'}`}>
                 {label}
               </span>
             </Link>

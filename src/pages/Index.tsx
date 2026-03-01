@@ -6,6 +6,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Award, MapPin, ChevronRight, Sparkles } from 'lucide-react';
 import heroMobile from '@/assets/hero-mobile.jpg';
+import MobileHeader from '@/components/MobileHeader';
 
 export default function HomePage() {
   const { lang, setLang, t } = useI18n();
@@ -24,10 +25,9 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Status bar spacer */}
-      <div className="h-2" />
+      <MobileHeader title="STAR SDG" />
 
-      {/* Top bar */}
+      {/* Greeting */}
       <div className="flex items-center justify-between px-5 py-3">
         <div>
           <p className="text-[13px] text-muted-foreground">

@@ -61,6 +61,8 @@
     --earth: 35 60% 50%;
     --earth-foreground: 0 0% 100%;
     --badge-red: 7 57% 52%;
+    --teal: 176 55% 42%;
+    --teal-foreground: 0 0% 100%;
   }
 
   .dark {
@@ -114,6 +116,8 @@
     --earth: 35 55% 55%;
     --earth-foreground: 0 0% 100%;
     --badge-red: 7 57% 52%;
+    --teal: 176 50% 48%;
+    --teal-foreground: 0 0% 100%;
   }
 }
 
