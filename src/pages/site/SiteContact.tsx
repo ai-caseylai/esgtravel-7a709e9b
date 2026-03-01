@@ -1,14 +1,26 @@
-import { useI18n } from '@/lib/i18n';
+import { useSiteContent } from '@/hooks/use-site-content';
 import { Phone, Mail, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function SiteContact() {
-  const { t } = useI18n();
+  const { tc } = useSiteContent();
 
   const contactItems = [
-    { icon: Phone, label: { 0: '電話', 1: '电话', 2: 'Phone', 3: '電話' }, value: '+852 1234-5678' },
-    { icon: Mail, label: { 0: '電郵', 1: '邮箱', 2: 'Email', 3: 'メール' }, value: 'info@starsdg.com' },
-    { icon: MapPin, label: { 0: '地址', 1: '地址', 2: 'Address', 3: '住所' }, value: t({ 0: '香港九龍尖沙咀廣東道 123 號', 1: '香港九龙尖沙咀广东道 123 号', 2: '123 Canton Road, Tsim Sha Tsui, Kowloon, Hong Kong', 3: '香港九龍尖沙咀広東道123号' }) },
+    {
+      icon: Phone,
+      label: tc('site_contact_phone_label', 'Phone'),
+      value: tc('site_contact_phone', '+852 1234-5678'),
+    },
+    {
+      icon: Mail,
+      label: tc('site_contact_email_label', 'Email'),
+      value: tc('site_contact_email_val', 'info@starsdg.com'),
+    },
+    {
+      icon: MapPin,
+      label: tc('site_contact_addr_label', 'Address'),
+      value: tc('site_contact_addr', '123 Canton Road, Tsim Sha Tsui, Kowloon, Hong Kong'),
+    },
   ];
 
   return (
@@ -16,10 +28,10 @@ export default function SiteContact() {
       <section className="bg-gradient-to-b from-primary/10 to-transparent py-16">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h1 className="text-foreground text-4xl font-bold mb-4">
-            {t({ 0: '聯絡我們', 1: '联系我们', 2: 'Contact Us', 3: 'お問い合わせ' })}
+            {tc('site_contact_title', 'Contact Us')}
           </h1>
           <p className="text-muted-foreground text-lg">
-            {t({ 0: '如有任何問題，歡迎聯絡我們', 1: '如有任何问题，欢迎联系我们', 2: 'Feel free to reach out with any questions', 3: 'ご質問がありましたらお気軽にお問い合わせください' })}
+            {tc('site_contact_desc', 'Feel free to reach out with any questions')}
           </p>
         </div>
       </section>
@@ -31,7 +43,7 @@ export default function SiteContact() {
               <item.icon className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <p className="text-muted-foreground text-xs mb-1">{t(item.label)}</p>
+              <p className="text-muted-foreground text-xs mb-1">{item.label}</p>
               <p className="text-foreground font-medium">{item.value}</p>
             </div>
           </div>
@@ -39,7 +51,7 @@ export default function SiteContact() {
 
         <div className="text-center pt-6">
           <Link to="/site" className="text-primary font-medium no-underline hover:underline">
-            ← {t({ 0: '返回首頁', 1: '返回首页', 2: 'Back to Home', 3: 'ホームに戻る' })}
+            ← {tc('home', 'Home')}
           </Link>
         </div>
       </section>

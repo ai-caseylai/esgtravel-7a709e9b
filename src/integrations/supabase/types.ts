@@ -559,23 +559,64 @@ export type Database = {
           resendotp: string
           sdg: string
           showmore: string
+          site_articles_label: string
+          site_contact_addr: string
+          site_contact_addr_label: string
+          site_contact_desc: string
+          site_contact_email_label: string
+          site_contact_email_val: string
+          site_contact_phone: string
+          site_contact_phone_label: string
+          site_contact_title: string
           site_cta_desc: string
+          site_cta_img: string
           site_cta_title: string
+          site_events_desc: string
+          site_events_hero_img: string
+          site_events_label: string
+          site_events_title: string
           site_feature1_desc: string
+          site_feature1_img: string
           site_feature1_title: string
           site_feature2_desc: string
+          site_feature2_img: string
           site_feature2_title: string
           site_feature3_desc: string
+          site_feature3_img: string
           site_feature3_title: string
           site_feature4_desc: string
+          site_feature4_img: string
           site_feature4_title: string
+          site_footer_contact: string
+          site_footer_desc: string
+          site_footer_links: string
           site_hero_desc: string
+          site_hero_img: string
           site_hero_title: string
+          site_how_desc: string
+          site_how_hero_img: string
+          site_how_title: string
           site_learnmore: string
+          site_nav_how: string
+          site_no_articles: string
+          site_no_events: string
           site_programme_desc: string
           site_programme_title: string
+          site_readmore: string
           site_sdg_desc: string
           site_sdg_title: string
+          site_step1_desc: string
+          site_step1_img: string
+          site_step1_title: string
+          site_step2_desc: string
+          site_step2_img: string
+          site_step2_title: string
+          site_step3_desc: string
+          site_step3_img: string
+          site_step3_title: string
+          site_step4_desc: string
+          site_step4_img: string
+          site_step4_title: string
           subheader: string
           submit: string
           successtitle: string
@@ -643,23 +684,64 @@ export type Database = {
           resendotp?: string
           sdg?: string
           showmore?: string
+          site_articles_label?: string
+          site_contact_addr?: string
+          site_contact_addr_label?: string
+          site_contact_desc?: string
+          site_contact_email_label?: string
+          site_contact_email_val?: string
+          site_contact_phone?: string
+          site_contact_phone_label?: string
+          site_contact_title?: string
           site_cta_desc?: string
+          site_cta_img?: string
           site_cta_title?: string
+          site_events_desc?: string
+          site_events_hero_img?: string
+          site_events_label?: string
+          site_events_title?: string
           site_feature1_desc?: string
+          site_feature1_img?: string
           site_feature1_title?: string
           site_feature2_desc?: string
+          site_feature2_img?: string
           site_feature2_title?: string
           site_feature3_desc?: string
+          site_feature3_img?: string
           site_feature3_title?: string
           site_feature4_desc?: string
+          site_feature4_img?: string
           site_feature4_title?: string
+          site_footer_contact?: string
+          site_footer_desc?: string
+          site_footer_links?: string
           site_hero_desc?: string
+          site_hero_img?: string
           site_hero_title?: string
+          site_how_desc?: string
+          site_how_hero_img?: string
+          site_how_title?: string
           site_learnmore?: string
+          site_nav_how?: string
+          site_no_articles?: string
+          site_no_events?: string
           site_programme_desc?: string
           site_programme_title?: string
+          site_readmore?: string
           site_sdg_desc?: string
           site_sdg_title?: string
+          site_step1_desc?: string
+          site_step1_img?: string
+          site_step1_title?: string
+          site_step2_desc?: string
+          site_step2_img?: string
+          site_step2_title?: string
+          site_step3_desc?: string
+          site_step3_img?: string
+          site_step3_title?: string
+          site_step4_desc?: string
+          site_step4_img?: string
+          site_step4_title?: string
           subheader?: string
           submit?: string
           successtitle?: string
@@ -727,23 +809,64 @@ export type Database = {
           resendotp?: string
           sdg?: string
           showmore?: string
+          site_articles_label?: string
+          site_contact_addr?: string
+          site_contact_addr_label?: string
+          site_contact_desc?: string
+          site_contact_email_label?: string
+          site_contact_email_val?: string
+          site_contact_phone?: string
+          site_contact_phone_label?: string
+          site_contact_title?: string
           site_cta_desc?: string
+          site_cta_img?: string
           site_cta_title?: string
+          site_events_desc?: string
+          site_events_hero_img?: string
+          site_events_label?: string
+          site_events_title?: string
           site_feature1_desc?: string
+          site_feature1_img?: string
           site_feature1_title?: string
           site_feature2_desc?: string
+          site_feature2_img?: string
           site_feature2_title?: string
           site_feature3_desc?: string
+          site_feature3_img?: string
           site_feature3_title?: string
           site_feature4_desc?: string
+          site_feature4_img?: string
           site_feature4_title?: string
+          site_footer_contact?: string
+          site_footer_desc?: string
+          site_footer_links?: string
           site_hero_desc?: string
+          site_hero_img?: string
           site_hero_title?: string
+          site_how_desc?: string
+          site_how_hero_img?: string
+          site_how_title?: string
           site_learnmore?: string
+          site_nav_how?: string
+          site_no_articles?: string
+          site_no_events?: string
           site_programme_desc?: string
           site_programme_title?: string
+          site_readmore?: string
           site_sdg_desc?: string
           site_sdg_title?: string
+          site_step1_desc?: string
+          site_step1_img?: string
+          site_step1_title?: string
+          site_step2_desc?: string
+          site_step2_img?: string
+          site_step2_title?: string
+          site_step3_desc?: string
+          site_step3_img?: string
+          site_step3_title?: string
+          site_step4_desc?: string
+          site_step4_img?: string
+          site_step4_title?: string
           subheader?: string
           submit?: string
           successtitle?: string

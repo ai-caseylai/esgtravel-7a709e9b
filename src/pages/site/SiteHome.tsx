@@ -4,10 +4,10 @@ import { useSiteContent } from '@/hooks/use-site-content';
 import { motion } from 'framer-motion';
 import { Globe, Award, Heart, Users, Home, Wheat, HeartPulse, GraduationCap, Equal, Droplets, Zap, Briefcase, Lightbulb, Scale, Building2, Recycle, Leaf, Fish, TreePine, Shield, Handshake } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
-import siteHero from '@/assets/site-hero.jpg';
-import featureBadge from '@/assets/feature-badge.jpg';
-import featureCommunity from '@/assets/feature-community.jpg';
-import featureImpact from '@/assets/feature-impact.jpg';
+import siteHeroFallback from '@/assets/site-hero.jpg';
+import featureBadgeFallback from '@/assets/feature-badge.jpg';
+import featureCommunityFallback from '@/assets/feature-community.jpg';
+import featureImpactFallback from '@/assets/feature-impact.jpg';
 
 const sdgs: { id: number; color: string; en: string; zhTw: string; zhCn: string; ja: string; icon: LucideIcon }[] = [
   { id: 1, color: '#E5243B', en: 'No Poverty', zhTw: '消除貧窮', zhCn: '消除贫穷', ja: '貧困をなくそう', icon: Home },
@@ -35,11 +35,14 @@ export default function SiteHome() {
 
   const getSdgName = (s: typeof sdgs[0]) => lang === 0 ? s.zhTw : lang === 1 ? s.zhCn : lang === 3 ? s.ja : s.en;
 
+  const heroImg = tc('site_hero_img', '') || siteHeroFallback;
+  const ctaImg = tc('site_cta_img', '') || featureCommunityFallback;
+
   const features = [
-    { icon: Globe, image: siteHero, title: tc('site_feature1_title', 'Sustainable Tourism'), desc: tc('site_feature1_desc', '') },
-    { icon: Award, image: featureBadge, title: tc('site_feature2_title', 'Digital Badges'), desc: tc('site_feature2_desc', '') },
-    { icon: Heart, image: featureImpact, title: tc('site_feature3_title', 'Social Impact'), desc: tc('site_feature3_desc', '') },
-    { icon: Users, image: featureCommunity, title: tc('site_feature4_title', 'Global Community'), desc: tc('site_feature4_desc', '') },
+    { icon: Globe, image: tc('site_feature1_img', '') || siteHeroFallback, title: tc('site_feature1_title', 'Sustainable Tourism'), desc: tc('site_feature1_desc', '') },
+    { icon: Award, image: tc('site_feature2_img', '') || featureBadgeFallback, title: tc('site_feature2_title', 'Digital Badges'), desc: tc('site_feature2_desc', '') },
+    { icon: Heart, image: tc('site_feature3_img', '') || featureImpactFallback, title: tc('site_feature3_title', 'Social Impact'), desc: tc('site_feature3_desc', '') },
+    { icon: Users, image: tc('site_feature4_img', '') || featureCommunityFallback, title: tc('site_feature4_title', 'Global Community'), desc: tc('site_feature4_desc', '') },
   ];
 
   return (
@@ -47,7 +50,7 @@ export default function SiteHome() {
       {/* Hero with background image */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
-          <img src={siteHero} alt="" className="w-full h-full object-cover" />
+          <img src={heroImg} alt="" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/50 to-background" />
         </div>
         <div className="max-w-6xl mx-auto px-4 pt-24 pb-32 relative">
@@ -158,7 +161,7 @@ export default function SiteHome() {
       {/* CTA with background */}
       <section className="relative overflow-hidden py-20">
         <div className="absolute inset-0">
-          <img src={featureCommunity} alt="" className="w-full h-full object-cover" />
+          <img src={ctaImg} alt="" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />
         </div>
         <div className="max-w-6xl mx-auto px-4 text-center relative">
