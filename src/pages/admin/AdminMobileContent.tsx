@@ -3,7 +3,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import { Save, Search, Plus, Trash2, Image as ImageIcon } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -60,8 +59,12 @@ export default function AdminMobileContent() {
   useEffect(() => { fetchAll(); }, []);
 
   const sections = SECTION_ORDER.filter(s => data.some(r => r.section === s));
-  // Add any sections in data that aren't in SECTION_ORDER
   data.forEach(r => { if (!sections.includes(r.section)) sections.push(r.section); });
+
+  const filteredSections = sections.filter(s =>
+    !search || (SECTION_LABELS[s] || s).toLowerCase().includes(search.toLowerCase()) ||
+    data.some(r => r.section === s && (r.content_key.includes(search) || r.value_tw.includes(search) || r.value_en.includes(search)))
+  );
 
   const filteredRows = data.filter(r =>
     r.section === activeSection &&
@@ -116,7 +119,6 @@ export default function AdminMobileContent() {
     else { toast.success('已刪除'); fetchAll(); }
   };
 
-  // For image type, show media picker
   const MediaInput = ({ value, onChange }: { value: string; onChange: (v: string) => void }) => {
     const [mediaList, setMediaList] = useState<string[]>([]);
     const [showPicker, setShowPicker] = useState(false);
@@ -220,86 +222,93 @@ export default function AdminMobileContent() {
       {loading ? (
         <p className="text-muted-foreground">載入中...</p>
       ) : (
-        <>
-          <div className="relative mb-4">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="搜尋..." className="pl-9" />
+        <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-6">
+          {/* ── Left: section nav ── */}
+          <div className="space-y-1">
+            <div className="relative mb-3">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="搜尋..." className="pl-9 text-sm" />
+            </div>
+            <nav className="flex lg:flex-col gap-1 overflow-x-auto lg:overflow-x-visible pb-2 lg:pb-0">
+              {filteredSections.map(s => (
+                <button
+                  key={s}
+                  onClick={() => setActiveSection(s)}
+                  className={`text-left px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
+                    activeSection === s
+                      ? 'bg-primary text-primary-foreground'
+                      : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                  }`}
+                >
+                  {SECTION_LABELS[s] || s}
+                </button>
+              ))}
+            </nav>
           </div>
 
-          {/* Section tabs */}
-          <div className="flex gap-2 overflow-x-auto pb-3 mb-4 border-b border-border">
-            {sections.map(s => (
-              <button
-                key={s}
-                onClick={() => setActiveSection(s)}
-                className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors border ${
-                  activeSection === s
-                    ? 'bg-primary text-primary-foreground border-primary'
-                    : 'bg-muted text-muted-foreground border-border hover:bg-muted/80'
-                }`}
-              >
-                {SECTION_LABELS[s] || s}
-              </button>
-            ))}
-          </div>
+          {/* ── Right: content editor ── */}
+          <div>
+            <h3 className="text-foreground font-semibold text-base mb-4">
+              {SECTION_LABELS[activeSection] || activeSection}
+            </h3>
 
-          {/* Content rows */}
-          <div className="space-y-4">
-            {filteredRows.map(row => (
-              <div key={row.id} className="bg-card rounded-xl border border-border p-4">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    {row.content_type === 'image' && <ImageIcon className="h-4 w-4 text-primary" />}
-                    <span className="text-sm font-mono text-muted-foreground">{row.content_key}</span>
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">
-                      {row.content_type}
-                    </span>
+            <div className="space-y-4">
+              {filteredRows.map(row => (
+                <div key={row.id} className="bg-card rounded-xl border border-border p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      {row.content_type === 'image' && <ImageIcon className="h-4 w-4 text-primary" />}
+                      <span className="text-sm font-mono text-muted-foreground">{row.content_key}</span>
+                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">
+                        {row.content_type}
+                      </span>
+                    </div>
+                    <Button variant="ghost" size="sm" onClick={() => handleDelete(row.id)}>
+                      <Trash2 className="h-3.5 w-3.5 text-destructive" />
+                    </Button>
                   </div>
-                  <Button variant="ghost" size="sm" onClick={() => handleDelete(row.id)}>
-                    <Trash2 className="h-3.5 w-3.5 text-destructive" />
-                  </Button>
+
+                  {row.content_type === 'image' ? (
+                    <div className="space-y-2">
+                      <Label className="text-[11px] text-muted-foreground">圖片 URL (所有語言共用)</Label>
+                      <MediaInput value={row.value_tw} onChange={v => { updateField(row.id, 'value_tw', v); updateField(row.id, 'value_cn', v); updateField(row.id, 'value_en', v); updateField(row.id, 'value_ja', v); }} />
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div>
+                        <Label className="text-[11px] text-muted-foreground">繁體中文</Label>
+                        <Input value={row.value_tw} onChange={e => updateField(row.id, 'value_tw', e.target.value)} className="text-sm" />
+                      </div>
+                      <div>
+                        <Label className="text-[11px] text-muted-foreground">简体中文</Label>
+                        <Input value={row.value_cn} onChange={e => updateField(row.id, 'value_cn', e.target.value)} className="text-sm" />
+                      </div>
+                      <div>
+                        <Label className="text-[11px] text-muted-foreground">English</Label>
+                        <Input value={row.value_en} onChange={e => updateField(row.id, 'value_en', e.target.value)} className="text-sm" />
+                      </div>
+                      <div>
+                        <Label className="text-[11px] text-muted-foreground">日本語</Label>
+                        <Input value={row.value_ja} onChange={e => updateField(row.id, 'value_ja', e.target.value)} className="text-sm" />
+                      </div>
+                    </div>
+                  )}
                 </div>
+              ))}
+            </div>
 
-                {row.content_type === 'image' ? (
-                  <div className="space-y-2">
-                    <Label className="text-[11px] text-muted-foreground">圖片 URL (所有語言共用)</Label>
-                    <MediaInput value={row.value_tw} onChange={v => { updateField(row.id, 'value_tw', v); updateField(row.id, 'value_cn', v); updateField(row.id, 'value_en', v); updateField(row.id, 'value_ja', v); }} />
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div>
-                      <Label className="text-[11px] text-muted-foreground">繁體中文</Label>
-                      <Input value={row.value_tw} onChange={e => updateField(row.id, 'value_tw', e.target.value)} className="text-sm" />
-                    </div>
-                    <div>
-                      <Label className="text-[11px] text-muted-foreground">简体中文</Label>
-                      <Input value={row.value_cn} onChange={e => updateField(row.id, 'value_cn', e.target.value)} className="text-sm" />
-                    </div>
-                    <div>
-                      <Label className="text-[11px] text-muted-foreground">English</Label>
-                      <Input value={row.value_en} onChange={e => updateField(row.id, 'value_en', e.target.value)} className="text-sm" />
-                    </div>
-                    <div>
-                      <Label className="text-[11px] text-muted-foreground">日本語</Label>
-                      <Input value={row.value_ja} onChange={e => updateField(row.id, 'value_ja', e.target.value)} className="text-sm" />
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
+            {filteredRows.length > 0 && (
+              <Button onClick={handleSave} disabled={saving} className="w-full mt-4">
+                <Save className="h-4 w-4 mr-1" />
+                {saving ? '儲存中...' : '儲存此區段'}
+              </Button>
+            )}
+
+            {filteredRows.length === 0 && (
+              <p className="text-muted-foreground text-center py-10">此區段尚無內容</p>
+            )}
           </div>
-
-          {filteredRows.length > 0 && (
-            <Button onClick={handleSave} disabled={saving} className="w-full mt-4">
-              <Save className="h-4 w-4 mr-1" />
-              {saving ? '儲存中...' : '儲存此區段'}
-            </Button>
-          )}
-
-          {filteredRows.length === 0 && (
-            <p className="text-muted-foreground text-center py-10">此區段尚無內容</p>
-          )}
-        </>
+        </div>
       )}
     </div>
   );
