@@ -45,7 +45,12 @@ export function RichTextEditor({ value, onChange, placeholder = '輸入內容...
 
   const editor = useEditor({
     extensions: [
-      StarterKit.configure({ heading: { levels: [1, 2, 3] } }),
+      StarterKit.configure({
+        heading: { levels: [1, 2, 3] },
+        // Disable built-in extensions that we configure separately
+        link: false,
+        underline: false,
+      }),
       Image.configure({ inline: false, allowBase64: true }),
       Link.configure({ openOnClick: false, HTMLAttributes: { class: 'text-primary underline' } }),
       Placeholder.configure({ placeholder }),
