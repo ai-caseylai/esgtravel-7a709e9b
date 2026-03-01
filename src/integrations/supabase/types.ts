@@ -202,6 +202,42 @@ export type Database = {
         }
         Relationships: []
       }
+      mobile_content: {
+        Row: {
+          content_key: string
+          content_type: string | null
+          id: number
+          section: string
+          sort_order: number | null
+          value_cn: string | null
+          value_en: string | null
+          value_ja: string | null
+          value_tw: string | null
+        }
+        Insert: {
+          content_key: string
+          content_type?: string | null
+          id?: number
+          section: string
+          sort_order?: number | null
+          value_cn?: string | null
+          value_en?: string | null
+          value_ja?: string | null
+          value_tw?: string | null
+        }
+        Update: {
+          content_key?: string
+          content_type?: string | null
+          id?: number
+          section?: string
+          sort_order?: number | null
+          value_cn?: string | null
+          value_en?: string | null
+          value_ja?: string | null
+          value_tw?: string | null
+        }
+        Relationships: []
+      }
       orders: {
         Row: {
           badge_id: number

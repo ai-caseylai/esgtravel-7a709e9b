@@ -1,13 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetchRanking } from '@/lib/api';
-import { useI18n, ui } from '@/lib/i18n';
 import MobileHeader from '@/components/MobileHeader';
 import { motion } from 'framer-motion';
+import { useMobileContent } from '@/hooks/use-mobile-content';
 
 const faceEmojis = ['😀', '😊', '😍', '🤩', '😎'];
 
 export default function RankingPage() {
-  const { t } = useI18n();
+  const { mc } = useMobileContent();
 
   const { data: ranking, isLoading } = useQuery({
     queryKey: ['ranking'],
@@ -16,7 +16,7 @@ export default function RankingPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <MobileHeader title={t({ 0: '排行榜', 1: '排行榜', 2: 'Leaderboard', 3: 'ランキング' })} showBack />
+      <MobileHeader title={mc('ranking', 'page_title', 'Leaderboard')} showBack />
 
       {/* Reactions */}
       <div className="flex justify-center gap-4 py-6">
@@ -50,7 +50,7 @@ export default function RankingPage() {
                 </span>
                 <div className="flex-1 min-w-0">
                   <p className="text-foreground text-[14px] font-medium truncate">{entry.contact_name}</p>
-                  <p className="text-muted-foreground text-[11px]">{entry.badge_count} {t({ 0: '徽章', 1: '徽章', 2: 'badges', 3: 'バッジ' })}</p>
+                  <p className="text-muted-foreground text-[11px]">{entry.badge_count} {mc('ranking', 'badges_label', 'badges')}</p>
                 </div>
                 <span className="text-primary font-bold text-[14px]">${entry.total_donated}</span>
               </div>
@@ -58,7 +58,7 @@ export default function RankingPage() {
           </div>
         ) : (
           <p className="text-muted-foreground text-center py-10 text-[14px]">
-            {t({ 0: '還沒有排名資料', 1: '还没有排名数据', 2: 'No data yet', 3: 'データがありません' })}
+            {mc('ranking', 'no_data', 'No data yet')}
           </p>
         )}
       </div>
