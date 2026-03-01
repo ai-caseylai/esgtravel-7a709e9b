@@ -3,6 +3,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { RichTextEditor } from '@/components/RichTextEditor';
+import '@/components/RichTextEditor.css';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -341,10 +343,9 @@ function FixedPageEditor({ page }: { page: typeof FIXED_PAGES[0] }) {
                             fallback={IMAGE_FALLBACKS[field.key]}
                           />
                         ) : field.multiline ? (
-                          <Textarea
+                          <RichTextEditor
                             value={data[l.dbLang]?.[field.key] ?? ''}
-                            onChange={e => updateField(l.dbLang, field.key, e.target.value)}
-                            rows={3} className="text-sm"
+                            onChange={(html) => updateField(l.dbLang, field.key, html)}
                           />
                         ) : (
                           <Input
@@ -438,7 +439,11 @@ function BlockEditor({ block, onChange, onRemove, onMoveUp, onMoveDown, isFirst,
         )}
 
         {block.block_type === 'text' && (
-          <Textarea placeholder="輸入內容（支援多行）" rows={4} value={block.content.text ?? ''} onChange={e => update({ text: e.target.value })} />
+          <RichTextEditor
+            value={block.content.text ?? ''}
+            onChange={(html) => update({ text: html })}
+            placeholder="輸入內容..."
+          />
         )}
 
         {block.block_type === 'image' && (
