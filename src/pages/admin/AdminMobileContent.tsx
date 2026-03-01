@@ -22,18 +22,18 @@ interface ContentRow {
 }
 
 const SECTION_LABELS: Record<string, string> = {
-  home: '🏠 首頁 / Home',
-  badges: '🏅 徽章列表 / Badges',
-  passport: '📘 護照 / Passport',
-  coupons: '🎟️ 優惠券 / Coupons',
-  settings: '⚙️ 設定 / Settings',
-  ranking: '🏆 排行榜 / Ranking',
-  login: '🔑 登入 / Login',
-  signup: '📝 註冊 / Signup',
-  payment_success: '✅ 付款成功 / Payment Success',
-  contact: '📞 聯絡 / Contact',
-  nav: '📱 底部導航 / Bottom Nav',
-  images: '🖼️ 圖片 / Images',
+  home: '首頁 / Home',
+  badges: '徽章列表 / Badges',
+  passport: '護照 / Passport',
+  coupons: '優惠券 / Coupons',
+  settings: '設定 / Settings',
+  ranking: '排行榜 / Ranking',
+  login: '登入 / Login',
+  payment: '付款 / Payment',
+  payment_success: '付款成功 / Payment Success',
+  contact: '聯絡 / Contact',
+  nav: '底部導航 / Bottom Nav',
+  images: '圖片 / Images',
 };
 
 const SECTION_ORDER = ['home', 'badges', 'passport', 'coupons', 'settings', 'ranking', 'login', 'signup', 'payment_success', 'contact', 'nav', 'images'];
