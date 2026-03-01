@@ -27,9 +27,8 @@ export default function HomePage() {
     <div className="min-h-screen bg-background">
       <MobileHeader title="STAR SDG" />
 
-      {/* Greeting */}
 
-      <div className="px-5 space-y-4 pb-4">
+      <div className="px-5 pt-3 space-y-4 pb-4">
         {/* Featured badge card */}
         {currentBadge && (
           <motion.div
