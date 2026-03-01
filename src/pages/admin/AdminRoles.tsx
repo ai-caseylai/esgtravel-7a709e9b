@@ -41,7 +41,7 @@ export default function AdminRoles() {
   const [roles, setRoles] = useState<RoleRow[]>([]);
   const [users, setUsers] = useState<UserOption[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedUser, setSelectedUser] = useState('');
+  const [selectedUser, setSelectedUser] = useState<string | undefined>(undefined);
   const [newRole, setNewRole] = useState<AppRole>('editor');
   const [adding, setAdding] = useState(false);
 
@@ -93,7 +93,7 @@ export default function AdminRoles() {
       toast.error(error.message.includes('duplicate') ? '此用戶已有該角色' : error.message);
     } else {
       toast.success('角色已新增');
-      setSelectedUser('');
+      setSelectedUser(undefined);
       fetchData();
     }
     setAdding(false);
