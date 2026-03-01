@@ -1,208 +1,91 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { RichTextEditor } from '@/components/RichTextEditor';
-import '@/components/RichTextEditor.css';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
-import { Plus, Trash2, GripVertical, ArrowUp, ArrowDown, Eye, FileText, Image as ImageIcon, Type, AlignLeft, LayoutList, Globe, ExternalLink, Save, Upload } from 'lucide-react';
+import { Plus, Trash2, GripVertical, ArrowUp, ArrowDown, Eye, FileText, Image as ImageIcon, Type, AlignLeft, LayoutList, Globe, ExternalLink, Save } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { MediaPickerButton } from '@/components/MediaPickerButton';
 
-// Fallback images used by frontend when DB field is empty
-import siteHeroFallback from '@/assets/site-hero.jpg';
-import featureBadgeFallback from '@/assets/feature-badge.jpg';
-import featureImpactFallback from '@/assets/feature-impact.jpg';
-import featureCommunityFallback from '@/assets/feature-community.jpg';
-import siteHowHeroFallback from '@/assets/site-how-hero.jpg';
-import stepExploreFallback from '@/assets/step-explore.jpg';
-import stepPurchaseFallback from '@/assets/step-purchase.jpg';
-import stepCertFallback from '@/assets/step-cert.jpg';
-import stepImpactFallback from '@/assets/step-impact.jpg';
-import siteEventsHeroFallback from '@/assets/site-events-hero.jpg';
+/* ── Fixed page definitions with mapped site_content fields ── */
+const FIXED_PAGES: {path: string;label: string;fields: {key: string;label: string;multiline?: boolean;}[];}[] = [
+{
+  path: '/site', label: '首頁 Home',
+  fields: [
+  { key: 'site_hero_title', label: 'Hero 標題' },
+  { key: 'site_hero_desc', label: 'Hero 描述', multiline: true },
+  { key: 'site_learnmore', label: '了解更多按鈕' },
+  { key: 'site_programme_title', label: '計劃介紹標題' },
+  { key: 'site_programme_desc', label: '計劃介紹描述', multiline: true },
+  { key: 'site_feature1_title', label: '特色1 標題' },
+  { key: 'site_feature1_desc', label: '特色1 描述', multiline: true },
+  { key: 'site_feature2_title', label: '特色2 標題' },
+  { key: 'site_feature2_desc', label: '特色2 描述', multiline: true },
+  { key: 'site_feature3_title', label: '特色3 標題' },
+  { key: 'site_feature3_desc', label: '特色3 描述', multiline: true },
+  { key: 'site_feature4_title', label: '特色4 標題' },
+  { key: 'site_feature4_desc', label: '特色4 描述', multiline: true },
+  { key: 'site_sdg_title', label: 'SDG 區段標題' },
+  { key: 'site_sdg_desc', label: 'SDG 區段描述' },
+  { key: 'site_cta_title', label: 'CTA 標題' },
+  { key: 'site_cta_desc', label: 'CTA 描述', multiline: true },
+  { key: 'home', label: '首頁標籤' },
+  { key: 'subheader', label: '副標題' },
+  { key: 'description', label: '描述', multiline: true },
+  { key: 'getstarted', label: '開始使用按鈕' },
+  { key: 'greeting', label: '問候語' }]
 
-const IMAGE_FALLBACKS: Record<string, string> = {
-  site_hero_img: siteHeroFallback,
-  site_feature1_img: siteHeroFallback,
-  site_feature2_img: featureBadgeFallback,
-  site_feature3_img: featureImpactFallback,
-  site_feature4_img: featureCommunityFallback,
-  site_cta_img: featureCommunityFallback,
-  site_how_hero_img: siteHowHeroFallback,
-  site_step1_img: stepExploreFallback,
-  site_step2_img: stepPurchaseFallback,
-  site_step3_img: stepCertFallback,
-  site_step4_img: stepImpactFallback,
-  site_events_hero_img: siteEventsHeroFallback,
-};
-const FIXED_PAGES: { path: string; label: string; fields: { key: string; label: string; multiline?: boolean; image?: boolean }[] }[] = [
-  {
-    path: '/site', label: '首頁 Home',
-    fields: [
-      { key: 'site_hero_title', label: 'Hero 標題' },
-      { key: 'site_hero_desc', label: 'Hero 描述', multiline: true },
-      { key: 'site_hero_img', label: 'Hero 背景圖片', image: true },
-      { key: 'site_learnmore', label: '了解更多按鈕' },
-      { key: 'site_programme_title', label: '計劃介紹標題' },
-      { key: 'site_programme_desc', label: '計劃介紹描述', multiline: true },
-      { key: 'site_feature1_title', label: '特色1 標題' },
-      { key: 'site_feature1_desc', label: '特色1 描述', multiline: true },
-      { key: 'site_feature1_img', label: '特色1 圖片', image: true },
-      { key: 'site_feature2_title', label: '特色2 標題' },
-      { key: 'site_feature2_desc', label: '特色2 描述', multiline: true },
-      { key: 'site_feature2_img', label: '特色2 圖片', image: true },
-      { key: 'site_feature3_title', label: '特色3 標題' },
-      { key: 'site_feature3_desc', label: '特色3 描述', multiline: true },
-      { key: 'site_feature3_img', label: '特色3 圖片', image: true },
-      { key: 'site_feature4_title', label: '特色4 標題' },
-      { key: 'site_feature4_desc', label: '特色4 描述', multiline: true },
-      { key: 'site_feature4_img', label: '特色4 圖片', image: true },
-      { key: 'site_sdg_title', label: 'SDG 區段標題' },
-      { key: 'site_sdg_desc', label: 'SDG 區段描述' },
-      { key: 'site_cta_title', label: 'CTA 標題' },
-      { key: 'site_cta_desc', label: 'CTA 描述', multiline: true },
-      { key: 'site_cta_img', label: 'CTA 背景圖片', image: true },
-      { key: 'site_appstore_label', label: 'App Store 按鈕文字' },
-      { key: 'site_appstore_url', label: 'App Store 連結' },
-      { key: 'site_googleplay_label', label: 'Google Play 按鈕文字' },
-      { key: 'site_googleplay_url', label: 'Google Play 連結' },
-    ],
-  },
-  {
-    path: '/site/how-it-works', label: '如何獲得徽章',
-    fields: [
-      { key: 'site_how_title', label: 'Hero 標題' },
-      { key: 'site_how_desc', label: 'Hero 描述', multiline: true },
-      { key: 'site_how_hero_img', label: 'Hero 背景圖片', image: true },
-      { key: 'site_step1_title', label: '步驟1 標題' },
-      { key: 'site_step1_desc', label: '步驟1 描述', multiline: true },
-      { key: 'site_step1_img', label: '步驟1 圖片', image: true },
-      { key: 'site_step2_title', label: '步驟2 標題' },
-      { key: 'site_step2_desc', label: '步驟2 描述', multiline: true },
-      { key: 'site_step2_img', label: '步驟2 圖片', image: true },
-      { key: 'site_step3_title', label: '步驟3 標題' },
-      { key: 'site_step3_desc', label: '步驟3 描述', multiline: true },
-      { key: 'site_step3_img', label: '步驟3 圖片', image: true },
-      { key: 'site_step4_title', label: '步驟4 標題' },
-      { key: 'site_step4_desc', label: '步驟4 描述', multiline: true },
-      { key: 'site_step4_img', label: '步驟4 圖片', image: true },
-    ],
-  },
-  {
-    path: '/site/events', label: '活動與資訊',
-    fields: [
-      { key: 'site_events_title', label: 'Hero 標題' },
-      { key: 'site_events_desc', label: 'Hero 描述', multiline: true },
-      { key: 'site_events_hero_img', label: 'Hero 背景圖片', image: true },
-      { key: 'site_events_label', label: '活動區段標題' },
-      { key: 'site_articles_label', label: '文章區段標題' },
-      { key: 'site_no_events', label: '無活動提示' },
-      { key: 'site_no_articles', label: '無文章提示' },
-      { key: 'site_readmore', label: '閱讀更多按鈕' },
-    ],
-  },
-  {
-    path: '/site/contact', label: '聯絡我們',
-    fields: [
-      { key: 'site_contact_title', label: '頁面標題' },
-      { key: 'site_contact_desc', label: '頁面描述', multiline: true },
-      { key: 'site_contact_phone_label', label: '電話標籤' },
-      { key: 'site_contact_phone', label: '電話號碼' },
-      { key: 'site_contact_email_label', label: '電郵標籤' },
-      { key: 'site_contact_email_val', label: '電郵地址' },
-      { key: 'site_contact_addr_label', label: '地址標籤' },
-      { key: 'site_contact_addr', label: '地址', multiline: true },
-    ],
-  },
-  {
-    path: '_layout', label: '導覽列與頁尾',
-    fields: [
-      { key: 'home', label: '首頁導覽標籤' },
-      { key: 'site_nav_how', label: '如何獲得徽章導覽標籤' },
-      { key: 'event', label: '活動導覽標籤' },
-      { key: 'contactus', label: '聯絡我們導覽標籤' },
-      { key: 'site_footer_desc', label: '頁尾描述', multiline: true },
-      { key: 'site_footer_links', label: '頁尾快速連結標題' },
-      { key: 'site_footer_contact', label: '頁尾聯絡標題' },
-      { key: 'email', label: '頁尾電郵' },
-      { key: 'contact', label: '頁尾電話' },
-      { key: 'site_brand', label: '品牌名稱' },
-      { key: 'site_copyright', label: '版權聲明' },
-      { key: 'site_loading', label: '載入中文字' },
-    ],
-  },
-];
+},
+{
+  path: '/site/how-it-works', label: '如何獲得徽章',
+  fields: [
+  { key: 'badge', label: '徽章標籤' },
+  { key: 'showmore', label: '顯示更多' },
+  { key: 'support', label: '支持按鈕' },
+  { key: 'addextra', label: '額外支持' },
+  { key: 'currency', label: '貨幣' },
+  { key: 'sdg', label: 'SDG 標籤' },
+  { key: 'summary', label: '摘要標籤' },
+  { key: 'detail', label: '詳情標籤' }]
+
+},
+{
+  path: '/site/events', label: '活動與資訊',
+  fields: [
+  { key: 'event', label: '活動標籤' },
+  { key: 'impact', label: '影響標籤' },
+  { key: 'impactheader', label: '影響標題' },
+  { key: 'impacttitle', label: '影響副標題' },
+  { key: 'impactrecord', label: '影響記錄' }]
+
+},
+{
+  path: '/site/contact', label: '聯絡我們',
+  fields: [
+  { key: 'contactus', label: '聯絡我們標籤' },
+  { key: 'contact', label: '聯絡方式' },
+  { key: 'email', label: '電郵' },
+  { key: 'website', label: '官網' },
+  { key: 'needhelp', label: '需要幫助' }]
+
+}];
+
 
 const LANGS = [
-  { id: 0, dbLang: 0, label: '繁中' },
-  { id: 1, dbLang: 3, label: '简中' },
-  { id: 2, dbLang: 1, label: 'EN' },
-  { id: 3, dbLang: 2, label: 'JP' },
-];
+{ id: 0, label: '繁中' },
+{ id: 1, label: '简中' },
+{ id: 2, label: 'EN' },
+{ id: 3, label: 'JP' }];
 
-/* ── Image field with upload + media picker + preview ── */
-function ImageFieldEditor({ value, onChange, fallback }: { value: string; onChange: (url: string) => void; fallback?: string }) {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [uploading, setUploading] = useState(false);
-
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploading(true);
-    try {
-      const ext = file.name.split('.').pop();
-      const fileName = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
-      const { error } = await supabase.storage.from('media').upload(fileName, file);
-      if (error) throw error;
-      const url = `https://jbfybrxpdippdsettdgv.supabase.co/storage/v1/object/public/media/${fileName}`;
-      onChange(url);
-    } catch (err: any) {
-      console.error(err);
-    } finally {
-      setUploading(false);
-      if (inputRef.current) inputRef.current.value = '';
-    }
-  };
-
-  const displayImg = value || fallback;
-
-  return (
-    <div className="space-y-2">
-      <div className="flex gap-2 items-center flex-wrap">
-        <div className="flex-1 min-w-[200px]">
-          <Input
-            placeholder="圖片 URL（留空則使用預設圖片）"
-            value={value}
-            onChange={e => onChange(e.target.value)}
-            className="text-sm"
-          />
-        </div>
-        <input ref={inputRef} type="file" accept="image/*" className="hidden" onChange={handleUpload} />
-        <Button type="button" variant="outline" size="sm" onClick={() => inputRef.current?.click()} disabled={uploading}>
-          <Upload className="h-4 w-4 mr-1" /> {uploading ? '上傳中...' : '上傳'}
-        </Button>
-        <MediaPickerButton onSelect={onChange} />
-      </div>
-      {displayImg && (
-        <div className="relative">
-          <img src={displayImg} alt="" className="max-h-32 rounded border border-border object-cover" />
-          {!value && fallback && (
-            <span className="absolute top-1 left-1 bg-muted/80 text-muted-foreground text-[10px] px-1.5 py-0.5 rounded">預設圖片</span>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
 
 /* ── Fixed page editor (site_content fields) ── */
-function FixedPageEditor({ page }: { page: typeof FIXED_PAGES[0] }) {
+function FixedPageEditor({ page }: {page: typeof FIXED_PAGES[0];}) {
   const { toast } = useToast();
   const [data, setData] = useState<Record<number, Record<string, string>>>({});
   const [loading, setLoading] = useState(true);
@@ -215,53 +98,28 @@ function FixedPageEditor({ page }: { page: typeof FIXED_PAGES[0] }) {
       setLoading(true);
       const { data: rows } = await supabase.from('site_content').select('*');
       const map: Record<number, Record<string, string>> = {};
-      (rows ?? []).forEach((r: any) => { map[r.lang] = r; });
+      (rows ?? []).forEach((r: any) => {map[r.lang] = r;});
       setData(map);
       setLoading(false);
     })();
   }, []);
 
   const updateField = (lang: number, key: string, value: string) => {
-    setData(prev => ({ ...prev, [lang]: { ...prev[lang], [key]: value } }));
+    setData((prev) => ({ ...prev, [lang]: { ...prev[lang], [key]: value } }));
   };
 
-  // Sync image URL across ALL languages so images are consistent
-  const updateImageField = (key: string, value: string) => {
-    setData(prev => {
-      const next = { ...prev };
-      LANGS.forEach(l => {
-        if (next[l.dbLang]) {
-          next[l.dbLang] = { ...next[l.dbLang], [key]: value };
-        }
-      });
-      return next;
-    });
-  };
-
-  const handleSave = async (dbLang: number) => {
+  const handleSave = async (lang: number) => {
     setSaving(true);
     try {
-      const row = data[dbLang];
+      const row = data[lang];
       if (!row) return;
       const updates: Record<string, string> = {};
-      page.fields.forEach(f => { updates[f.key] = row[f.key] ?? ''; });
+      page.fields.forEach((f) => {updates[f.key] = row[f.key] ?? '';});
       const { error } = await supabase.from('site_content').update(updates as any).eq('id', Number(row.id));
       if (error) throw error;
-
-      // Sync image fields to all other languages
-      const imageUpdates: Record<string, string> = {};
-      page.fields.filter(f => f.image).forEach(f => { imageUpdates[f.key] = row[f.key] ?? ''; });
-      if (Object.keys(imageUpdates).length > 0) {
-        for (const l of LANGS) {
-          if (l.dbLang === dbLang) continue;
-          const otherRow = data[l.dbLang];
-          if (!otherRow) continue;
-          await supabase.from('site_content').update(imageUpdates as any).eq('id', Number(otherRow.id));
-        }
-      }
-
-      toast({ title: `已儲存 ${LANGS.find(l => l.dbLang === dbLang)?.label} 內容` });
-      setPreviewKey(k => k + 1);
+      toast({ title: `已儲存 ${LANGS.find((l) => l.id === lang)?.label} 內容` });
+      // Refresh preview after save
+      setPreviewKey((k) => k + 1);
     } catch (e: any) {
       toast({ title: '儲存失敗', description: e.message, variant: 'destructive' });
     } finally {
@@ -281,17 +139,17 @@ function FixedPageEditor({ page }: { page: typeof FIXED_PAGES[0] }) {
               <button
                 onClick={() => setViewMode('edit')}
                 className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors border-none cursor-pointer ${
-                  viewMode === 'edit' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
+                viewMode === 'edit' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`
+                }>
+
                 <FileText className="h-3.5 w-3.5 inline mr-1" />編輯
               </button>
               <button
-                onClick={() => { setViewMode('preview'); setPreviewKey(k => k + 1); }}
+                onClick={() => {setViewMode('preview');setPreviewKey((k) => k + 1);}}
                 className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors border-none cursor-pointer ${
-                  viewMode === 'preview' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
+                viewMode === 'preview' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`
+                }>
+
                 <Eye className="h-3.5 w-3.5 inline mr-1" />預覽
               </button>
             </div>
@@ -302,8 +160,8 @@ function FixedPageEditor({ page }: { page: typeof FIXED_PAGES[0] }) {
         </CardContent>
       </Card>
 
-      {viewMode === 'preview' ? (
-        <div className="border border-border rounded-xl overflow-hidden bg-background">
+      {viewMode === 'preview' ?
+      <div className="border border-border rounded-xl overflow-hidden bg-background">
           <div className="bg-muted/50 px-3 py-2 flex items-center gap-2 border-b border-border">
             <div className="flex gap-1.5">
               <span className="w-3 h-3 rounded-full bg-destructive/40" />
@@ -313,64 +171,59 @@ function FixedPageEditor({ page }: { page: typeof FIXED_PAGES[0] }) {
             <span className="text-xs text-muted-foreground font-mono ml-2 truncate">{window.location.origin}{page.path}</span>
           </div>
           <iframe
-            key={previewKey}
-            src={page.path}
-            className="w-full border-0"
-            style={{ height: '70vh' }}
-            title={`Preview: ${page.label}`}
-          />
-        </div>
-      ) : (
-        <Tabs defaultValue="0">
+          key={previewKey}
+          src={page.path}
+          className="w-full border-0"
+          style={{ height: '70vh' }}
+          title={`Preview: ${page.label}`} />
+
+        </div> :
+
+      <Tabs defaultValue="0">
           <TabsList>
-            {LANGS.map(l => <TabsTrigger key={l.id} value={String(l.id)}>{l.label}</TabsTrigger>)}
+            {LANGS.map((l) => <TabsTrigger key={l.id} value={String(l.id)}>{l.label}</TabsTrigger>)}
           </TabsList>
-          {LANGS.map(l => (
-            <TabsContent key={l.id} value={String(l.id)}>
-              {data[l.dbLang] ? (
-                <div className="space-y-4">
+          {LANGS.map((l) =>
+        <TabsContent key={l.id} value={String(l.id)}>
+              {data[l.id] ?
+          <div className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {page.fields.map(field => (
-                      <div key={field.key} className={(field.multiline || field.image) ? 'md:col-span-2' : ''}>
+                    {page.fields.map((field) =>
+              <div key={field.key} className={field.multiline ? 'md:col-span-2' : ''}>
                         <Label className="text-xs text-muted-foreground mb-1.5 block">
                           {field.label}
                           <span className="text-[10px] ml-1.5 opacity-40 font-mono">({field.key})</span>
                         </Label>
-                        {field.image ? (
-                          <ImageFieldEditor
-                            value={data[l.dbLang]?.[field.key] ?? ''}
-                            onChange={(url) => updateImageField(field.key, url)}
-                            fallback={IMAGE_FALLBACKS[field.key]}
-                          />
-                        ) : field.multiline ? (
-                          <RichTextEditor
-                            value={data[l.dbLang]?.[field.key] ?? ''}
-                            onChange={(html) => updateField(l.dbLang, field.key, html)}
-                          />
-                        ) : (
-                          <Input
-                            value={data[l.dbLang]?.[field.key] ?? ''}
-                            onChange={e => updateField(l.dbLang, field.key, e.target.value)}
-                            className="text-sm"
-                          />
-                        )}
+                        {field.multiline ?
+                <Textarea
+                  value={data[l.id]?.[field.key] ?? ''}
+                  onChange={(e) => updateField(l.id, field.key, e.target.value)}
+                  rows={3} className="text-sm" /> :
+
+
+                <Input
+                  value={data[l.id]?.[field.key] ?? ''}
+                  onChange={(e) => updateField(l.id, field.key, e.target.value)}
+                  className="text-sm" />
+
+                }
                       </div>
-                    ))}
+              )}
                   </div>
-                  <Button onClick={() => handleSave(l.dbLang)} disabled={saving} className="w-full">
+                  <Button onClick={() => handleSave(l.id)} disabled={saving} className="w-full">
                     <Save className="h-4 w-4 mr-1" />
                     {saving ? '儲存中...' : `儲存 ${l.label}`}
                   </Button>
-                </div>
-              ) : (
-                <p className="text-muted-foreground py-4">此語言尚無內容記錄。</p>
-              )}
+                </div> :
+
+          <p className="text-muted-foreground py-4">此語言尚無內容記錄。</p>
+          }
             </TabsContent>
-          ))}
+        )}
         </Tabs>
-      )}
-    </div>
-  );
+      }
+    </div>);
+
 }
 
 /* ── Block types ── */
@@ -390,24 +243,24 @@ type Page = {
 };
 
 const BLOCK_TYPES = [
-  { value: 'heading', label: '標題 Heading', icon: Type },
-  { value: 'text', label: '文字 Text', icon: AlignLeft },
-  { value: 'image', label: '圖片 Image', icon: ImageIcon },
-  { value: 'blog_feed', label: '部落格列表 Blog Feed', icon: LayoutList },
-  { value: 'hero', label: '橫幅 Hero Banner', icon: FileText },
-];
+{ value: 'heading', label: '標題 Heading', icon: Type },
+{ value: 'text', label: '文字 Text', icon: AlignLeft },
+{ value: 'image', label: '圖片 Image', icon: ImageIcon },
+{ value: 'blog_feed', label: '部落格列表 Blog Feed', icon: LayoutList },
+{ value: 'hero', label: '橫幅 Hero Banner', icon: FileText }];
 
-function BlockEditor({ block, onChange, onRemove, onMoveUp, onMoveDown, isFirst, isLast }: {
-  block: Block;
-  onChange: (b: Block) => void;
-  onRemove: () => void;
-  onMoveUp: () => void;
-  onMoveDown: () => void;
-  isFirst: boolean;
-  isLast: boolean;
-}) {
+
+function BlockEditor({ block, onChange, onRemove, onMoveUp, onMoveDown, isFirst, isLast
+
+
+
+
+
+
+
+}: {block: Block;onChange: (b: Block) => void;onRemove: () => void;onMoveUp: () => void;onMoveDown: () => void;isFirst: boolean;isLast: boolean;}) {
   const update = (content: Record<string, any>) => onChange({ ...block, content: { ...block.content, ...content } });
-  const typeMeta = BLOCK_TYPES.find(t => t.value === block.block_type);
+  const typeMeta = BLOCK_TYPES.find((t) => t.value === block.block_type);
   const Icon = typeMeta?.icon ?? FileText;
 
   return (
@@ -424,10 +277,10 @@ function BlockEditor({ block, onChange, onRemove, onMoveUp, onMoveDown, isFirst,
           </div>
         </div>
 
-        {block.block_type === 'heading' && (
-          <div className="space-y-2">
-            <Input placeholder="標題文字" value={block.content.text ?? ''} onChange={e => update({ text: e.target.value })} />
-            <Select value={block.content.level ?? 'h2'} onValueChange={v => update({ level: v })}>
+        {block.block_type === 'heading' &&
+        <div className="space-y-2">
+            <Input placeholder="標題文字" value={block.content.text ?? ''} onChange={(e) => update({ text: e.target.value })} />
+            <Select value={block.content.level ?? 'h2'} onValueChange={(v) => update({ level: v })}>
               <SelectTrigger className="w-32"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="h1">H1</SelectItem>
@@ -436,50 +289,46 @@ function BlockEditor({ block, onChange, onRemove, onMoveUp, onMoveDown, isFirst,
               </SelectContent>
             </Select>
           </div>
-        )}
+        }
 
-        {block.block_type === 'text' && (
-          <RichTextEditor
-            value={block.content.text ?? ''}
-            onChange={(html) => update({ text: html })}
-            placeholder="輸入內容..."
-          />
-        )}
+        {block.block_type === 'text' &&
+        <Textarea placeholder="輸入內容（支援多行）" rows={4} value={block.content.text ?? ''} onChange={(e) => update({ text: e.target.value })} />
+        }
 
-        {block.block_type === 'image' && (
-          <div className="space-y-2">
+        {block.block_type === 'image' &&
+        <div className="space-y-2">
             <div className="flex gap-2 items-center">
               <div className="flex-1">
-                <Input placeholder="圖片 URL" value={block.content.url ?? ''} onChange={e => update({ url: e.target.value })} />
+                <Input placeholder="圖片 URL" value={block.content.url ?? ''} onChange={(e) => update({ url: e.target.value })} />
               </div>
               <MediaPickerButton onSelect={(url) => update({ url })} />
             </div>
-            <Input placeholder="圖片說明 (alt)" value={block.content.alt ?? ''} onChange={e => update({ alt: e.target.value })} />
-            {block.content.url && (
-              <img src={block.content.url} alt={block.content.alt ?? ''} className="max-h-40 rounded border object-cover" />
-            )}
+            <Input placeholder="圖片說明 (alt)" value={block.content.alt ?? ''} onChange={(e) => update({ alt: e.target.value })} />
+            {block.content.url &&
+          <img src={block.content.url} alt={block.content.alt ?? ''} className="max-h-40 rounded border object-cover" />
+          }
           </div>
-        )}
+        }
 
-        {block.block_type === 'hero' && (
-          <div className="space-y-2">
-            <Input placeholder="標題" value={block.content.title ?? ''} onChange={e => update({ title: e.target.value })} />
-            <Input placeholder="副標題" value={block.content.subtitle ?? ''} onChange={e => update({ subtitle: e.target.value })} />
+        {block.block_type === 'hero' &&
+        <div className="space-y-2">
+            <Input placeholder="標題" value={block.content.title ?? ''} onChange={(e) => update({ title: e.target.value })} />
+            <Input placeholder="副標題" value={block.content.subtitle ?? ''} onChange={(e) => update({ subtitle: e.target.value })} />
             <div className="flex gap-2 items-center">
               <div className="flex-1">
-                <Input placeholder="背景圖片 URL" value={block.content.bg ?? ''} onChange={e => update({ bg: e.target.value })} />
+                <Input placeholder="背景圖片 URL" value={block.content.bg ?? ''} onChange={(e) => update({ bg: e.target.value })} />
               </div>
               <MediaPickerButton onSelect={(url) => update({ bg: url })} />
             </div>
-            {block.content.bg && (
-              <img src={block.content.bg} alt="bg preview" className="max-h-32 rounded border object-cover w-full" />
-            )}
+            {block.content.bg &&
+          <img src={block.content.bg} alt="bg preview" className="max-h-32 rounded border object-cover w-full" />
+          }
           </div>
-        )}
+        }
 
-        {block.block_type === 'blog_feed' && (
-          <div className="space-y-2">
-            <Select value={block.content.category ?? 'all'} onValueChange={v => update({ category: v })}>
+        {block.block_type === 'blog_feed' &&
+        <div className="space-y-2">
+            <Select value={block.content.category ?? 'all'} onValueChange={(v) => update({ category: v })}>
               <SelectTrigger><SelectValue placeholder="分類" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">全部</SelectItem>
@@ -487,12 +336,12 @@ function BlockEditor({ block, onChange, onRemove, onMoveUp, onMoveDown, isFirst,
                 <SelectItem value="event">活動</SelectItem>
               </SelectContent>
             </Select>
-            <Input type="number" placeholder="顯示數量" value={block.content.limit ?? 6} onChange={e => update({ limit: parseInt(e.target.value) || 6 })} />
+            <Input type="number" placeholder="顯示數量" value={block.content.limit ?? 6} onChange={(e) => update({ limit: parseInt(e.target.value) || 6 })} />
           </div>
-        )}
+        }
       </CardContent>
-    </Card>
-  );
+    </Card>);
+
 }
 
 export default function AdminPages() {
@@ -509,10 +358,10 @@ export default function AdminPages() {
 
   const loadPages = useCallback(async () => {
     const { data } = await supabase.from('pages').select('*').order('created_at', { ascending: false });
-    setPages((data as any[]) ?? []);
+    setPages(data as any[] ?? []);
   }, []);
 
-  useEffect(() => { loadPages(); }, [loadPages]);
+  useEffect(() => {loadPages();}, [loadPages]);
 
   const selectFixed = (path: string) => {
     setSelectedFixed(path);
@@ -522,16 +371,16 @@ export default function AdminPages() {
   const selectPage = async (id: number) => {
     setSelectedFixed(null);
     setSelectedId(id);
-    const page = pages.find(p => p.id === id);
+    const page = pages.find((p) => p.id === id);
     if (page) setPageForm({ slug: page.slug, title: page.title, is_published: page.is_published });
     const { data } = await supabase.from('page_blocks').select('*').eq('page_id', id).order('sort_order');
-    setBlocks((data as any[]) ?? []);
+    setBlocks(data as any[] ?? []);
   };
 
   const createPage = async () => {
     if (!newSlug.trim()) return;
     const { error } = await supabase.from('pages').insert({ slug: newSlug.trim(), title: newTitle.trim() } as any);
-    if (error) { toast({ title: '錯誤', description: error.message, variant: 'destructive' }); return; }
+    if (error) {toast({ title: '錯誤', description: error.message, variant: 'destructive' });return;}
     setCreateOpen(false);
     setNewSlug('');
     setNewTitle('');
@@ -549,19 +398,19 @@ export default function AdminPages() {
   };
 
   const addBlock = (type: string) => {
-    setBlocks(prev => [...prev, { block_type: type, content: {}, sort_order: prev.length }]);
+    setBlocks((prev) => [...prev, { block_type: type, content: {}, sort_order: prev.length }]);
   };
 
   const updateBlock = (idx: number, block: Block) => {
-    setBlocks(prev => prev.map((b, i) => i === idx ? block : b));
+    setBlocks((prev) => prev.map((b, i) => i === idx ? block : b));
   };
 
   const removeBlock = (idx: number) => {
-    setBlocks(prev => prev.filter((_, i) => i !== idx));
+    setBlocks((prev) => prev.filter((_, i) => i !== idx));
   };
 
   const moveBlock = (idx: number, dir: -1 | 1) => {
-    setBlocks(prev => {
+    setBlocks((prev) => {
       const next = [...prev];
       const target = idx + dir;
       if (target < 0 || target >= next.length) return next;
@@ -576,7 +425,7 @@ export default function AdminPages() {
     await supabase.from('pages').update({ slug: pageForm.slug, title: pageForm.title, is_published: pageForm.is_published } as any).eq('id', selectedId);
     await supabase.from('page_blocks').delete().eq('page_id', selectedId);
     if (blocks.length > 0) {
-      const inserts = blocks.map((b, i) => ({ page_id: selectedId, block_type: b.block_type, content: b.content, sort_order: i } as any));
+      const inserts = blocks.map((b, i) => ({ page_id: selectedId, block_type: b.block_type, content: b.content, sort_order: i }) as any);
       await supabase.from('page_blocks').insert(inserts);
     }
     setSaving(false);
@@ -584,7 +433,7 @@ export default function AdminPages() {
     toast({ title: '已儲存' });
   };
 
-  const fixedPage = FIXED_PAGES.find(fp => fp.path === selectedFixed);
+  const fixedPage = FIXED_PAGES.find((fp) => fp.path === selectedFixed);
 
   return (
     <div>
@@ -599,18 +448,18 @@ export default function AdminPages() {
           <div>
             <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-1">現有頁面</h4>
             <div className="space-y-1">
-              {FIXED_PAGES.map(fp => (
-                <button
-                  key={fp.path}
-                  onClick={() => selectFixed(fp.path)}
-                  className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 border-none cursor-pointer ${
-                    selectedFixed === fp.path ? 'bg-primary text-primary-foreground' : 'bg-card text-muted-foreground hover:bg-muted'
-                  }`}
-                >
+              {FIXED_PAGES.map((fp) =>
+              <button
+                key={fp.path}
+                onClick={() => selectFixed(fp.path)}
+                className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 border-none cursor-pointer ${
+                selectedFixed === fp.path ? 'bg-primary text-primary-foreground' : 'bg-card text-muted-foreground hover:bg-muted'}`
+                }>
+
                   <Globe className="h-4 w-4 shrink-0" />
                   <span className="truncate">{fp.label}</span>
                 </button>
-              ))}
+              )}
             </div>
           </div>
 
@@ -624,55 +473,55 @@ export default function AdminPages() {
               <DialogContent>
                 <DialogHeader><DialogTitle>新增頁面</DialogTitle></DialogHeader>
                 <div className="space-y-3 pt-2">
-                  <Input placeholder="Slug (如 about-us)" value={newSlug} onChange={e => setNewSlug(e.target.value)} />
-                  <Input placeholder="標題" value={newTitle} onChange={e => setNewTitle(e.target.value)} />
+                  <Input placeholder="Slug (如 about-us)" value={newSlug} onChange={(e) => setNewSlug(e.target.value)} />
+                  <Input placeholder="標題" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} />
                   <Button onClick={createPage} className="w-full">建立</Button>
                 </div>
               </DialogContent>
             </Dialog>
 
             <div className="space-y-1">
-              {pages.map(p => (
-                <button
-                  key={p.id}
-                  onClick={() => selectPage(p.id)}
-                  className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium transition-colors border-none cursor-pointer ${
-                    selectedId === p.id ? 'bg-primary text-primary-foreground' : 'bg-card text-muted-foreground hover:bg-muted'
-                  }`}
-                >
+              {pages.map((p) =>
+              <button
+                key={p.id}
+                onClick={() => selectPage(p.id)}
+                className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium transition-colors border-none cursor-pointer ${
+                selectedId === p.id ? 'bg-primary text-primary-foreground' : 'bg-card text-muted-foreground hover:bg-muted'}`
+                }>
+
                   <div className="flex items-center gap-2">
                     <FileText className="h-4 w-4 shrink-0" />
                     <span className="truncate">{p.title || p.slug}</span>
                     {p.is_published && <span className="ml-auto text-[10px] bg-primary/20 text-primary px-1.5 py-0.5 rounded">已發佈</span>}
                   </div>
                 </button>
-              ))}
+              )}
               {pages.length === 0 && <p className="text-xs text-muted-foreground text-center py-3">尚無自訂頁面</p>}
             </div>
           </div>
         </div>
 
         {/* Right: editor */}
-        {fixedPage ? (
-          <FixedPageEditor key={fixedPage.path} page={fixedPage} />
-        ) : selectedId ? (
-          <div className="space-y-4">
+        {fixedPage ?
+        <FixedPageEditor key={fixedPage.path} page={fixedPage} /> :
+        selectedId ?
+        <div className="space-y-4">
             {/* Page meta */}
             <Card>
               <CardContent className="p-4 space-y-3">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="text-xs text-muted-foreground">Slug</label>
-                    <Input value={pageForm.slug} onChange={e => setPageForm(f => ({ ...f, slug: e.target.value }))} />
+                    <Input value={pageForm.slug} onChange={(e) => setPageForm((f) => ({ ...f, slug: e.target.value }))} />
                   </div>
                   <div>
                     <label className="text-xs text-muted-foreground">標題</label>
-                    <Input value={pageForm.title} onChange={e => setPageForm(f => ({ ...f, title: e.target.value }))} />
+                    <Input value={pageForm.title} onChange={(e) => setPageForm((f) => ({ ...f, title: e.target.value }))} />
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Switch checked={pageForm.is_published} onCheckedChange={v => setPageForm(f => ({ ...f, is_published: v }))} />
+                    <Switch checked={pageForm.is_published} onCheckedChange={(v) => setPageForm((f) => ({ ...f, is_published: v }))} />
                     <span className="text-sm text-muted-foreground">{pageForm.is_published ? '已發佈' : '草稿'}</span>
                   </div>
                   <div className="flex gap-2">
@@ -687,27 +536,27 @@ export default function AdminPages() {
 
             {/* Blocks */}
             <div className="space-y-3">
-              {blocks.map((block, idx) => (
-                <BlockEditor
-                  key={idx}
-                  block={block}
-                  onChange={b => updateBlock(idx, b)}
-                  onRemove={() => removeBlock(idx)}
-                  onMoveUp={() => moveBlock(idx, -1)}
-                  onMoveDown={() => moveBlock(idx, 1)}
-                  isFirst={idx === 0}
-                  isLast={idx === blocks.length - 1}
-                />
-              ))}
+              {blocks.map((block, idx) =>
+            <BlockEditor
+              key={idx}
+              block={block}
+              onChange={(b) => updateBlock(idx, b)}
+              onRemove={() => removeBlock(idx)}
+              onMoveUp={() => moveBlock(idx, -1)}
+              onMoveDown={() => moveBlock(idx, 1)}
+              isFirst={idx === 0}
+              isLast={idx === blocks.length - 1} />
+
+            )}
             </div>
 
             {/* Add block */}
             <div className="flex flex-wrap gap-2">
-              {BLOCK_TYPES.map(t => (
-                <Button key={t.value} variant="outline" size="sm" onClick={() => addBlock(t.value)}>
+              {BLOCK_TYPES.map((t) =>
+            <Button key={t.value} variant="outline" size="sm" onClick={() => addBlock(t.value)}>
                   <t.icon className="h-3.5 w-3.5 mr-1" /> {t.label}
                 </Button>
-              ))}
+            )}
             </div>
 
             {/* Save */}
@@ -722,42 +571,42 @@ export default function AdminPages() {
                 <PagePreview blocks={blocks} />
               </div>
             </div>
-          </div>
-        ) : (
-          <div className="flex items-center justify-center text-muted-foreground h-64">
+          </div> :
+
+        <div className="flex items-center justify-center text-muted-foreground h-64">
             ← 選擇或新增一個頁面
           </div>
-        )}
+        }
       </div>
-    </div>
-  );
+    </div>);
+
 }
 
 /* ── Inline preview renderer (also used in public page) ── */
-export function PagePreview({ blocks }: { blocks: Block[] }) {
+export function PagePreview({ blocks }: {blocks: Block[];}) {
   return (
     <div className="space-y-6">
-      {blocks.map((block, idx) => (
-        <PageBlockRenderer key={idx} block={block} />
-      ))}
-      {blocks.length === 0 && <p className="text-muted-foreground text-center py-8">尚無內容</p>}
-    </div>
-  );
+      {blocks.map((block, idx) =>
+      <PageBlockRenderer key={idx} block={block} />
+      )}
+      {blocks.length === 0 && <p className="text-muted-foreground text-center py-8">頁面管理 Page Builder
+      </p>}
+    </div>);
 }
 
-function PageBlockRenderer({ block }: { block: Block }) {
+function PageBlockRenderer({ block }: {block: Block;}) {
   switch (block.block_type) {
-    case 'heading': {
-      const Tag = (block.content.level ?? 'h2') as 'h1' | 'h2' | 'h3';
-      const cls = Tag === 'h1' ? 'text-3xl font-bold' : Tag === 'h2' ? 'text-2xl font-semibold' : 'text-xl font-semibold';
-      return <Tag className={`${cls} text-foreground`}>{block.content.text || '(標題)'}</Tag>;
-    }
+    case 'heading':{
+        const Tag = (block.content.level ?? 'h2') as 'h1' | 'h2' | 'h3';
+        const cls = Tag === 'h1' ? 'text-3xl font-bold' : Tag === 'h2' ? 'text-2xl font-semibold' : 'text-xl font-semibold';
+        return <Tag className={`${cls} text-foreground`}>{block.content.text || '(標題)'}</Tag>;
+      }
     case 'text':
       return <div className="text-foreground leading-relaxed whitespace-pre-wrap">{block.content.text || ''}</div>;
     case 'image':
-      return block.content.url ? (
-        <img src={block.content.url} alt={block.content.alt ?? ''} className="rounded-lg w-full max-h-[500px] object-cover" />
-      ) : <div className="bg-muted rounded-lg h-40 flex items-center justify-center text-muted-foreground">無圖片</div>;
+      return block.content.url ?
+      <img src={block.content.url} alt={block.content.alt ?? ''} className="rounded-lg w-full max-h-[500px] object-cover" /> :
+      <div className="bg-muted rounded-lg h-40 flex items-center justify-center text-muted-foreground">無圖片</div>;
     case 'hero':
       return (
         <div className="relative rounded-lg overflow-hidden min-h-[240px] flex items-center justify-center text-center" style={{ backgroundImage: block.content.bg ? `url(${block.content.bg})` : undefined, backgroundSize: 'cover', backgroundPosition: 'center' }}>
@@ -766,8 +615,8 @@ function PageBlockRenderer({ block }: { block: Block }) {
             <h2 className="text-3xl font-bold mb-2">{block.content.title || '(標題)'}</h2>
             {block.content.subtitle && <p className="text-lg opacity-90">{block.content.subtitle}</p>}
           </div>
-        </div>
-      );
+        </div>);
+
     case 'blog_feed':
       return <BlogFeedBlock category={block.content.category} limit={block.content.limit ?? 6} />;
     default:
@@ -775,7 +624,7 @@ function PageBlockRenderer({ block }: { block: Block }) {
   }
 }
 
-function BlogFeedBlock({ category, limit }: { category?: string; limit: number }) {
+function BlogFeedBlock({ category, limit }: {category?: string;limit: number;}) {
   const [posts, setPosts] = useState<any[]>([]);
   useEffect(() => {
     (async () => {
@@ -788,7 +637,7 @@ function BlogFeedBlock({ category, limit }: { category?: string; limit: number }
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      {posts.map(post => {
+      {posts.map((post) => {
         const t = (post.post_translations as any[])?.[0];
         return (
           <div key={post.id} className="rounded-lg border bg-card overflow-hidden">
@@ -797,10 +646,10 @@ function BlogFeedBlock({ category, limit }: { category?: string; limit: number }
               <h4 className="font-semibold text-sm text-foreground">{t?.title || post.slug}</h4>
               <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{t?.summary}</p>
             </div>
-          </div>
-        );
+          </div>);
+
       })}
       {posts.length === 0 && <p className="text-muted-foreground col-span-full text-center py-4">沒有文章</p>}
-    </div>
-  );
+    </div>);
+
 }
