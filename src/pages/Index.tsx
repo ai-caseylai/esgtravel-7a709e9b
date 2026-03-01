@@ -28,13 +28,6 @@ export default function HomePage() {
       <MobileHeader title="STAR SDG" />
 
       {/* Greeting */}
-      <div className="flex items-center justify-between px-5 py-3">
-        <div>
-          <h1 className="text-[22px] font-bold text-foreground leading-tight">
-            {user ? user.email?.split('@')[0] : 'STAR SDG'}
-          </h1>
-        </div>
-      </div>
 
       <div className="px-5 space-y-4 pb-4">
         {/* Featured badge card */}
