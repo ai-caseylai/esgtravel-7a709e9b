@@ -165,3 +165,217 @@ const { user, session, loading, signOut } = useAuth();
 - **語義化令牌**：所有顏色使用 CSS 變數（`--primary`、`--foreground` 等），不在元件中寫死色值
 - **安全性**：角色獨立表、SECURITY DEFINER 函式、RLS 全覆蓋
 - **100% 可編輯**：所有前端文字均可從後台動態更新
+
+---
+
+## 7. 介紹網站 (Site) 建構模式
+
+### 架構總覽
+介紹網站位於 `/site` 路由下，使用 `SiteLayout` 統一佈局（含導覽列、頁尾、語言切換）。所有頁面內容均來自 CMS，支援四國語言即時切換。
+
+### 頁面清單
+| 路徑 | 元件 | 說明 |
+|------|------|------|
+| `/site` | `SiteHome` | 首頁：Hero、計劃介紹、4 特色卡片、17 SDG 方格、CTA |
+| `/site/how-it-works` | `SiteHowItWorks` | 如何獲得徽章：4 步驟圖文交錯佈局 |
+| `/site/events` | `SiteEvents` | 活動與部落格列表（合併頁） |
+| `/site/contact` | `SiteContact` | 聯絡資訊 |
+| `/site/login` | `SiteLogin` | PC 端登入頁 |
+| `/site/p/:slug` | `SitePage` | 動態自訂頁面（Page Builder 產生） |
+
+### 內容讀取模式
+```tsx
+// 1. 取得 CMS 內容
+const { tc } = useSiteContent();
+
+// 2. 文字欄位直接使用
+<h1>{tc('site_hero_title', 'Fallback Title')}</h1>
+
+// 3. 富文本欄位使用 HtmlContent 元件
+<HtmlContent html={tc('site_hero_desc', '')} className="text-muted-foreground" />
+
+// 4. 圖片欄位帶 fallback
+const heroImg = tc('site_hero_img', '') || localFallbackImage;
+<img src={heroImg} alt="" />
+```
+
+### HtmlContent 元件
+- 路徑：`src/components/HtmlContent.tsx`
+- 功能：偵測內容是否含 HTML 標籤，有則用 `dangerouslySetInnerHTML` 渲染，無則純文字顯示
+- 套用 `.rich-content` CSS class 確保標題、清單、連結等樣式一致
+- 支援 `as` prop 可指定包裹標籤（預設 `div`）
+
+### 圖片 Fallback 機制
+每個圖片欄位在 `site_content` 表中有對應 `_img` 後綴欄位（如 `site_hero_img`、`site_feature1_img`）。前端邏輯：
+```tsx
+const image = tc('site_feature1_img', '') || localFallbackAsset;
+```
+本地 fallback 圖存放於 `src/assets/` 目錄。
+
+### SiteLayout 結構
+```
+SiteLayout
+├── <header>  ← 導覽列（品牌、導覽連結、語言切換）
+├── <Outlet /> ← 子頁面內容
+└── <footer>  ← 頁尾（品牌說明、快速連結、聯絡資訊、版權）
+```
+所有導覽文字、頁尾文字皆來自 `tc()` 動態讀取。
+
+---
+
+## 8. 語言映射詳解
+
+### 前端語言 ID vs 資料庫語言 ID
+
+**注意：`site_content` 與 `badge_translations/post_translations` 使用不同語言編號！**
+
+| 前端 lang | 語言 | site_content 的 lang | badge/post translations 的 lang |
+|-----------|------|--------------------|---------------------------------|
+| 0 | 繁體中文 | 0 | 0 |
+| 1 | 簡體中文 | 3 | 0 (fallback 繁中) |
+| 2 | English | 1 | 1 |
+| 3 | 日本語 | 2 | 2 |
+
+### use-site-content.ts 映射
+```typescript
+const SITE_LANG_TO_DB_LANG: Record<number, number> = {
+  0: 0, // 繁中 → DB lang 0
+  1: 3, // 简中 → DB lang 3
+  2: 1, // EN → DB lang 1
+  3: 2, // JP → DB lang 2
+};
+```
+
+### mobile_content 語言
+mobile_content 使用四欄式設計，不需映射：
+| 前端 lang | 對應欄位 |
+|-----------|---------|
+| 0 | `value_tw` |
+| 1 | `value_cn` |
+| 2 | `value_en` |
+| 3 | `value_ja` |
+
+---
+
+## 9. Page Builder（頁面產生器）
+
+### 資料庫結構
+- `pages` 表：管理頁面元資料（slug、title、is_published）
+- `page_blocks` 表：每頁由多個區塊組成，`block_type` + `content`(JSONB) + `sort_order`
+
+### 區塊類型
+| block_type | 說明 | content 欄位 |
+|-----------|------|-------------|
+| `heading` | 標題 | `{ text, level: 'h1'|'h2'|'h3' }` |
+| `text` | 段落文字 | `{ text }` |
+| `image` | 圖片 | `{ url, alt }` |
+| `hero` | 橫幅 | `{ title, subtitle, bg }` |
+| `blog_feed` | 文章列表 | `{ category: 'all'|'blog'|'event', limit }` |
+
+### 前端渲染
+- 路由 `/site/p/:slug` → `SitePage` 元件
+- 查詢 `pages` 取得 `id`，再查 `page_blocks` 依 `sort_order` 排列
+- 使用 `PagePreview` 元件依 `block_type` 分別渲染
+
+### 後台管理
+- `/admin/pages` → `AdminPages` 元件
+- 左側：固定頁面列表 + 自訂頁面列表
+- 右側：固定頁面用 `FixedPageEditor`（直接編輯 site_content 欄位）；自訂頁面用區塊拖曳編輯器
+- 支援即時預覽（Iframe 嵌入前端頁面）
+
+---
+
+## 10. Mobile API（React Native 用 RESTful API）
+
+### 端點
+```
+Base URL: https://jbfybrxpdippdsettdgv.supabase.co/functions/v1/mobile-api
+```
+
+### API 分組
+| 分類 | 端點 | 方法 | 需認證 |
+|------|------|------|--------|
+| Auth | `/auth/signup` | POST | ✗ |
+| Auth | `/auth/login` | POST | ✗ |
+| Auth | `/auth/refresh` | POST | ✗ |
+| Auth | `/auth/logout` | POST | ✔ |
+| Auth | `/auth/reset-password` | POST | ✗ |
+| Badges | `/badges?lang=0` | GET | ✗ |
+| Badges | `/badges/:id?lang=0` | GET | ✗ |
+| Orders | `/orders` | GET/POST | ✔ |
+| Profile | `/profile` | GET/PUT | ✔ |
+| Rankings | `/rankings` | GET | ✗ |
+| Content | `/mobile-content?section=` | GET | ✗ |
+| Content | `/site-content` | GET | ✗ |
+| Posts | `/posts?lang=0&category=` | GET | ✗ |
+| Posts | `/posts/:slug?lang=0` | GET | ✗ |
+| Misc | `/country-codes` | GET | ✗ |
+
+### 認證方式
+`Authorization: Bearer <access_token>` header。Token 來自 `/auth/login` 或 `/auth/signup` 回傳的 `session.access_token`。
+
+### 詳細文件
+完整 API 文件見 `docs/mobile-api.md`。
+
+---
+
+## 11. 後台管理系統
+
+### 內容管理頁面
+| 路徑 | 元件 | 說明 |
+|------|------|------|
+| `/admin/content` | `AdminSiteContent` | 網站 UI 文字（按欄位分群、4 語言 Tab） |
+| `/admin/mobile-content` | `AdminMobileContent` | App UI 文字（按 section 分群） |
+| `/admin/posts` | `AdminPosts` | 文章/活動管理（多語言 Tab 切換、WYSIWYG 編輯器） |
+| `/admin/pages` | `AdminPages` | 頁面管理（固定頁面 + 自訂頁面、區塊編輯器） |
+| `/admin/media` | `AdminMedia` | 媒體庫（Supabase Storage） |
+
+### AdminSiteContent 結構
+- 左側：欄位分群導覽（首頁、徽章、護照、排行榜、登入、表單、錯誤訊息、付款、聯絡）
+- 右側：4 語言 Tab，每個 Tab 下顯示當前分群的欄位編輯表單
+- 搜尋：支援按欄位名稱或 key 過濾
+
+### WYSIWYG 編輯器
+- 技術：Tiptap（`@tiptap/react`、`@tiptap/starter-kit`）
+- 支援：粗體、斜體、底線、標題(H1-H3)、清單、連結、圖片、文字對齊
+- 元件：`src/components/RichTextEditor.tsx`
+- 樣式：`src/components/RichTextEditor.css`（`.rich-content` class 同時用於前台顯示）
+
+---
+
+## 12. 媒體管理
+
+### Storage Bucket
+- Bucket 名稱：`media`（公開）
+- 支援上傳：圖片、文件等
+- MediaPickerButton 元件可在任何編輯器中嵌入，選擇媒體庫圖片
+
+### 使用方式
+```tsx
+import { MediaPickerButton } from '@/components/MediaPickerButton';
+
+<MediaPickerButton onSelect={(url) => handleImageSelected(url)} />
+```
+
+---
+
+## 13. 新增功能開發指南
+
+### 新增介紹網站頁面
+1. 在 `site_content` 表新增對應欄位（4 個語言記錄各一列）
+2. 建立頁面元件於 `src/pages/site/`，使用 `tc()` 讀取內容
+3. 在 `src/App.tsx` 的 `<Route path="/site">` 下新增路由
+4. 在 `SiteLayout` 的 `navItems` 加入導覽項目
+5. 在 `AdminPages` 的 `FIXED_PAGES` 加入欄位定義
+6. 在 `AdminSiteContent` 的 `FIELD_GROUPS` 加入管理介面
+
+### 新增 Mobile API 端點
+1. 在 `supabase/functions/mobile-api/index.ts` 新增路由分支
+2. 處理認證檢查（需認證則驗證 Bearer token）
+3. 更新 `docs/mobile-api.md` 文件
+4. 部署 edge function
+
+### 新增 CMS 欄位
+1. 資料庫 migration 新增欄位
+2. `FIELD_GROUPS`（AdminSiteContent）或 `FIXED_PAGES`（AdminPages）加入欄位定義
+3. 前端頁面用 `tc('new_field_key', 'fallback')` 讀取
