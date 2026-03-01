@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { Save, Search, Plus, Trash2, Image as ImageIcon } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
@@ -37,12 +38,20 @@ const SECTION_LABELS: Record<string, string> = {
 
 const SECTION_ORDER = ['home', 'badges', 'passport', 'coupons', 'settings', 'ranking', 'login', 'signup', 'payment_success', 'contact', 'nav', 'images'];
 
+const LANGS = [
+  { id: 'tw', label: '繁中', field: 'value_tw' },
+  { id: 'cn', label: '简中', field: 'value_cn' },
+  { id: 'en', label: 'EN', field: 'value_en' },
+  { id: 'ja', label: 'JP', field: 'value_ja' },
+];
+
 export default function AdminMobileContent() {
   const [data, setData] = useState<ContentRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [search, setSearch] = useState('');
   const [activeSection, setActiveSection] = useState('home');
+  const [activeLang, setActiveLang] = useState('tw');
   const [addOpen, setAddOpen] = useState(false);
   const [newRow, setNewRow] = useState({ section: 'home', content_key: '', value_tw: '', value_cn: '', value_en: '', value_ja: '', content_type: 'text' });
 
@@ -248,53 +257,55 @@ export default function AdminMobileContent() {
 
           {/* ── Right: content editor ── */}
           <div>
-            <h3 className="text-foreground font-semibold text-base mb-4">
-              {SECTION_LABELS[activeSection] || activeSection}
-            </h3>
+            <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
+              <h3 className="text-foreground font-semibold text-base">
+                {SECTION_LABELS[activeSection] || activeSection}
+              </h3>
+              <Tabs value={activeLang} onValueChange={setActiveLang}>
+                <TabsList>
+                  {LANGS.map(l => (
+                    <TabsTrigger key={l.id} value={l.id}>{l.label}</TabsTrigger>
+                  ))}
+                </TabsList>
+              </Tabs>
+            </div>
 
             <div className="space-y-4">
-              {filteredRows.map(row => (
-                <div key={row.id} className="bg-card rounded-xl border border-border p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2">
-                      {row.content_type === 'image' && <ImageIcon className="h-4 w-4 text-primary" />}
-                      <span className="text-sm font-mono text-muted-foreground">{row.content_key}</span>
-                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">
-                        {row.content_type}
-                      </span>
+              {filteredRows.map(row => {
+                const currentLang = LANGS.find(l => l.id === activeLang)!;
+                return (
+                  <div key={row.id} className="bg-card rounded-xl border border-border p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        {row.content_type === 'image' && <ImageIcon className="h-4 w-4 text-primary" />}
+                        <span className="text-sm font-mono text-muted-foreground">{row.content_key}</span>
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">
+                          {row.content_type}
+                        </span>
+                      </div>
+                      <Button variant="ghost" size="sm" onClick={() => handleDelete(row.id)}>
+                        <Trash2 className="h-3.5 w-3.5 text-destructive" />
+                      </Button>
                     </div>
-                    <Button variant="ghost" size="sm" onClick={() => handleDelete(row.id)}>
-                      <Trash2 className="h-3.5 w-3.5 text-destructive" />
-                    </Button>
-                  </div>
 
-                  {row.content_type === 'image' ? (
-                    <div className="space-y-2">
-                      <Label className="text-[11px] text-muted-foreground">圖片 URL (所有語言共用)</Label>
-                      <MediaInput value={row.value_tw} onChange={v => { updateField(row.id, 'value_tw', v); updateField(row.id, 'value_cn', v); updateField(row.id, 'value_en', v); updateField(row.id, 'value_ja', v); }} />
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      <div>
-                        <Label className="text-[11px] text-muted-foreground">繁體中文</Label>
-                        <Input value={row.value_tw} onChange={e => updateField(row.id, 'value_tw', e.target.value)} className="text-sm" />
+                    {row.content_type === 'image' ? (
+                      <div className="space-y-2">
+                        <Label className="text-[11px] text-muted-foreground">圖片 URL (所有語言共用)</Label>
+                        <MediaInput value={row.value_tw} onChange={v => { updateField(row.id, 'value_tw', v); updateField(row.id, 'value_cn', v); updateField(row.id, 'value_en', v); updateField(row.id, 'value_ja', v); }} />
                       </div>
+                    ) : (
                       <div>
-                        <Label className="text-[11px] text-muted-foreground">简体中文</Label>
-                        <Input value={row.value_cn} onChange={e => updateField(row.id, 'value_cn', e.target.value)} className="text-sm" />
+                        <Label className="text-[11px] text-muted-foreground">{currentLang.label}</Label>
+                        <Input
+                          value={(row as any)[currentLang.field] || ''}
+                          onChange={e => updateField(row.id, currentLang.field, e.target.value)}
+                          className="text-sm"
+                        />
                       </div>
-                      <div>
-                        <Label className="text-[11px] text-muted-foreground">English</Label>
-                        <Input value={row.value_en} onChange={e => updateField(row.id, 'value_en', e.target.value)} className="text-sm" />
-                      </div>
-                      <div>
-                        <Label className="text-[11px] text-muted-foreground">日本語</Label>
-                        <Input value={row.value_ja} onChange={e => updateField(row.id, 'value_ja', e.target.value)} className="text-sm" />
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
+                    )}
+                  </div>
+                );
+              })}
             </div>
 
             {filteredRows.length > 0 && (
