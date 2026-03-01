@@ -282,6 +282,65 @@ export type Database = {
           },
         ]
       }
+      page_blocks: {
+        Row: {
+          block_type: string
+          content: Json
+          id: number
+          page_id: number
+          sort_order: number
+        }
+        Insert: {
+          block_type?: string
+          content?: Json
+          id?: number
+          page_id: number
+          sort_order?: number
+        }
+        Update: {
+          block_type?: string
+          content?: Json
+          id?: number
+          page_id?: number
+          sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "page_blocks_page_id_fkey"
+            columns: ["page_id"]
+            isOneToOne: false
+            referencedRelation: "pages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pages: {
+        Row: {
+          created_at: string
+          id: number
+          is_published: boolean
+          slug: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          is_published?: boolean
+          slug: string
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          is_published?: boolean
+          slug?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       post_translations: {
         Row: {
           content: string

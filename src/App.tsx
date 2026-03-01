@@ -32,6 +32,7 @@ import AdminRoles from "./pages/admin/AdminRoles";
 import AdminMedia from "./pages/admin/AdminMedia";
 import AdminSiteContent from "./pages/admin/AdminSiteContent";
 import AdminMobileContent from "./pages/admin/AdminMobileContent";
+import AdminPages from "./pages/admin/AdminPages";
 import SiteLayout from "./pages/site/SiteLayout";
 import SiteHome from "./pages/site/SiteHome";
 import SiteHowItWorks from "./pages/site/SiteHowItWorks";
@@ -39,6 +40,7 @@ import SiteEvents from "./pages/site/SiteEvents";
 import SiteBlog from "./pages/site/SiteBlog";
 import SiteContact from "./pages/site/SiteContact";
 import SiteLogin from "./pages/site/SiteLogin";
+import SitePage from "./pages/site/SitePage";
 
 const queryClient = new QueryClient();
 
@@ -64,6 +66,7 @@ const App = () => (
                 <Route path="roles" element={<AdminRoles />} />
                 <Route path="content" element={<AdminSiteContent />} />
                 <Route path="mobile-content" element={<AdminMobileContent />} />
+                <Route path="pages" element={<AdminPages />} />
               </Route>
 
               {/* Website / intro site */}
@@ -74,6 +77,7 @@ const App = () => (
                 <Route path="blog" element={<Navigate to="/site/events" replace />} />
                 <Route path="contact" element={<SiteContact />} />
                 <Route path="login" element={<SiteLogin />} />
+                <Route path="p/:slug" element={<SitePage />} />
               </Route>
               <Route path="/" element={<Navigate to="/site" replace />} />
               <Route path="/mobile" element={<Layout><Index /></Layout>} />

@@ -1,6 +1,6 @@
 import { useAuth } from '@/lib/auth';
 import { Navigate, Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { Users, ShoppingCart, Award, Building2, UserCheck, LayoutDashboard, FileText, Shield, ImageIcon, Globe, Smartphone, LogOut } from 'lucide-react';
+import { Users, ShoppingCart, Award, Building2, UserCheck, LayoutDashboard, FileText, Shield, ImageIcon, Globe, Smartphone, LogOut, PanelTop } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
@@ -15,6 +15,7 @@ const navItems = [
   { path: '/admin/roles', label: '角色管理', icon: Shield },
   { path: '/admin/content', label: '網站內容', icon: Globe },
   { path: '/admin/mobile-content', label: 'App 內容', icon: Smartphone },
+  { path: '/admin/pages', label: '頁面管理', icon: PanelTop },
 ];
 
 export default function AdminDashboard() {
