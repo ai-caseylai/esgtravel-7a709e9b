@@ -12,24 +12,7 @@ export default function CouponsPage() {
   const navigate = useNavigate();
   const { mc } = useMobileContent();
 
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4 px-8">
-        <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-          <Ticket className="w-8 h-8 text-primary" />
-        </div>
-        <p className="text-foreground font-semibold text-lg">
-          {mc('coupons', 'please_sign_in', 'Please sign in')}
-        </p>
-        <button
-          onClick={() => navigate('/mobile/login')}
-          className="bg-primary text-primary-foreground px-8 py-2.5 rounded-xl border-none text-[15px] font-medium"
-        >
-          {mc('coupons', 'sign_in_button', 'Sign In')}
-        </button>
-      </div>
-    );
-  }
+  if (!user) { navigate('/mobile/login'); return null; }
 
   const coupons = [
     { id: 1, discountKey: 'coupon1_discount', titleKey: 'coupon1_title', descKey: 'coupon1_desc', expiry: '2026-12-31' },

@@ -25,22 +25,7 @@ export default function PassportPage() {
     queryFn: () => fetchBadges(lang),
   });
 
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4 px-8">
-        <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-          <Award className="w-8 h-8 text-primary" />
-        </div>
-        <p className="text-foreground font-semibold text-lg">{mc('passport', 'please_sign_in', 'Please sign in')}</p>
-        <button
-          onClick={() => navigate('/mobile/login')}
-          className="bg-primary text-primary-foreground px-8 py-2.5 rounded-xl border-none text-[15px] font-medium"
-        >
-          {mc('login', 'page_title', 'Login')}
-        </button>
-      </div>
-    );
-  }
+  if (!user) { navigate('/mobile/login'); return null; }
 
   const userBadgeIds = [...new Set(orders?.map(o => o.badge_id) || [])];
   const collectedBadges = badges?.filter(b => userBadgeIds.includes(b.id)) || [];

@@ -68,20 +68,7 @@ export default function SettingsPage() {
     navigate('/mobile');
   };
 
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-background">
-        <MobileHeader title={mc('settings', 'page_title', 'Settings')} />
-        <div className="flex flex-col items-center justify-center px-5 pt-24 gap-4">
-          <User className="w-12 h-12 text-muted-foreground" />
-          <p className="text-muted-foreground text-[15px]">{mc('settings', 'please_login', '請先登入')}</p>
-          <Button onClick={() => navigate('/mobile/login')} className="w-full max-w-[200px]">
-            {mc('settings', 'go_login', '登入')}
-          </Button>
-        </div>
-      </div>
-    );
-  }
+  if (!user) { navigate('/mobile/login'); return null; }
 
   const langOptions = [
     { value: 0 as const, label: '繁體中文' },

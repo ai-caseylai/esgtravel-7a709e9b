@@ -22,14 +22,7 @@ export default function PaymentPage() {
     enabled: !!badgeId,
   });
 
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-3">
-        <p className="text-foreground">{t({ 0: '請先登入', 1: '请先登录', 2: 'Please sign in', 3: 'ログインしてください' })}</p>
-        <button onClick={() => navigate('/mobile/login')} className="bg-primary text-primary-foreground px-6 py-2.5 rounded-xl border-none text-[14px]">{t(ui.login)}</button>
-      </div>
-    );
-  }
+  if (!user) { navigate('/mobile/login'); return null; }
 
   const handlePayment = async () => {
     if (!badge || !user) return;
