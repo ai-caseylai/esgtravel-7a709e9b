@@ -10,12 +10,14 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import MobileHeader from '@/components/MobileHeader';
 import { User, Globe, Mail, LogOut, Lock, ChevronRight } from 'lucide-react';
+import { useMobileContent } from '@/hooks/use-mobile-content';
 
 export default function SettingsPage() {
-  const { lang, setLang, t } = useI18n();
+  const { lang, setLang } = useI18n();
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { mc } = useMobileContent();
 
   const [editingProfile, setEditingProfile] = useState(false);
   const [editingPassword, setEditingPassword] = useState(false);
@@ -41,7 +43,7 @@ export default function SettingsPage() {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success(t({ 0: '已更新', 1: '已更新', 2: 'Updated', 3: '更新しました' }));
+      toast.success(mc('settings', 'updated_msg', 'Updated'));
       queryClient.invalidateQueries({ queryKey: ['profile'] });
       setEditingProfile(false);
     },
@@ -54,7 +56,7 @@ export default function SettingsPage() {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success(t({ 0: '密碼已更新', 1: '密码已更新', 2: 'Password updated', 3: 'パスワード更新済み' }));
+      toast.success(mc('settings', 'password_updated', 'Password updated'));
       setEditingPassword(false);
       setNewPassword('');
     },
@@ -80,9 +82,7 @@ export default function SettingsPage() {
   }) => (
     <button
       onClick={onClick}
-      className={`w-full flex items-center gap-3 px-4 py-3.5 bg-transparent border-none text-left transition-colors active:bg-muted/50 ${
-        destructive ? '' : ''
-      }`}
+      className={`w-full flex items-center gap-3 px-4 py-3.5 bg-transparent border-none text-left transition-colors active:bg-muted/50`}
     >
       <Icon className={`w-[18px] h-[18px] ${destructive ? 'text-destructive' : 'text-primary'}`} />
       <span className={`flex-1 text-[15px] ${destructive ? 'text-destructive' : 'text-foreground'}`}>{label}</span>
@@ -92,7 +92,7 @@ export default function SettingsPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <MobileHeader title={t({ 0: '設定', 1: '设置', 2: 'Settings', 3: '設定' })} />
+      <MobileHeader title={mc('settings', 'page_title', 'Settings')} />
 
       {/* Account info */}
       <div className="px-5 py-4">
@@ -111,31 +111,31 @@ export default function SettingsPage() {
       <div className="px-5 space-y-3">
         {/* Profile section */}
         <div className="bg-card rounded-2xl border border-border overflow-hidden divide-y divide-border">
-          <SettingsRow icon={User} label={t({ 0: '個人資料', 1: '个人资料', 2: 'Personal Info', 3: '個人情報' })} onClick={() => setEditingProfile(!editingProfile)} />
+          <SettingsRow icon={User} label={mc('settings', 'personal_info', 'Personal Info')} onClick={() => setEditingProfile(!editingProfile)} />
           {editingProfile && (
             <div className="px-4 py-3 space-y-3 bg-muted/30">
               <div>
-                <Label className="text-[12px]">{t(ui.name)}</Label>
+                <Label className="text-[12px]">{mc('signup', 'name_label', 'Name')}</Label>
                 <Input value={name} onChange={e => setName(e.target.value)} className="h-9 text-[14px]" />
               </div>
               <div>
-                <Label className="text-[12px]">{t(ui.phone)}</Label>
+                <Label className="text-[12px]">{mc('contact', 'page_title', 'Phone')}</Label>
                 <Input value={mobile} onChange={e => setMobile(e.target.value)} className="h-9 text-[14px]" />
               </div>
               <Button onClick={() => updateProfile.mutate()} disabled={updateProfile.isPending} size="sm" className="w-full">
-                {t({ 0: '儲存', 1: '保存', 2: 'Save', 3: '保存' })}
+                {mc('settings', 'save', 'Save')}
               </Button>
             </div>
           )}
-          <SettingsRow icon={Lock} label={t({ 0: '更改密碼', 1: '更改密码', 2: 'Change Password', 3: 'パスワード変更' })} onClick={() => setEditingPassword(!editingPassword)} />
+          <SettingsRow icon={Lock} label={mc('settings', 'change_password', 'Change Password')} onClick={() => setEditingPassword(!editingPassword)} />
           {editingPassword && (
             <div className="px-4 py-3 space-y-3 bg-muted/30">
               <div>
-                <Label className="text-[12px]">{t({ 0: '新密碼', 1: '新密码', 2: 'New Password', 3: '新しいパスワード' })}</Label>
+                <Label className="text-[12px]">{mc('settings', 'new_password', 'New Password')}</Label>
                 <Input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} minLength={6} className="h-9 text-[14px]" />
               </div>
               <Button onClick={() => updatePassword.mutate()} disabled={updatePassword.isPending || newPassword.length < 6} size="sm" className="w-full">
-                {t({ 0: '更新', 1: '更新', 2: 'Update', 3: '更新' })}
+                {mc('settings', 'update', 'Update')}
               </Button>
             </div>
           )}
@@ -145,7 +145,7 @@ export default function SettingsPage() {
         <div className="bg-card rounded-2xl border border-border overflow-hidden">
           <div className="flex items-center gap-3 px-4 pt-3.5 pb-2">
             <Globe className="w-[18px] h-[18px] text-primary" />
-            <span className="text-foreground text-[15px]">{t({ 0: '語言', 1: '语言', 2: 'Language', 3: '言語' })}</span>
+            <span className="text-foreground text-[15px]">{mc('settings', 'language', 'Language')}</span>
           </div>
           <div className="px-4 pb-3.5 grid grid-cols-4 gap-2">
             {langOptions.map(opt => (
@@ -166,12 +166,12 @@ export default function SettingsPage() {
 
         {/* Actions */}
         <div className="bg-card rounded-2xl border border-border overflow-hidden divide-y divide-border">
-          <SettingsRow icon={Mail} label={t(ui.contactUs)} onClick={() => navigate('/mobile/contact')} />
+          <SettingsRow icon={Mail} label={mc('contact', 'page_title', 'Contact Us')} onClick={() => navigate('/mobile/contact')} />
         </div>
 
         {/* Logout */}
         <div className="bg-card rounded-2xl border border-destructive/20 overflow-hidden">
-          <SettingsRow icon={LogOut} label={t(ui.logout)} onClick={handleLogout} destructive />
+          <SettingsRow icon={LogOut} label={ui.logout[lang]} onClick={handleLogout} destructive />
         </div>
       </div>
     </div>

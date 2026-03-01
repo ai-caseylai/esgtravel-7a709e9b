@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { useI18n, ui } from '@/lib/i18n';
+import { useI18n } from '@/lib/i18n';
 import { toast } from 'sonner';
 import MobileHeader from '@/components/MobileHeader';
 import { Leaf } from 'lucide-react';
+import { useMobileContent } from '@/hooks/use-mobile-content';
 
 export default function SignupPage() {
   const { t } = useI18n();
   const navigate = useNavigate();
+  const { mc } = useMobileContent();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
@@ -23,7 +25,7 @@ export default function SignupPage() {
     });
     if (error) { toast.error(error.message); }
     else {
-      toast.success(t({ 0: '請檢查郵箱確認帳號', 1: '请检查邮箱确认帐号', 2: 'Check your email to confirm', 3: 'メールを確認してください' }));
+      toast.success(mc('signup', 'confirm_msg', 'Check your email to confirm'));
       navigate('/mobile/login');
     }
     setLoading(false);
@@ -31,7 +33,7 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <MobileHeader title={t(ui.signup)} showBack />
+      <MobileHeader title={mc('signup', 'page_title', 'Sign Up')} showBack />
 
       <div className="px-6 pt-8">
         <div className="flex justify-center mb-6">
@@ -41,19 +43,19 @@ export default function SignupPage() {
         </div>
 
         <h2 className="text-[20px] font-bold text-foreground text-center mb-6">
-          {t({ 0: '創建帳號', 1: '创建帐号', 2: 'Create Account', 3: 'アカウント作成' })}
+          {mc('signup', 'create_account', 'Create Account')}
         </h2>
 
         <form onSubmit={handleSignup} className="space-y-4">
           <div>
-            <label className="text-[12px] text-muted-foreground font-medium block mb-1.5">{t(ui.name)}</label>
+            <label className="text-[12px] text-muted-foreground font-medium block mb-1.5">{mc('signup', 'name_label', 'Name')}</label>
             <input
               value={name} onChange={e => setName(e.target.value)} required
               className="w-full h-11 px-3.5 rounded-xl border border-border bg-card text-foreground text-[15px] outline-none focus:ring-2 focus:ring-primary/30 transition"
             />
           </div>
           <div>
-            <label className="text-[12px] text-muted-foreground font-medium block mb-1.5">{t(ui.email)}</label>
+            <label className="text-[12px] text-muted-foreground font-medium block mb-1.5">{mc('signup', 'email_label', 'Email')}</label>
             <input
               type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder="you@example.com"
               className="w-full h-11 px-3.5 rounded-xl border border-border bg-card text-foreground text-[15px] outline-none focus:ring-2 focus:ring-primary/30 transition"
@@ -61,7 +63,7 @@ export default function SignupPage() {
           </div>
           <div>
             <label className="text-[12px] text-muted-foreground font-medium block mb-1.5">
-              {t({ 0: '密碼', 1: '密码', 2: 'Password', 3: 'パスワード' })}
+              {mc('signup', 'password_label', 'Password')}
             </label>
             <input
               type="password" minLength={6} value={password} onChange={e => setPassword(e.target.value)} required placeholder="••••••"
@@ -71,13 +73,13 @@ export default function SignupPage() {
           <button type="submit" disabled={loading}
             className="w-full h-12 rounded-xl bg-primary text-primary-foreground font-semibold text-[15px] border-none disabled:opacity-50"
           >
-            {t(ui.signup)}
+            {mc('signup', 'page_title', 'Sign Up')}
           </button>
         </form>
 
         <p className="mt-6 text-center text-[13px] text-muted-foreground">
-          {t({ 0: '已有帳號？', 1: '已有帐号？', 2: 'Have an account?', 3: 'アカウントをお持ちですか？' })}{' '}
-          <Link to="/mobile/login" className="text-primary font-medium">{t(ui.login)}</Link>
+          {mc('signup', 'have_account', 'Have an account?')}{' '}
+          <Link to="/mobile/login" className="text-primary font-medium">{mc('login', 'page_title', 'Login')}</Link>
         </p>
       </div>
     </div>

@@ -2,10 +2,12 @@ import { useNavigate } from 'react-router-dom';
 import { useI18n, ui } from '@/lib/i18n';
 import { motion } from 'framer-motion';
 import { CheckCircle2 } from 'lucide-react';
+import { useMobileContent } from '@/hooks/use-mobile-content';
 
 export default function PaymentSuccessPage() {
   const { t } = useI18n();
   const navigate = useNavigate();
+  const { mc } = useMobileContent();
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center px-8 gap-5">
@@ -20,7 +22,7 @@ export default function PaymentSuccessPage() {
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-center">
         <h1 className="text-foreground text-[22px] font-bold mb-1">{t(ui.thankYou)}</h1>
         <p className="text-muted-foreground text-[14px]">
-          {t({ 0: '徽章已加入護照', 1: '徽章已加入护照', 2: 'Badge added to passport', 3: 'バッジがパスポートに追加されました' })}
+          {mc('payment_success', 'badge_added', 'Badge added to passport')}
         </p>
       </motion.div>
 

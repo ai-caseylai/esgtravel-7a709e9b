@@ -4,9 +4,11 @@ import { useI18n } from '@/lib/i18n';
 import { Link } from 'react-router-dom';
 import MobileHeader from '@/components/MobileHeader';
 import { motion } from 'framer-motion';
+import { useMobileContent } from '@/hooks/use-mobile-content';
 
 export default function BadgesListPage() {
-  const { lang, t } = useI18n();
+  const { lang } = useI18n();
+  const { mc } = useMobileContent();
 
   const { data: badges, isLoading } = useQuery({
     queryKey: ['badges', lang],
@@ -15,7 +17,7 @@ export default function BadgesListPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <MobileHeader title={t({ 0: '數碼徽章', 1: '数码徽章', 2: 'Digital Badges', 3: 'デジタルバッジ' })} />
+      <MobileHeader title={mc('badges', 'page_title', 'Digital Badges')} />
 
       {isLoading ? (
         <div className="flex justify-center py-20">

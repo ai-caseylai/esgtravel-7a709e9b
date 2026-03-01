@@ -6,11 +6,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import MobileHeader from '@/components/MobileHeader';
 import { motion } from 'framer-motion';
 import { Award } from 'lucide-react';
+import { useMobileContent } from '@/hooks/use-mobile-content';
 
 export default function PassportPage() {
   const { user } = useAuth();
-  const { lang, t } = useI18n();
+  const { lang } = useI18n();
   const navigate = useNavigate();
+  const { mc } = useMobileContent();
 
   const { data: orders } = useQuery({
     queryKey: ['orders', user?.id],
@@ -29,12 +31,12 @@ export default function PassportPage() {
         <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
           <Award className="w-8 h-8 text-primary" />
         </div>
-        <p className="text-foreground font-semibold text-lg">{t({ 0: '請先登入', 1: '请先登录', 2: 'Please sign in', 3: 'ログインしてください' })}</p>
+        <p className="text-foreground font-semibold text-lg">{mc('passport', 'please_sign_in', 'Please sign in')}</p>
         <button
           onClick={() => navigate('/mobile/login')}
           className="bg-primary text-primary-foreground px-8 py-2.5 rounded-xl border-none text-[15px] font-medium"
         >
-          {t(ui.login)}
+          {mc('login', 'page_title', 'Login')}
         </button>
       </div>
     );
@@ -45,13 +47,13 @@ export default function PassportPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <MobileHeader title={t({ 0: '我的護照', 1: '我的护照', 2: 'My Passport', 3: 'マイパスポート' })} />
+      <MobileHeader title={mc('passport', 'page_title', 'My Passport')} />
 
       {/* Stats */}
       <div className="px-5 py-5">
         <div className="bg-card rounded-2xl border border-border p-5">
           <p className="text-muted-foreground text-[13px]">
-            {t({ 0: '已收集徽章', 1: '已收集徽章', 2: 'Badges collected', 3: '収集済みバッジ' })}
+            {mc('passport', 'badges_collected', 'Badges collected')}
           </p>
           <p className="text-[36px] font-bold text-foreground leading-tight">{userBadgeIds.length}</p>
         </div>
@@ -61,7 +63,7 @@ export default function PassportPage() {
       {collectedBadges.length > 0 ? (
         <div className="px-5 space-y-3">
           <h3 className="text-[15px] font-semibold text-foreground">
-            {t({ 0: '我的徽章', 1: '我的徽章', 2: 'My Badges', 3: 'マイバッジ' })}
+            {mc('passport', 'my_badges', 'My Badges')}
           </h3>
           {collectedBadges.map((badge, i) => (
             <motion.div
@@ -88,7 +90,7 @@ export default function PassportPage() {
                     </p>
                   </div>
                   <span className="text-primary text-[13px] font-medium shrink-0">
-                    {t({ 0: '查看', 1: '查看', 2: 'View', 3: '見る' })}
+                    {mc('passport', 'view', 'View')}
                   </span>
                 </div>
               </Link>
@@ -101,13 +103,13 @@ export default function PassportPage() {
             <Award className="w-10 h-10 text-muted-foreground" />
           </div>
           <p className="text-muted-foreground text-center mb-4">
-            {t({ 0: '還沒有收集任何徽章', 1: '还没有收集任何徽章', 2: 'No badges collected yet', 3: 'まだバッジを収集していません' })}
+            {mc('passport', 'no_badges', 'No badges collected yet')}
           </p>
           <button
             onClick={() => navigate('/mobile/badges')}
             className="bg-primary text-primary-foreground px-6 py-2.5 rounded-xl border-none text-[14px] font-medium"
           >
-            {t({ 0: '探索徽章', 1: '探索徽章', 2: 'Explore Badges', 3: 'バッジを探す' })}
+            {mc('passport', 'explore_badges', 'Explore Badges')}
           </button>
         </div>
       )}

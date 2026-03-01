@@ -7,12 +7,14 @@ import { motion } from 'framer-motion';
 import { Award, MapPin, ChevronRight, Sparkles } from 'lucide-react';
 import heroMobile from '@/assets/hero-mobile.jpg';
 import MobileHeader from '@/components/MobileHeader';
+import { useMobileContent } from '@/hooks/use-mobile-content';
 
 export default function HomePage() {
   const { lang, setLang, t } = useI18n();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { mc } = useMobileContent();
 
   const { data: badges } = useQuery({
     queryKey: ['badges', lang],
@@ -26,7 +28,6 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-background">
       <MobileHeader title="STAR SDG" />
-
 
       <div className="px-5 pt-3 space-y-4 pb-4">
         {/* Featured badge card */}
@@ -44,7 +45,7 @@ export default function HomePage() {
               <div className="flex items-start justify-between mb-6">
                 <div className="bg-primary-foreground/20 rounded-xl px-3 py-1.5">
                   <span className="text-primary-foreground text-[11px] font-semibold tracking-wide uppercase">
-                    {t({ 0: '精選徽章', 1: '精选徽章', 2: 'Featured', 3: 'おすすめ' })}
+                    {mc('home', 'featured_label', 'Featured')}
                   </span>
                 </div>
                 <Sparkles className="w-5 h-5 text-primary-foreground/60" />
@@ -53,8 +54,7 @@ export default function HomePage() {
                 {tr?.home_header || tr?.title || currentBadge.code}
               </h2>
               <p className="text-primary-foreground/70 text-[13px] leading-relaxed line-clamp-2 mb-4">
-                {tr?.show_more?.substring(0, 80) ||
-                  t({ 0: '支持當地可持續發展項目', 1: '支持当地可持续发展项目', 2: 'Support local sustainability projects', 3: '地域の持続可能性プロジェクトを支援' })}
+                {tr?.show_more?.substring(0, 80) || mc('home', 'badge_desc_fallback', 'Support local sustainability projects')}
               </p>
               <div className="flex items-center justify-between">
                 <span className="text-primary-foreground font-bold text-lg">${currentBadge.price} USD</span>
@@ -79,10 +79,10 @@ export default function HomePage() {
               <Award className="w-5 h-5 text-primary" />
             </div>
             <p className="text-foreground font-semibold text-[14px]">
-              {t({ 0: '探索徽章', 1: '探索徽章', 2: 'Explore', 3: '探索' })}
+              {mc('home', 'explore_button', 'Explore')}
             </p>
             <p className="text-muted-foreground text-[12px] mt-0.5">
-              {badges?.length ?? 0} {t({ 0: '個可用', 1: '个可用', 2: 'available', 3: '利用可能' })}
+              {badges?.length ?? 0} {mc('home', 'available_text', 'available')}
             </p>
           </motion.button>
 
@@ -97,10 +97,10 @@ export default function HomePage() {
               <MapPin className="w-5 h-5 text-accent" />
             </div>
             <p className="text-foreground font-semibold text-[14px]">
-              {t({ 0: '我的護照', 1: '我的护照', 2: 'Passport', 3: 'パスポート' })}
+              {mc('home', 'passport_button', 'Passport')}
             </p>
             <p className="text-muted-foreground text-[12px] mt-0.5">
-              {t({ 0: '查看收藏', 1: '查看收藏', 2: 'View collection', 3: 'コレクション' })}
+              {mc('home', 'view_collection', 'View collection')}
             </p>
           </motion.button>
         </div>
@@ -114,13 +114,13 @@ export default function HomePage() {
           >
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-[15px] font-semibold text-foreground">
-                {t({ 0: '所有徽章', 1: '所有徽章', 2: 'All Badges', 3: 'すべてのバッジ' })}
+                {mc('home', 'all_badges_title', 'All Badges')}
               </h3>
               <button
                 onClick={() => navigate('/mobile/badges')}
                 className="text-[13px] text-primary font-medium bg-transparent border-none"
               >
-                {t({ 0: '查看全部', 1: '查看全部', 2: 'See all', 3: 'すべて見る' })}
+                {mc('home', 'see_all', 'See all')}
               </button>
             </div>
             <div className="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-hide">
@@ -152,7 +152,6 @@ export default function HomePage() {
           </motion.div>
         )}
 
-
         {/* Login CTA */}
         {!user && (
           <motion.button
@@ -162,7 +161,7 @@ export default function HomePage() {
             onClick={() => navigate('/mobile/login')}
             className="w-full py-3.5 rounded-2xl bg-card border border-border text-primary font-semibold text-[15px] flex items-center justify-center gap-1"
           >
-            {t({ 0: '登入帳號', 1: '登录帐号', 2: 'Sign In', 3: 'ログイン' })}
+            {mc('home', 'sign_in_button', 'Sign In')}
             <ChevronRight className="w-4 h-4" />
           </motion.button>
         )}

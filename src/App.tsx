@@ -31,6 +31,7 @@ import AdminPosts from "./pages/admin/AdminPosts";
 import AdminRoles from "./pages/admin/AdminRoles";
 import AdminMedia from "./pages/admin/AdminMedia";
 import AdminSiteContent from "./pages/admin/AdminSiteContent";
+import AdminMobileContent from "./pages/admin/AdminMobileContent";
 import SiteLayout from "./pages/site/SiteLayout";
 import SiteHome from "./pages/site/SiteHome";
 import SiteHowItWorks from "./pages/site/SiteHowItWorks";
@@ -61,6 +62,7 @@ const App = () => (
                 <Route path="agents" element={<AdminAgents />} />
                 <Route path="roles" element={<AdminRoles />} />
                 <Route path="content" element={<AdminSiteContent />} />
+                <Route path="mobile-content" element={<AdminMobileContent />} />
               </Route>
 
               {/* Website / intro site */}

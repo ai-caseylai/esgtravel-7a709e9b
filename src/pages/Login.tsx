@@ -5,10 +5,12 @@ import { useI18n } from '@/lib/i18n';
 import { toast } from 'sonner';
 import MobileHeader from '@/components/MobileHeader';
 import { Leaf } from 'lucide-react';
+import { useMobileContent } from '@/hooks/use-mobile-content';
 
 export default function LoginPage() {
   const { t } = useI18n();
   const navigate = useNavigate();
+  const { mc } = useMobileContent();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -51,10 +53,9 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <MobileHeader title={t({ 0: '登入', 1: '登录', 2: 'Sign In', 3: 'ログイン' })} showBack />
+      <MobileHeader title={mc('login', 'page_title', 'Login')} showBack />
 
       <div className="px-6 pt-8">
-        {/* Logo */}
         <div className="flex justify-center mb-8">
           <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center">
             <Leaf className="w-8 h-8 text-primary" />
@@ -62,13 +63,12 @@ export default function LoginPage() {
         </div>
 
         <h2 className="text-[22px] font-bold text-foreground text-center mb-1">
-          {t({ 0: '歡迎回來', 1: '欢迎回来', 2: 'Welcome back', 3: 'おかえりなさい' })}
+          {mc('login', 'welcome_back', 'Welcome Back')}
         </h2>
         <p className="text-muted-foreground text-[14px] text-center mb-6">
           {t({ 0: '登入你的影響力護照', 1: '登录你的影响力护照', 2: 'Sign in to your Impact Passport', 3: 'インパクトパスポートにログイン' })}
         </p>
 
-        {/* Mode toggle */}
         <div className="flex bg-muted rounded-xl p-1 mb-6">
           <button
             onClick={() => { setMode('password'); setError(''); }}
@@ -76,7 +76,7 @@ export default function LoginPage() {
               mode === 'password' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground'
             }`}
           >
-            {t({ 0: '密碼', 1: '密码', 2: 'Password', 3: 'パスワード' })}
+            {mc('login', 'password_label', 'Password')}
           </button>
           <button
             onClick={() => { setMode('otp'); setError(''); }}
@@ -88,11 +88,10 @@ export default function LoginPage() {
           </button>
         </div>
 
-        {/* Form */}
         <form onSubmit={mode === 'password' ? handlePasswordLogin : handleOtpLogin} className="space-y-4">
           <div>
             <label className="text-[12px] text-muted-foreground font-medium block mb-1.5">
-              {t({ 0: '電郵地址', 1: '邮箱地址', 2: 'Email address', 3: 'メールアドレス' })}
+              {mc('login', 'email_label', 'Email Address')}
             </label>
             <input
               type="email" required value={email} onChange={e => setEmail(e.target.value)}
@@ -104,7 +103,7 @@ export default function LoginPage() {
           {mode === 'password' && (
             <div>
               <label className="text-[12px] text-muted-foreground font-medium block mb-1.5">
-                {t({ 0: '密碼', 1: '密码', 2: 'Password', 3: 'パスワード' })}
+                {mc('login', 'password_label', 'Password')}
               </label>
               <input
                 type="password" required minLength={6} value={password} onChange={e => setPassword(e.target.value)}
@@ -121,14 +120,14 @@ export default function LoginPage() {
             disabled={loading || (mode === 'otp' && countdown > 0)}
             className="w-full h-12 rounded-xl bg-primary text-primary-foreground font-semibold text-[15px] border-none disabled:opacity-50 transition-opacity"
           >
-            {loading ? '...' : mode === 'otp' && countdown > 0 ? `Resend in ${countdown}s` : t({ 0: '登入', 1: '登录', 2: 'Sign In', 3: 'ログイン' })}
+            {loading ? '...' : mode === 'otp' && countdown > 0 ? `Resend in ${countdown}s` : mc('login', 'page_title', 'Login')}
           </button>
         </form>
 
         <p className="mt-6 text-center text-[13px] text-muted-foreground">
-          {t({ 0: '還沒有帳號？', 1: '还没有帐号？', 2: "Don't have an account?", 3: 'アカウントをお持ちでないですか？' })}{' '}
+          {mc('login', 'no_account', "Don't have an account?")}{' '}
           <Link to="/mobile/signup" className="text-primary font-medium">
-            {t({ 0: '註冊', 1: '注册', 2: 'Sign up', 3: 'サインアップ' })}
+            {mc('signup', 'page_title', 'Sign Up')}
           </Link>
         </p>
       </div>

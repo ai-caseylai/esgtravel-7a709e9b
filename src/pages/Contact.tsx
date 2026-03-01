@@ -1,13 +1,13 @@
-import { useI18n, ui } from '@/lib/i18n';
 import MobileHeader from '@/components/MobileHeader';
 import { Mail, Phone } from 'lucide-react';
+import { useMobileContent } from '@/hooks/use-mobile-content';
 
 export default function ContactPage() {
-  const { t } = useI18n();
+  const { mc } = useMobileContent();
 
   return (
     <div className="min-h-screen bg-background">
-      <MobileHeader title={t(ui.contactUs)} showBack />
+      <MobileHeader title={mc('contact', 'page_title', 'Contact Us')} showBack />
 
       <div className="px-5 py-8 space-y-4">
         <div className="bg-card rounded-2xl border border-border p-5 flex items-center gap-4">
@@ -15,9 +15,7 @@ export default function ContactPage() {
             <Phone className="w-5 h-5 text-primary" />
           </div>
           <div>
-            <p className="text-muted-foreground text-[12px]">
-              {t({ 0: '聯繫電話', 1: '联系电话', 2: 'Phone', 3: '電話' })}
-            </p>
+            <p className="text-muted-foreground text-[12px]">Phone</p>
             <p className="text-foreground font-medium text-[15px]">+852 1234-5678</p>
           </div>
         </div>
@@ -27,9 +25,7 @@ export default function ContactPage() {
             <Mail className="w-5 h-5 text-primary" />
           </div>
           <div>
-            <p className="text-muted-foreground text-[12px]">
-              {t({ 0: '電郵', 1: '邮箱', 2: 'Email', 3: 'メール' })}
-            </p>
+            <p className="text-muted-foreground text-[12px]">Email</p>
             <p className="text-foreground font-medium text-[15px]">info@starsdg.com</p>
           </div>
         </div>
