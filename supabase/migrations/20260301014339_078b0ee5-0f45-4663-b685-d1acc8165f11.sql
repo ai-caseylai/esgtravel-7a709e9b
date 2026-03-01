@@ -1,0 +1,1 @@
+UPDATE site_content SET event = 'Introduction' WHERE lang = 1;
