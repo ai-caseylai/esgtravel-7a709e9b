@@ -22,7 +22,7 @@ export default function AdminDashboard() {
   const location = useLocation();
 
   if (loading) return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
-  if (!user) return <Navigate to={`/mobile/login?redirect=${encodeURIComponent('/admin')}`} replace />;
+  if (!user) return <Navigate to={`/site/login?redirect=${encodeURIComponent('/admin')}`} replace />;
 
   return (
     <div className="flex min-h-screen bg-muted/30">

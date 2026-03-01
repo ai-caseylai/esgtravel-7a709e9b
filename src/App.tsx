@@ -38,6 +38,7 @@ import SiteHowItWorks from "./pages/site/SiteHowItWorks";
 import SiteEvents from "./pages/site/SiteEvents";
 import SiteBlog from "./pages/site/SiteBlog";
 import SiteContact from "./pages/site/SiteContact";
+import SiteLogin from "./pages/site/SiteLogin";
 
 const queryClient = new QueryClient();
 
@@ -72,6 +73,7 @@ const App = () => (
                 <Route path="events" element={<SiteEvents />} />
                 <Route path="blog" element={<Navigate to="/site/events" replace />} />
                 <Route path="contact" element={<SiteContact />} />
+                <Route path="login" element={<SiteLogin />} />
               </Route>
               <Route path="/" element={<Navigate to="/site" replace />} />
               <Route path="/mobile" element={<Layout><Index /></Layout>} />
