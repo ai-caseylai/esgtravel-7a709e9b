@@ -180,6 +180,8 @@ export default function AdminSiteContent() {
     ),
   })).filter(g => g.fields.length > 0);
 
+  const [activeGroup, setActiveGroup] = useState(FIELD_GROUPS[0].title);
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
@@ -189,67 +191,90 @@ export default function AdminSiteContent() {
       {loading ? (
         <p className="text-muted-foreground">載入中...</p>
       ) : (
-        <>
-          {/* Search */}
-          <div className="relative mb-4">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="搜尋欄位..." className="pl-9" />
+        <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-6">
+          {/* ── Left: section nav ── */}
+          <div className="space-y-1">
+            <div className="relative mb-3">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="搜尋..." className="pl-9 text-sm" />
+            </div>
+            <nav className="flex lg:flex-col gap-1 overflow-x-auto lg:overflow-x-visible pb-2 lg:pb-0">
+              {filteredGroups.map(group => (
+                <button
+                  key={group.title}
+                  onClick={() => setActiveGroup(group.title)}
+                  className={`text-left px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
+                    activeGroup === group.title
+                      ? 'bg-primary text-primary-foreground'
+                      : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                  }`}
+                >
+                  {group.title}
+                </button>
+              ))}
+            </nav>
           </div>
 
-          <Tabs defaultValue="0">
-            <TabsList className="mb-4">
+          {/* ── Right: content editor ── */}
+          <div>
+            <Tabs defaultValue="0">
+              <TabsList className="mb-4">
+                {LANGS.map(l => (
+                  <TabsTrigger key={l.id} value={String(l.id)}>{l.label}</TabsTrigger>
+                ))}
+              </TabsList>
+
               {LANGS.map(l => (
-                <TabsTrigger key={l.id} value={String(l.id)}>{l.label}</TabsTrigger>
-              ))}
-            </TabsList>
-
-            {LANGS.map(l => (
-              <TabsContent key={l.id} value={String(l.id)}>
-                {data[l.id] ? (
-                  <div className="space-y-6">
-                    {filteredGroups.map(group => (
-                      <div key={group.title} className="bg-card rounded-xl border border-border p-5">
-                        <h3 className="text-foreground font-semibold text-sm mb-4 border-b border-border pb-2">
-                          {group.title}
-                        </h3>
-                        <div className="space-y-3">
-                          {group.fields.map(field => (
-                            <div key={field.key}>
-                              <Label className="text-[12px] text-muted-foreground">
-                                {field.label} <span className="text-[10px] opacity-50">({field.key})</span>
-                              </Label>
-                              {field.multiline ? (
-                                <Textarea
-                                  value={data[l.id]?.[field.key] ?? ''}
-                                  onChange={e => updateField(l.id, field.key, e.target.value)}
-                                  rows={3}
-                                  className="text-sm"
-                                />
-                              ) : (
-                                <Input
-                                  value={data[l.id]?.[field.key] ?? ''}
-                                  onChange={e => updateField(l.id, field.key, e.target.value)}
-                                  className="text-sm"
-                                />
-                              )}
-                            </div>
-                          ))}
+                <TabsContent key={l.id} value={String(l.id)}>
+                  {data[l.id] ? (
+                    <div className="space-y-5">
+                      {filteredGroups
+                        .filter(g => g.title === activeGroup)
+                        .map(group => (
+                        <div key={group.title}>
+                          <h3 className="text-foreground font-semibold text-base mb-4">
+                            {group.title}
+                          </h3>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {group.fields.map(field => (
+                              <div key={field.key} className={field.multiline ? 'md:col-span-2' : ''}>
+                                <Label className="text-xs text-muted-foreground mb-1.5 block">
+                                  {field.label}
+                                  <span className="text-[10px] ml-1.5 opacity-40 font-mono">({field.key})</span>
+                                </Label>
+                                {field.multiline ? (
+                                  <Textarea
+                                    value={data[l.id]?.[field.key] ?? ''}
+                                    onChange={e => updateField(l.id, field.key, e.target.value)}
+                                    rows={3}
+                                    className="text-sm"
+                                  />
+                                ) : (
+                                  <Input
+                                    value={data[l.id]?.[field.key] ?? ''}
+                                    onChange={e => updateField(l.id, field.key, e.target.value)}
+                                    className="text-sm"
+                                  />
+                                )}
+                              </div>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
 
-                    <Button onClick={() => handleSave(l.id)} disabled={saving} className="w-full">
-                      <Save className="h-4 w-4 mr-1" />
-                      {saving ? '儲存中...' : `儲存 ${l.label}`}
-                    </Button>
-                  </div>
-                ) : (
-                  <p className="text-muted-foreground">此語言尚無內容記錄。</p>
-                )}
-              </TabsContent>
-            ))}
-          </Tabs>
-        </>
+                      <Button onClick={() => handleSave(l.id)} disabled={saving} className="w-full mt-2">
+                        <Save className="h-4 w-4 mr-1" />
+                        {saving ? '儲存中...' : `儲存 ${l.label}`}
+                      </Button>
+                    </div>
+                  ) : (
+                    <p className="text-muted-foreground">此語言尚無內容記錄。</p>
+                  )}
+                </TabsContent>
+              ))}
+            </Tabs>
+          </div>
+        </div>
       )}
     </div>
   );
