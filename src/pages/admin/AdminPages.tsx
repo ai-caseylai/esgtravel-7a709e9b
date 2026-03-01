@@ -7,18 +7,167 @@ import { Switch } from '@/components/ui/switch';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Trash2, GripVertical, ArrowUp, ArrowDown, Eye, FileText, Image as ImageIcon, Type, AlignLeft, LayoutList, Globe, ExternalLink } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Label } from '@/components/ui/label';
+import { Plus, Trash2, GripVertical, ArrowUp, ArrowDown, Eye, FileText, Image as ImageIcon, Type, AlignLeft, LayoutList, Globe, ExternalLink, Save } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { MediaPickerButton } from '@/components/MediaPickerButton';
 
-const FIXED_PAGES = [
-  { path: '/site', label: '首頁 Home' },
-  { path: '/site/how-it-works', label: '如何獲得徽章' },
-  { path: '/site/events', label: '活動與資訊' },
-  { path: '/site/contact', label: '聯絡我們' },
+/* ── Fixed page definitions with mapped site_content fields ── */
+const FIXED_PAGES: { path: string; label: string; fields: { key: string; label: string; multiline?: boolean }[] }[] = [
+  {
+    path: '/site', label: '首頁 Home',
+    fields: [
+      { key: 'home', label: '首頁標籤' },
+      { key: 'subheader', label: '副標題' },
+      { key: 'description', label: '描述', multiline: true },
+      { key: 'getstarted', label: '開始使用按鈕' },
+      { key: 'greeting', label: '問候語' },
+      { key: 'aboutheader', label: '關於標題' },
+      { key: 'abouttitle', label: '關於副標題' },
+    ],
+  },
+  {
+    path: '/site/how-it-works', label: '如何獲得徽章',
+    fields: [
+      { key: 'badge', label: '徽章標籤' },
+      { key: 'showmore', label: '顯示更多' },
+      { key: 'support', label: '支持按鈕' },
+      { key: 'addextra', label: '額外支持' },
+      { key: 'currency', label: '貨幣' },
+      { key: 'sdg', label: 'SDG 標籤' },
+      { key: 'summary', label: '摘要標籤' },
+      { key: 'detail', label: '詳情標籤' },
+    ],
+  },
+  {
+    path: '/site/events', label: '活動與資訊',
+    fields: [
+      { key: 'event', label: '活動標籤' },
+      { key: 'impact', label: '影響標籤' },
+      { key: 'impactheader', label: '影響標題' },
+      { key: 'impacttitle', label: '影響副標題' },
+      { key: 'impactrecord', label: '影響記錄' },
+    ],
+  },
+  {
+    path: '/site/contact', label: '聯絡我們',
+    fields: [
+      { key: 'contactus', label: '聯絡我們標籤' },
+      { key: 'contact', label: '聯絡方式' },
+      { key: 'email', label: '電郵' },
+      { key: 'website', label: '官網' },
+      { key: 'needhelp', label: '需要幫助' },
+    ],
+  },
 ];
 
+const LANGS = [
+  { id: 0, label: '繁中' },
+  { id: 1, label: '简中' },
+  { id: 2, label: 'EN' },
+  { id: 3, label: 'JP' },
+];
 
+/* ── Fixed page editor (site_content fields) ── */
+function FixedPageEditor({ page }: { page: typeof FIXED_PAGES[0] }) {
+  const { toast } = useToast();
+  const [data, setData] = useState<Record<number, Record<string, string>>>({});
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      setLoading(true);
+      const { data: rows } = await supabase.from('site_content').select('*');
+      const map: Record<number, Record<string, string>> = {};
+      (rows ?? []).forEach((r: any) => { map[r.lang] = r; });
+      setData(map);
+      setLoading(false);
+    })();
+  }, []);
+
+  const updateField = (lang: number, key: string, value: string) => {
+    setData(prev => ({ ...prev, [lang]: { ...prev[lang], [key]: value } }));
+  };
+
+  const handleSave = async (lang: number) => {
+    setSaving(true);
+    try {
+      const row = data[lang];
+      if (!row) return;
+      const updates: Record<string, string> = {};
+      page.fields.forEach(f => { updates[f.key] = row[f.key] ?? ''; });
+      const { error } = await supabase.from('site_content').update(updates as any).eq('id', Number(row.id));
+      if (error) throw error;
+      toast({ title: `已儲存 ${LANGS.find(l => l.id === lang)?.label} 內容` });
+    } catch (e: any) {
+      toast({ title: '儲存失敗', description: e.message, variant: 'destructive' });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) return <p className="text-muted-foreground py-8 text-center">載入中...</p>;
+
+  return (
+    <div className="space-y-4">
+      <Card>
+        <CardContent className="p-4 flex items-center justify-between">
+          <h3 className="font-semibold text-foreground">{page.label}</h3>
+          <Button variant="outline" size="sm" asChild>
+            <a href={page.path} target="_blank" rel="noreferrer"><Eye className="h-3.5 w-3.5 mr-1" /> 預覽</a>
+          </Button>
+        </CardContent>
+      </Card>
+
+      <Tabs defaultValue="0">
+        <TabsList>
+          {LANGS.map(l => <TabsTrigger key={l.id} value={String(l.id)}>{l.label}</TabsTrigger>)}
+        </TabsList>
+        {LANGS.map(l => (
+          <TabsContent key={l.id} value={String(l.id)}>
+            {data[l.id] ? (
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {page.fields.map(field => (
+                    <div key={field.key} className={field.multiline ? 'md:col-span-2' : ''}>
+                      <Label className="text-xs text-muted-foreground mb-1.5 block">
+                        {field.label}
+                        <span className="text-[10px] ml-1.5 opacity-40 font-mono">({field.key})</span>
+                      </Label>
+                      {field.multiline ? (
+                        <Textarea
+                          value={data[l.id]?.[field.key] ?? ''}
+                          onChange={e => updateField(l.id, field.key, e.target.value)}
+                          rows={3} className="text-sm"
+                        />
+                      ) : (
+                        <Input
+                          value={data[l.id]?.[field.key] ?? ''}
+                          onChange={e => updateField(l.id, field.key, e.target.value)}
+                          className="text-sm"
+                        />
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <Button onClick={() => handleSave(l.id)} disabled={saving} className="w-full">
+                  <Save className="h-4 w-4 mr-1" />
+                  {saving ? '儲存中...' : `儲存 ${l.label}`}
+                </Button>
+              </div>
+            ) : (
+              <p className="text-muted-foreground py-4">此語言尚無內容記錄。</p>
+            )}
+          </TabsContent>
+        ))}
+      </Tabs>
+    </div>
+  );
+}
+
+/* ── Block types ── */
 type Block = {
   id?: number;
   block_type: string;
@@ -140,6 +289,7 @@ export default function AdminPages() {
   const { toast } = useToast();
   const [pages, setPages] = useState<Page[]>([]);
   const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [selectedFixed, setSelectedFixed] = useState<string | null>(null);
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [pageForm, setPageForm] = useState({ slug: '', title: '', is_published: false });
   const [saving, setSaving] = useState(false);
@@ -154,7 +304,13 @@ export default function AdminPages() {
 
   useEffect(() => { loadPages(); }, [loadPages]);
 
+  const selectFixed = (path: string) => {
+    setSelectedFixed(path);
+    setSelectedId(null);
+  };
+
   const selectPage = async (id: number) => {
+    setSelectedFixed(null);
     setSelectedId(id);
     const page = pages.find(p => p.id === id);
     if (page) setPageForm({ slug: page.slug, title: page.title, is_published: page.is_published });
@@ -207,9 +363,7 @@ export default function AdminPages() {
   const savePage = async () => {
     if (!selectedId) return;
     setSaving(true);
-    // Update page meta
     await supabase.from('pages').update({ slug: pageForm.slug, title: pageForm.title, is_published: pageForm.is_published } as any).eq('id', selectedId);
-    // Delete old blocks & insert new
     await supabase.from('page_blocks').delete().eq('page_id', selectedId);
     if (blocks.length > 0) {
       const inserts = blocks.map((b, i) => ({ page_id: selectedId, block_type: b.block_type, content: b.content, sort_order: i } as any));
@@ -219,6 +373,8 @@ export default function AdminPages() {
     await loadPages();
     toast({ title: '已儲存' });
   };
+
+  const fixedPage = FIXED_PAGES.find(fp => fp.path === selectedFixed);
 
   return (
     <div>
@@ -234,17 +390,16 @@ export default function AdminPages() {
             <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-1">現有頁面</h4>
             <div className="space-y-1">
               {FIXED_PAGES.map(fp => (
-                <a
+                <button
                   key={fp.path}
-                  href={fp.path}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 no-underline bg-card text-muted-foreground hover:bg-muted"
+                  onClick={() => selectFixed(fp.path)}
+                  className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 border-none cursor-pointer ${
+                    selectedFixed === fp.path ? 'bg-primary text-primary-foreground' : 'bg-card text-muted-foreground hover:bg-muted'
+                  }`}
                 >
                   <Globe className="h-4 w-4 shrink-0" />
                   <span className="truncate">{fp.label}</span>
-                  <ExternalLink className="h-3 w-3 ml-auto shrink-0 opacity-50" />
-                </a>
+                </button>
               ))}
             </div>
           </div>
@@ -288,7 +443,9 @@ export default function AdminPages() {
         </div>
 
         {/* Right: editor */}
-        {selectedId ? (
+        {fixedPage ? (
+          <FixedPageEditor key={fixedPage.path} page={fixedPage} />
+        ) : selectedId ? (
           <div className="space-y-4">
             {/* Page meta */}
             <Card>
