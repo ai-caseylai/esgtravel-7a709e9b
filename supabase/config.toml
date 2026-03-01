@@ -1,1 +1,4 @@
 project_id = "jbfybrxpdippdsettdgv"
+
+[functions.mobile-api]
+verify_jwt = false
