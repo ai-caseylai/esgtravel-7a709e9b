@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 import { useI18n, ui } from '@/lib/i18n';
 import { useAuth } from '@/lib/auth';
 import { supabase } from '@/integrations/supabase/client';
@@ -68,7 +68,7 @@ export default function SettingsPage() {
     navigate('/mobile');
   };
 
-  if (!user) { navigate('/mobile/login'); return null; }
+  if (!user) return <Navigate to="/mobile/login" replace />;
 
   const langOptions = [
     { value: 0 as const, label: '繁體中文' },
