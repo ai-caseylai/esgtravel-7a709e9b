@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useI18n } from '@/lib/i18n';
 import { toast } from 'sonner';
@@ -11,6 +11,8 @@ export default function LoginPage() {
   const { t } = useI18n();
   const navigate = useNavigate();
   const { mc } = useMobileContent();
+  const [searchParams] = useSearchParams();
+  const redirectTo = searchParams.get('redirect') || '/mobile/passport';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -28,7 +30,7 @@ export default function LoginPage() {
     setError(''); setLoading(true);
     const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
     if (authError) { setError(t({ 0: '電郵或密碼不正確', 1: '邮箱或密码不正确', 2: 'Incorrect email or password', 3: 'メールまたはパスワードが違います' })); }
-    else { toast.success(t({ 0: '登入成功', 1: '登录成功', 2: 'Logged in', 3: 'ログイン成功' })); navigate('/mobile/passport'); }
+    else { toast.success(t({ 0: '登入成功', 1: '登录成功', 2: 'Logged in', 3: 'ログイン成功' })); navigate(redirectTo); }
     setLoading(false);
   };
 
