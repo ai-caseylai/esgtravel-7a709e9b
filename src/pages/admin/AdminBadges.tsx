@@ -105,7 +105,7 @@ export default function AdminBadges() {
   const fetchAll = async (preferId?: number) => {
     setLoading(true);
     const [b, t, s] = await Promise.all([
-      supabase.from('badges').select('*').order('id'),
+      supabase.from('badges').select('*').order('id', { ascending: false }),
       supabase.from('badge_translations').select('badge_id, lang, title, home_header, summary').order('badge_id'),
       supabase.from('sdg_badges').select('badge_id, sdg_id').order('badge_id'),
     ]);
