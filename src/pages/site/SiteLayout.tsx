@@ -4,21 +4,18 @@ import { useSiteContent } from '@/hooks/use-site-content';
 import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 
-const navItems = [
-  { path: '/site', contentKey: 'home', fallbackKey: { 0: '首頁', 1: '首页', 2: 'Home', 3: 'ホーム' } },
-  { path: '/site/how-it-works', contentKey: '', fallbackKey: { 0: '如何獲得徽章', 1: '如何获得徽章', 2: 'How to Get Badges', 3: 'バッジの取得方法' } },
-  { path: '/site/events', contentKey: 'event', fallbackKey: { 0: '活動與資訊', 1: '活动与资讯', 2: 'Events & Activities', 3: 'イベント' } },
-  { path: '/site/contact', contentKey: 'contactus', fallbackKey: { 0: '聯絡我們', 1: '联系我们', 2: 'Contact Us', 3: 'お問い合わせ' } },
-];
-
 export default function SiteLayout() {
   const { lang, setLang, t } = useI18n();
   const { tc } = useSiteContent();
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const getLabel = (item: typeof navItems[0]) =>
-    item.contentKey ? tc(item.contentKey, t(item.fallbackKey)) : t(item.fallbackKey);
+  const navItems = [
+    { path: '/site', label: tc('home', t({ 0: '首頁', 1: '首页', 2: 'Home', 3: 'ホーム' })) },
+    { path: '/site/how-it-works', label: tc('site_nav_how', t({ 0: '如何獲得徽章', 1: '如何获得徽章', 2: 'How to Get Badges', 3: 'バッジの取得方法' })) },
+    { path: '/site/events', label: tc('event', t({ 0: '活動與資訊', 1: '活动与资讯', 2: 'Events & Activities', 3: 'イベント' })) },
+    { path: '/site/contact', label: tc('contactus', t({ 0: '聯絡我們', 1: '联系我们', 2: 'Contact Us', 3: 'お問い合わせ' })) },
+  ];
 
   const langOptions = [
     { value: 0 as const, label: '繁中' },
@@ -45,7 +42,7 @@ export default function SiteLayout() {
                   location.pathname === item.path ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                {getLabel(item)}
+                {item.label}
               </Link>
             ))}
           </nav>
@@ -82,7 +79,7 @@ export default function SiteLayout() {
                   location.pathname === item.path ? 'text-primary' : 'text-muted-foreground'
                 }`}
               >
-                {getLabel(item)}
+                {item.label}
               </Link>
             ))}
             <div className="flex gap-2 pt-2">
@@ -112,24 +109,24 @@ export default function SiteLayout() {
             <div>
               <h3 className="text-primary font-bold text-lg mb-3">STAR SDG</h3>
               <p className="text-muted-foreground text-sm leading-relaxed">
-                {t({ 0: '推動可持續旅遊，為地球的未來出一分力。', 1: '推动可持续旅游，为地球的未来出一分力。', 2: 'Promoting sustainable tourism for a better future.', 3: '持続可能な観光を推進し、より良い未来のために。' })}
+                {tc('site_footer_desc', t({ 0: '推動可持續旅遊，為地球的未來出一分力。', 1: '推动可持续旅游，为地球的未来出一分力。', 2: 'Promoting sustainable tourism for a better future.', 3: '持続可能な観光を推進し、より良い未来のために。' }))}
               </p>
             </div>
             <div>
               <h4 className="text-foreground font-semibold text-sm mb-3">
-                {t({ 0: '快速連結', 1: '快速链接', 2: 'Quick Links', 3: 'クイックリンク' })}
+                {tc('site_footer_links', t({ 0: '快速連結', 1: '快速链接', 2: 'Quick Links', 3: 'クイックリンク' }))}
               </h4>
               <div className="space-y-2">
                 {navItems.map(item => (
                   <Link key={item.path} to={item.path} className="block text-muted-foreground text-sm no-underline hover:text-primary">
-                    {getLabel(item)}
+                    {item.label}
                   </Link>
                 ))}
               </div>
             </div>
             <div>
               <h4 className="text-foreground font-semibold text-sm mb-3">
-                {tc('contactus', t({ 0: '聯絡方式', 1: '联系方式', 2: 'Contact', 3: '連絡先' }))}
+                {tc('site_footer_contact', tc('contactus', t({ 0: '聯絡方式', 1: '联系方式', 2: 'Contact', 3: '連絡先' })))}
               </h4>
               <p className="text-muted-foreground text-sm">{tc('email', 'info@starsdg.com')}</p>
               <p className="text-muted-foreground text-sm">{tc('contact', '+852 1234-5678')}</p>

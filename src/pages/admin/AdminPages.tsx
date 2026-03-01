@@ -14,65 +14,93 @@ import { useToast } from '@/hooks/use-toast';
 import { MediaPickerButton } from '@/components/MediaPickerButton';
 
 /* ── Fixed page definitions with mapped site_content fields ── */
-const FIXED_PAGES: { path: string; label: string; fields: { key: string; label: string; multiline?: boolean }[] }[] = [
+const FIXED_PAGES: { path: string; label: string; fields: { key: string; label: string; multiline?: boolean; image?: boolean }[] }[] = [
   {
     path: '/site', label: '首頁 Home',
     fields: [
       { key: 'site_hero_title', label: 'Hero 標題' },
       { key: 'site_hero_desc', label: 'Hero 描述', multiline: true },
+      { key: 'site_hero_img', label: 'Hero 背景圖片', image: true },
       { key: 'site_learnmore', label: '了解更多按鈕' },
       { key: 'site_programme_title', label: '計劃介紹標題' },
       { key: 'site_programme_desc', label: '計劃介紹描述', multiline: true },
       { key: 'site_feature1_title', label: '特色1 標題' },
       { key: 'site_feature1_desc', label: '特色1 描述', multiline: true },
+      { key: 'site_feature1_img', label: '特色1 圖片', image: true },
       { key: 'site_feature2_title', label: '特色2 標題' },
       { key: 'site_feature2_desc', label: '特色2 描述', multiline: true },
+      { key: 'site_feature2_img', label: '特色2 圖片', image: true },
       { key: 'site_feature3_title', label: '特色3 標題' },
       { key: 'site_feature3_desc', label: '特色3 描述', multiline: true },
+      { key: 'site_feature3_img', label: '特色3 圖片', image: true },
       { key: 'site_feature4_title', label: '特色4 標題' },
       { key: 'site_feature4_desc', label: '特色4 描述', multiline: true },
+      { key: 'site_feature4_img', label: '特色4 圖片', image: true },
       { key: 'site_sdg_title', label: 'SDG 區段標題' },
       { key: 'site_sdg_desc', label: 'SDG 區段描述' },
       { key: 'site_cta_title', label: 'CTA 標題' },
       { key: 'site_cta_desc', label: 'CTA 描述', multiline: true },
-      { key: 'home', label: '首頁標籤' },
-      { key: 'subheader', label: '副標題' },
-      { key: 'description', label: '描述', multiline: true },
-      { key: 'getstarted', label: '開始使用按鈕' },
-      { key: 'greeting', label: '問候語' },
+      { key: 'site_cta_img', label: 'CTA 背景圖片', image: true },
     ],
   },
   {
     path: '/site/how-it-works', label: '如何獲得徽章',
     fields: [
-      { key: 'badge', label: '徽章標籤' },
-      { key: 'showmore', label: '顯示更多' },
-      { key: 'support', label: '支持按鈕' },
-      { key: 'addextra', label: '額外支持' },
-      { key: 'currency', label: '貨幣' },
-      { key: 'sdg', label: 'SDG 標籤' },
-      { key: 'summary', label: '摘要標籤' },
-      { key: 'detail', label: '詳情標籤' },
+      { key: 'site_how_title', label: 'Hero 標題' },
+      { key: 'site_how_desc', label: 'Hero 描述', multiline: true },
+      { key: 'site_how_hero_img', label: 'Hero 背景圖片', image: true },
+      { key: 'site_step1_title', label: '步驟1 標題' },
+      { key: 'site_step1_desc', label: '步驟1 描述', multiline: true },
+      { key: 'site_step1_img', label: '步驟1 圖片', image: true },
+      { key: 'site_step2_title', label: '步驟2 標題' },
+      { key: 'site_step2_desc', label: '步驟2 描述', multiline: true },
+      { key: 'site_step2_img', label: '步驟2 圖片', image: true },
+      { key: 'site_step3_title', label: '步驟3 標題' },
+      { key: 'site_step3_desc', label: '步驟3 描述', multiline: true },
+      { key: 'site_step3_img', label: '步驟3 圖片', image: true },
+      { key: 'site_step4_title', label: '步驟4 標題' },
+      { key: 'site_step4_desc', label: '步驟4 描述', multiline: true },
+      { key: 'site_step4_img', label: '步驟4 圖片', image: true },
     ],
   },
   {
     path: '/site/events', label: '活動與資訊',
     fields: [
-      { key: 'event', label: '活動標籤' },
-      { key: 'impact', label: '影響標籤' },
-      { key: 'impactheader', label: '影響標題' },
-      { key: 'impacttitle', label: '影響副標題' },
-      { key: 'impactrecord', label: '影響記錄' },
+      { key: 'site_events_title', label: 'Hero 標題' },
+      { key: 'site_events_desc', label: 'Hero 描述', multiline: true },
+      { key: 'site_events_hero_img', label: 'Hero 背景圖片', image: true },
+      { key: 'site_events_label', label: '活動區段標題' },
+      { key: 'site_articles_label', label: '文章區段標題' },
+      { key: 'site_no_events', label: '無活動提示' },
+      { key: 'site_no_articles', label: '無文章提示' },
+      { key: 'site_readmore', label: '閱讀更多按鈕' },
     ],
   },
   {
     path: '/site/contact', label: '聯絡我們',
     fields: [
-      { key: 'contactus', label: '聯絡我們標籤' },
-      { key: 'contact', label: '聯絡方式' },
-      { key: 'email', label: '電郵' },
-      { key: 'website', label: '官網' },
-      { key: 'needhelp', label: '需要幫助' },
+      { key: 'site_contact_title', label: '頁面標題' },
+      { key: 'site_contact_desc', label: '頁面描述', multiline: true },
+      { key: 'site_contact_phone_label', label: '電話標籤' },
+      { key: 'site_contact_phone', label: '電話號碼' },
+      { key: 'site_contact_email_label', label: '電郵標籤' },
+      { key: 'site_contact_email_val', label: '電郵地址' },
+      { key: 'site_contact_addr_label', label: '地址標籤' },
+      { key: 'site_contact_addr', label: '地址', multiline: true },
+    ],
+  },
+  {
+    path: '_layout', label: '導覽列與頁尾',
+    fields: [
+      { key: 'home', label: '首頁導覽標籤' },
+      { key: 'site_nav_how', label: '如何獲得徽章導覽標籤' },
+      { key: 'event', label: '活動導覽標籤' },
+      { key: 'contactus', label: '聯絡我們導覽標籤' },
+      { key: 'site_footer_desc', label: '頁尾描述', multiline: true },
+      { key: 'site_footer_links', label: '頁尾快速連結標題' },
+      { key: 'site_footer_contact', label: '頁尾聯絡標題' },
+      { key: 'email', label: '頁尾電郵' },
+      { key: 'contact', label: '頁尾電話' },
     ],
   },
 ];
@@ -189,12 +217,29 @@ function FixedPageEditor({ page }: { page: typeof FIXED_PAGES[0] }) {
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {page.fields.map(field => (
-                      <div key={field.key} className={field.multiline ? 'md:col-span-2' : ''}>
+                      <div key={field.key} className={(field.multiline || field.image) ? 'md:col-span-2' : ''}>
                         <Label className="text-xs text-muted-foreground mb-1.5 block">
                           {field.label}
                           <span className="text-[10px] ml-1.5 opacity-40 font-mono">({field.key})</span>
                         </Label>
-                        {field.multiline ? (
+                        {field.image ? (
+                          <div className="space-y-2">
+                            <div className="flex gap-2 items-center">
+                              <div className="flex-1">
+                                <Input
+                                  placeholder="圖片 URL（留空則使用預設圖片）"
+                                  value={data[l.id]?.[field.key] ?? ''}
+                                  onChange={e => updateField(l.id, field.key, e.target.value)}
+                                  className="text-sm"
+                                />
+                              </div>
+                              <MediaPickerButton onSelect={(url) => updateField(l.id, field.key, url)} />
+                            </div>
+                            {data[l.id]?.[field.key] && (
+                              <img src={data[l.id][field.key]} alt="" className="max-h-32 rounded border border-border object-cover" />
+                            )}
+                          </div>
+                        ) : field.multiline ? (
                           <Textarea
                             value={data[l.id]?.[field.key] ?? ''}
                             onChange={e => updateField(l.id, field.key, e.target.value)}

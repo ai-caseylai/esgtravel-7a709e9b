@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useI18n } from '@/lib/i18n';
+import { useSiteContent } from '@/hooks/use-site-content';
 import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
-import eventsHero from '@/assets/site-events-hero.jpg';
+import eventsHeroFallback from '@/assets/site-events-hero.jpg';
 
 interface PostItem {
   id: number;
@@ -18,11 +19,14 @@ interface PostItem {
 }
 
 export default function SiteEvents() {
-  const { lang, t } = useI18n();
+  const { lang } = useI18n();
+  const { tc } = useSiteContent();
   const [events, setEvents] = useState<PostItem[]>([]);
   const [blogs, setBlogs] = useState<PostItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<PostItem | null>(null);
+
+  const heroImg = tc('site_events_hero_img', '') || eventsHeroFallback;
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -75,22 +79,22 @@ export default function SiteEvents() {
     fetchPosts();
   }, [lang]);
 
-  const readMore = t({ 0: '閱讀更多 →', 1: '阅读更多 →', 2: 'Read more →', 3: '続きを読む →' });
+  const readMore = tc('site_readmore', 'Read more →');
 
   return (
     <div>
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
-          <img src={eventsHero} alt="" className="w-full h-full object-cover" />
+          <img src={heroImg} alt="" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background" />
         </div>
         <div className="max-w-4xl mx-auto px-4 py-20 text-center relative">
           <h1 className="text-foreground text-4xl font-bold mb-4 drop-shadow-lg">
-            {t({ 0: '活動與資訊', 1: '活动与资讯', 2: 'Events & Activities', 3: 'イベントと活動' })}
+            {tc('site_events_title', 'Events & Activities')}
           </h1>
           <p className="text-foreground/80 text-lg drop-shadow">
-            {t({ 0: '了解我們過去和即將舉辦的活動，以及最新文章', 1: '了解我们过去和即将举办的活动，以及最新文章', 2: 'Discover our events and latest articles', 3: '過去および今後のイベントと最新記事をご覧ください' })}
+            {tc('site_events_desc', '')}
           </p>
         </div>
       </section>
@@ -104,11 +108,11 @@ export default function SiteEvents() {
           {/* Events section */}
           <section className="max-w-4xl mx-auto px-4 py-12">
             <h2 className="text-2xl font-bold text-foreground mb-6">
-              {t({ 0: '活動', 1: '活动', 2: 'Events', 3: 'イベント' })}
+              {tc('site_events_label', 'Events')}
             </h2>
             {events.length === 0 ? (
               <p className="text-muted-foreground">
-                {t({ 0: '暫無活動', 1: '暂无活动', 2: 'No events yet', 3: 'イベントはまだありません' })}
+                {tc('site_no_events', 'No events yet')}
               </p>
             ) : (
               <div className="space-y-6">
@@ -146,11 +150,11 @@ export default function SiteEvents() {
           {/* Blog section */}
           <section className="max-w-4xl mx-auto px-4 pb-12">
             <h2 className="text-2xl font-bold text-foreground mb-6">
-              {t({ 0: '最新文章', 1: '最新文章', 2: 'Latest Articles', 3: '最新記事' })}
+              {tc('site_articles_label', 'Latest Articles')}
             </h2>
             {blogs.length === 0 ? (
               <p className="text-muted-foreground">
-                {t({ 0: '暫無文章', 1: '暂无文章', 2: 'No articles yet', 3: '記事はまだありません' })}
+                {tc('site_no_articles', 'No articles yet')}
               </p>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
