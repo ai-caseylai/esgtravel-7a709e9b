@@ -70,7 +70,7 @@ const App = () => (
                 <Route index element={<SiteHome />} />
                 <Route path="how-it-works" element={<SiteHowItWorks />} />
                 <Route path="events" element={<SiteEvents />} />
-                <Route path="blog" element={<SiteBlog />} />
+                <Route path="blog" element={<Navigate to="/site/events" replace />} />
                 <Route path="contact" element={<SiteContact />} />
               </Route>
               <Route path="/" element={<Navigate to="/site" replace />} />

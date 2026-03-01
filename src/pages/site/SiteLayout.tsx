@@ -8,7 +8,6 @@ const navItems = [
   { path: '/site', contentKey: 'home', fallbackKey: { 0: '首頁', 1: '首页', 2: 'Home', 3: 'ホーム' } },
   { path: '/site/how-it-works', contentKey: '', fallbackKey: { 0: '如何獲得徽章', 1: '如何获得徽章', 2: 'How to Get Badges', 3: 'バッジの取得方法' } },
   { path: '/site/events', contentKey: 'event', fallbackKey: { 0: '活動與資訊', 1: '活动与资讯', 2: 'Events & Activities', 3: 'イベント' } },
-  { path: '/site/blog', contentKey: '', fallbackKey: { 0: '文章', 1: '文章', 2: 'Blog', 3: 'ブログ' } },
   { path: '/site/contact', contentKey: 'contactus', fallbackKey: { 0: '聯絡我們', 1: '联系我们', 2: 'Contact Us', 3: 'お問い合わせ' } },
 ];
 
