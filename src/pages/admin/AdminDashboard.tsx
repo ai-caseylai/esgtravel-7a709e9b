@@ -1,6 +1,6 @@
 import { useAuth } from '@/lib/auth';
-import { Navigate, Link, Outlet, useLocation } from 'react-router-dom';
-import { Users, ShoppingCart, Award, Building2, UserCheck, LayoutDashboard, FileText, Shield, ImageIcon, Globe, Smartphone } from 'lucide-react';
+import { Navigate, Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Users, ShoppingCart, Award, Building2, UserCheck, LayoutDashboard, FileText, Shield, ImageIcon, Globe, Smartphone, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
@@ -18,8 +18,14 @@ const navItems = [
 ];
 
 export default function AdminDashboard() {
-  const { user, loading } = useAuth();
+  const { user, loading, signOut } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await signOut();
+    navigate('/site/login');
+  };
 
   if (loading) return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
   if (!user) return <Navigate to={`/site/login?redirect=${encodeURIComponent('/admin')}`} replace />;
@@ -54,10 +60,17 @@ export default function AdminDashboard() {
             );
           })}
         </nav>
-        <div className="mt-auto p-3 border-t border-border">
+        <div className="mt-auto p-3 border-t border-border space-y-1">
           <Link to="/site" className="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground">
             ← 返回前台
           </Link>
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2 px-3 py-2 text-sm text-destructive hover:text-destructive/80 w-full text-left border-none bg-transparent cursor-pointer"
+          >
+            <LogOut className="h-4 w-4" />
+            登出
+          </button>
         </div>
       </aside>
 
