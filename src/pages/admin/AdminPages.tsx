@@ -113,10 +113,10 @@ const FIXED_PAGES: { path: string; label: string; fields: { key: string; label: 
 ];
 
 const LANGS = [
-  { id: 0, label: '繁中' },
-  { id: 1, label: '简中' },
-  { id: 2, label: 'EN' },
-  { id: 3, label: 'JP' },
+  { id: 0, dbLang: 0, label: '繁中' },
+  { id: 1, dbLang: 3, label: '简中' },
+  { id: 2, dbLang: 1, label: 'EN' },
+  { id: 3, dbLang: 2, label: 'JP' },
 ];
 
 /* ── Fixed page editor (site_content fields) ── */
@@ -143,16 +143,16 @@ function FixedPageEditor({ page }: { page: typeof FIXED_PAGES[0] }) {
     setData(prev => ({ ...prev, [lang]: { ...prev[lang], [key]: value } }));
   };
 
-  const handleSave = async (lang: number) => {
+  const handleSave = async (dbLang: number) => {
     setSaving(true);
     try {
-      const row = data[lang];
+      const row = data[dbLang];
       if (!row) return;
       const updates: Record<string, string> = {};
       page.fields.forEach(f => { updates[f.key] = row[f.key] ?? ''; });
       const { error } = await supabase.from('site_content').update(updates as any).eq('id', Number(row.id));
       if (error) throw error;
-      toast({ title: `已儲存 ${LANGS.find(l => l.id === lang)?.label} 內容` });
+      toast({ title: `已儲存 ${LANGS.find(l => l.dbLang === dbLang)?.label} 內容` });
       // Refresh preview after save
       setPreviewKey(k => k + 1);
     } catch (e: any) {
@@ -220,7 +220,7 @@ function FixedPageEditor({ page }: { page: typeof FIXED_PAGES[0] }) {
           </TabsList>
           {LANGS.map(l => (
             <TabsContent key={l.id} value={String(l.id)}>
-              {data[l.id] ? (
+              {data[l.dbLang] ? (
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {page.fields.map(field => (
@@ -235,34 +235,34 @@ function FixedPageEditor({ page }: { page: typeof FIXED_PAGES[0] }) {
                               <div className="flex-1">
                                 <Input
                                   placeholder="圖片 URL（留空則使用預設圖片）"
-                                  value={data[l.id]?.[field.key] ?? ''}
-                                  onChange={e => updateField(l.id, field.key, e.target.value)}
+                                  value={data[l.dbLang]?.[field.key] ?? ''}
+                                  onChange={e => updateField(l.dbLang, field.key, e.target.value)}
                                   className="text-sm"
                                 />
                               </div>
-                              <MediaPickerButton onSelect={(url) => updateField(l.id, field.key, url)} />
+                              <MediaPickerButton onSelect={(url) => updateField(l.dbLang, field.key, url)} />
                             </div>
-                            {data[l.id]?.[field.key] && (
-                              <img src={data[l.id][field.key]} alt="" className="max-h-32 rounded border border-border object-cover" />
+                            {data[l.dbLang]?.[field.key] && (
+                              <img src={data[l.dbLang][field.key]} alt="" className="max-h-32 rounded border border-border object-cover" />
                             )}
                           </div>
                         ) : field.multiline ? (
                           <Textarea
-                            value={data[l.id]?.[field.key] ?? ''}
-                            onChange={e => updateField(l.id, field.key, e.target.value)}
+                            value={data[l.dbLang]?.[field.key] ?? ''}
+                            onChange={e => updateField(l.dbLang, field.key, e.target.value)}
                             rows={3} className="text-sm"
                           />
                         ) : (
                           <Input
-                            value={data[l.id]?.[field.key] ?? ''}
-                            onChange={e => updateField(l.id, field.key, e.target.value)}
+                            value={data[l.dbLang]?.[field.key] ?? ''}
+                            onChange={e => updateField(l.dbLang, field.key, e.target.value)}
                             className="text-sm"
                           />
                         )}
                       </div>
                     ))}
                   </div>
-                  <Button onClick={() => handleSave(l.id)} disabled={saving} className="w-full">
+                  <Button onClick={() => handleSave(l.dbLang)} disabled={saving} className="w-full">
                     <Save className="h-4 w-4 mr-1" />
                     {saving ? '儲存中...' : `儲存 ${l.label}`}
                   </Button>

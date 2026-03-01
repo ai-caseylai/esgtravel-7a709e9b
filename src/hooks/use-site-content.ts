@@ -13,8 +13,16 @@ async function fetchSiteContent(): Promise<ContentMap> {
   return map;
 }
 
+const SITE_LANG_TO_DB_LANG: Record<number, number> = {
+  0: 0, // 繁中
+  1: 3, // 简中
+  2: 1, // EN
+  3: 2, // JP
+};
+
 export function useSiteContent() {
   const { lang } = useI18n();
+  const dbLang = SITE_LANG_TO_DB_LANG[lang] ?? 0;
 
   const { data: content } = useQuery({
     queryKey: ['site_content'],
@@ -22,14 +30,9 @@ export function useSiteContent() {
     staleTime: 5 * 60 * 1000,
   });
 
-  /**
-   * Get a site_content field value for the current language.
-   * site_content.lang uses the same 0-3 mapping as the frontend lang.
-   * Falls back to lang 0 (繁中), then returns the fallback string.
-   */
   const tc = (key: string, fallback = ''): string => {
     if (!content) return fallback;
-    return content[lang]?.[key] || content[0]?.[key] || fallback;
+    return content[dbLang]?.[key] || content[0]?.[key] || fallback;
   };
 
   return { tc, content, isLoaded: !!content };
