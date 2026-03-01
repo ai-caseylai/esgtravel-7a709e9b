@@ -302,16 +302,25 @@ export default function AdminPosts() {
       </p>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>{editingId ? '編輯文章' : '新增文章'}</DialogTitle>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0">
+          <DialogHeader className="px-6 pt-6 pb-4 border-b border-border sticky top-0 bg-background z-10">
+            <DialogTitle className="text-lg">{editingId ? '編輯文章' : '新增文章'}</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+
+          <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-0">
+            {/* ── Left sidebar: metadata ── */}
+            <div className="border-b lg:border-b-0 lg:border-r border-border p-5 space-y-5 bg-muted/30">
+              {/* Cover image */}
               <div>
-                <Label>分類</Label>
+                <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2 block">封面圖片</Label>
+                <CoverImagePicker value={coverImage} onChange={setCoverImage} />
+              </div>
+
+              {/* Category */}
+              <div>
+                <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2 block">分類</Label>
                 <Select value={category} onValueChange={setCategory}>
-                  <SelectTrigger>
+                  <SelectTrigger className="w-full">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -320,69 +329,77 @@ export default function AdminPosts() {
                   </SelectContent>
                 </Select>
               </div>
-              <div>
-                <Label>Slug (網址路徑)</Label>
-                <Input value={slug} onChange={e => setSlug(e.target.value)} placeholder="e.g. kochi-eco-tour" />
-              </div>
-            </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label>封面圖片</Label>
-                <CoverImagePicker value={coverImage} onChange={setCoverImage} />
-              </div>
+              {/* Event date */}
               {category === 'event' && (
                 <div>
-                  <Label>活動日期</Label>
+                  <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2 block">活動日期</Label>
                   <Input type="date" value={eventDate} onChange={e => setEventDate(e.target.value)} />
                 </div>
               )}
+
+              {/* Slug */}
+              <div>
+                <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2 block">Slug (網址路徑)</Label>
+                <Input value={slug} onChange={e => setSlug(e.target.value)} placeholder="e.g. kochi-eco-tour" className="text-sm" />
+              </div>
+
+              {/* Publish toggle */}
+              <div className="flex items-center justify-between pt-2 border-t border-border">
+                <Label className="text-sm">發佈狀態</Label>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-muted-foreground">{isPublished ? '已發佈' : '草稿'}</span>
+                  <Switch checked={isPublished} onCheckedChange={setIsPublished} />
+                </div>
+              </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <Switch checked={isPublished} onCheckedChange={setIsPublished} />
-              <Label>發佈</Label>
+            {/* ── Right: translations ── */}
+            <div className="p-5">
+              <Tabs defaultValue="0" className="h-full">
+                <TabsList className="mb-4">
+                  {LANGS.map(l => <TabsTrigger key={l.id} value={String(l.id)}>{l.label}</TabsTrigger>)}
+                </TabsList>
+                {LANGS.map(l => (
+                  <TabsContent key={l.id} value={String(l.id)} className="space-y-4 mt-0">
+                    <div>
+                      <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1.5 block">標題</Label>
+                      <Input
+                        value={translations[l.id].title}
+                        onChange={e => updateTranslation(l.id, 'title', e.target.value)}
+                        className="text-base font-medium"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1.5 block">摘要</Label>
+                      <Textarea
+                        value={translations[l.id].summary}
+                        onChange={e => updateTranslation(l.id, 'summary', e.target.value)}
+                        rows={2}
+                        className="text-sm"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1.5 block">內容</Label>
+                      <Textarea
+                        value={translations[l.id].content}
+                        onChange={e => updateTranslation(l.id, 'content', e.target.value)}
+                        rows={12}
+                        className="text-sm font-mono"
+                      />
+                    </div>
+                  </TabsContent>
+                ))}
+              </Tabs>
             </div>
+          </div>
 
-            <Tabs defaultValue="0">
-              <TabsList>
-                {LANGS.map(l => <TabsTrigger key={l.id} value={String(l.id)}>{l.label}</TabsTrigger>)}
-              </TabsList>
-              {LANGS.map(l => (
-                <TabsContent key={l.id} value={String(l.id)} className="space-y-3">
-                  <div>
-                    <Label>標題</Label>
-                    <Input
-                      value={translations[l.id].title}
-                      onChange={e => updateTranslation(l.id, 'title', e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <Label>摘要</Label>
-                    <Textarea
-                      value={translations[l.id].summary}
-                      onChange={e => updateTranslation(l.id, 'summary', e.target.value)}
-                      rows={2}
-                    />
-                  </div>
-                  <div>
-                    <Label>內容</Label>
-                    <Textarea
-                      value={translations[l.id].content}
-                      onChange={e => updateTranslation(l.id, 'content', e.target.value)}
-                      rows={10}
-                    />
-                  </div>
-                </TabsContent>
-              ))}
-            </Tabs>
-
-            <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setDialogOpen(false)}>取消</Button>
-              <Button onClick={handleSave} disabled={saving}>
-                {saving ? '儲存中...' : '儲存'}
-              </Button>
-            </div>
+          {/* ── Footer ── */}
+          <div className="flex justify-end gap-2 px-6 py-4 border-t border-border sticky bottom-0 bg-background">
+            <Button variant="outline" onClick={() => setDialogOpen(false)}>取消</Button>
+            <Button onClick={handleSave} disabled={saving}>
+              {saving ? '儲存中...' : '儲存'}
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
