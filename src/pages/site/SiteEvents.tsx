@@ -1,3 +1,4 @@
+import '@/components/RichTextEditor.css';
 import { useEffect, useState } from 'react';
 import { useI18n } from '@/lib/i18n';
 import { useSiteContent } from '@/hooks/use-site-content';
@@ -222,9 +223,10 @@ export default function SiteEvents() {
                 <h2 className="text-foreground text-2xl md:text-3xl font-bold mb-6">
                   {selected.title}
                 </h2>
-                <div className="text-muted-foreground leading-relaxed whitespace-pre-line text-base">
-                  {selected.content}
-                </div>
+                <div
+                  className="rich-content text-muted-foreground leading-relaxed text-base"
+                  dangerouslySetInnerHTML={{ __html: selected.content }}
+                />
               </div>
             </motion.article>
           </motion.div>
