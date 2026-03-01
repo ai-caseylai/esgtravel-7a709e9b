@@ -5,6 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useI18n, ui } from '@/lib/i18n';
 import { useAuth } from '@/lib/auth';
 import AppFooter from '@/components/AppFooter';
+import MobileHeader from '@/components/MobileHeader';
 
 export default function CertPage() {
   const { id } = useParams<{ id: string }>();
@@ -57,10 +58,7 @@ export default function CertPage() {
 
   return (
     <div className="min-h-screen bg-background pb-20">
-      {/* Back */}
-      <div className="pt-4 px-4">
-        <button onClick={() => navigate(-1)} className="text-primary text-2xl">←</button>
-      </div>
+      <MobileHeader title={tr?.home_header || badge?.code || t({ 0: '數碼認證', 1: '数码认证', 2: 'Certificate', 3: 'デジタル認証' })} showBack />
 
       {/* Certificate card */}
       <div className="mx-4 mt-4 bg-card rounded-2xl border border-border shadow-lg p-6 text-center">
