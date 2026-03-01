@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 
 const SUPABASE_URL = 'https://jbfybrxpdippdsettdgv.supabase.co';
 
-type DbLang = 0 | 1 | 2;
+type DbLang = 0 | 1 | 2 | 3;
 
 interface BadgeItem {
   id: number;
@@ -43,7 +43,8 @@ interface TranslationDraft {
 }
 
 const DB_LANGS: { id: DbLang; label: string; hint: string }[] = [
-  { id: 0, label: '繁中', hint: '簡中將回退繁中' },
+  { id: 0, label: '繁中', hint: 'App 繁體中文' },
+  { id: 3, label: '简中', hint: 'App 简体中文' },
   { id: 1, label: '英文', hint: 'App EN' },
   { id: 2, label: '日文', hint: 'App 日本語' },
 ];
@@ -54,6 +55,7 @@ const emptyTranslationMap = (): Record<DbLang, TranslationDraft> => ({
   0: emptyTranslation(),
   1: emptyTranslation(),
   2: emptyTranslation(),
+  3: emptyTranslation(),
 });
 
 const SDG_OPTIONS = Array.from({ length: 17 }, (_, i) => i + 1);
@@ -141,7 +143,7 @@ export default function AdminBadges() {
 
     const nextTranslations = emptyTranslationMap();
     selectedTranslations.forEach(t => {
-      if (t.lang === 0 || t.lang === 1 || t.lang === 2) {
+      if (t.lang === 0 || t.lang === 1 || t.lang === 2 || t.lang === 3) {
         nextTranslations[t.lang] = {
           title: t.title || '',
           home_header: t.home_header || '',
