@@ -13,7 +13,32 @@ import { Plus, Trash2, GripVertical, ArrowUp, ArrowDown, Eye, FileText, Image as
 import { useToast } from '@/hooks/use-toast';
 import { MediaPickerButton } from '@/components/MediaPickerButton';
 
-/* ── Fixed page definitions with mapped site_content fields ── */
+// Fallback images used by frontend when DB field is empty
+import siteHeroFallback from '@/assets/site-hero.jpg';
+import featureBadgeFallback from '@/assets/feature-badge.jpg';
+import featureImpactFallback from '@/assets/feature-impact.jpg';
+import featureCommunityFallback from '@/assets/feature-community.jpg';
+import siteHowHeroFallback from '@/assets/site-how-hero.jpg';
+import stepExploreFallback from '@/assets/step-explore.jpg';
+import stepPurchaseFallback from '@/assets/step-purchase.jpg';
+import stepCertFallback from '@/assets/step-cert.jpg';
+import stepImpactFallback from '@/assets/step-impact.jpg';
+import siteEventsHeroFallback from '@/assets/site-events-hero.jpg';
+
+const IMAGE_FALLBACKS: Record<string, string> = {
+  site_hero_img: siteHeroFallback,
+  site_feature1_img: siteHeroFallback,
+  site_feature2_img: featureBadgeFallback,
+  site_feature3_img: featureImpactFallback,
+  site_feature4_img: featureCommunityFallback,
+  site_cta_img: featureCommunityFallback,
+  site_how_hero_img: siteHowHeroFallback,
+  site_step1_img: stepExploreFallback,
+  site_step2_img: stepPurchaseFallback,
+  site_step3_img: stepCertFallback,
+  site_step4_img: stepImpactFallback,
+  site_events_hero_img: siteEventsHeroFallback,
+};
 const FIXED_PAGES: { path: string; label: string; fields: { key: string; label: string; multiline?: boolean; image?: boolean }[] }[] = [
   {
     path: '/site', label: '首頁 Home',
@@ -120,7 +145,7 @@ const LANGS = [
 ];
 
 /* ── Image field with upload + media picker + preview ── */
-function ImageFieldEditor({ value, onChange }: { value: string; onChange: (url: string) => void }) {
+function ImageFieldEditor({ value, onChange, fallback }: { value: string; onChange: (url: string) => void; fallback?: string }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
 
@@ -143,6 +168,8 @@ function ImageFieldEditor({ value, onChange }: { value: string; onChange: (url: 
     }
   };
 
+  const displayImg = value || fallback;
+
   return (
     <div className="space-y-2">
       <div className="flex gap-2 items-center flex-wrap">
@@ -160,8 +187,13 @@ function ImageFieldEditor({ value, onChange }: { value: string; onChange: (url: 
         </Button>
         <MediaPickerButton onSelect={onChange} />
       </div>
-      {value && (
-        <img src={value} alt="" className="max-h-32 rounded border border-border object-cover" />
+      {displayImg && (
+        <div className="relative">
+          <img src={displayImg} alt="" className="max-h-32 rounded border border-border object-cover" />
+          {!value && fallback && (
+            <span className="absolute top-1 left-1 bg-muted/80 text-muted-foreground text-[10px] px-1.5 py-0.5 rounded">預設圖片</span>
+          )}
+        </div>
       )}
     </div>
   );
@@ -306,6 +338,7 @@ function FixedPageEditor({ page }: { page: typeof FIXED_PAGES[0] }) {
                           <ImageFieldEditor
                             value={data[l.dbLang]?.[field.key] ?? ''}
                             onChange={(url) => updateImageField(field.key, url)}
+                            fallback={IMAGE_FALLBACKS[field.key]}
                           />
                         ) : field.multiline ? (
                           <Textarea
