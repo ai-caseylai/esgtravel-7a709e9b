@@ -1,4 +1,5 @@
 import { useSiteContent } from '@/hooks/use-site-content';
+import { HtmlContent } from '@/components/HtmlContent';
 import { Phone, Mail, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -30,9 +31,7 @@ export default function SiteContact() {
           <h1 className="text-foreground text-4xl font-bold mb-4">
             {tc('site_contact_title', 'Contact Us')}
           </h1>
-          <p className="text-muted-foreground text-lg">
-            {tc('site_contact_desc', 'Feel free to reach out with any questions')}
-          </p>
+          <HtmlContent html={tc('site_contact_desc', 'Feel free to reach out with any questions')} className="text-muted-foreground text-lg" />
         </div>
       </section>
 

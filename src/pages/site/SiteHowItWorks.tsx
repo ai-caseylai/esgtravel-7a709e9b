@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useSiteContent } from '@/hooks/use-site-content';
+import { HtmlContent } from '@/components/HtmlContent';
 import heroImgFallback from '@/assets/site-how-hero.jpg';
 import stepExploreFallback from '@/assets/step-explore.jpg';
 import stepPurchaseFallback from '@/assets/step-purchase.jpg';
@@ -12,30 +13,10 @@ export default function SiteHowItWorks() {
   const heroImg = tc('site_how_hero_img', '') || heroImgFallback;
 
   const steps = [
-    {
-      num: '01',
-      image: tc('site_step1_img', '') || stepExploreFallback,
-      title: tc('site_step1_title', 'Explore Badges'),
-      desc: tc('site_step1_desc', ''),
-    },
-    {
-      num: '02',
-      image: tc('site_step2_img', '') || stepPurchaseFallback,
-      title: tc('site_step2_title', 'Purchase a Badge'),
-      desc: tc('site_step2_desc', ''),
-    },
-    {
-      num: '03',
-      image: tc('site_step3_img', '') || stepCertFallback,
-      title: tc('site_step3_title', 'Receive Digital Certificate'),
-      desc: tc('site_step3_desc', ''),
-    },
-    {
-      num: '04',
-      image: tc('site_step4_img', '') || stepImpactFallback,
-      title: tc('site_step4_title', 'Track Your Impact'),
-      desc: tc('site_step4_desc', ''),
-    },
+    { num: '01', image: tc('site_step1_img', '') || stepExploreFallback, title: tc('site_step1_title', 'Explore Badges'), desc: tc('site_step1_desc', '') },
+    { num: '02', image: tc('site_step2_img', '') || stepPurchaseFallback, title: tc('site_step2_title', 'Purchase a Badge'), desc: tc('site_step2_desc', '') },
+    { num: '03', image: tc('site_step3_img', '') || stepCertFallback, title: tc('site_step3_title', 'Receive Digital Certificate'), desc: tc('site_step3_desc', '') },
+    { num: '04', image: tc('site_step4_img', '') || stepImpactFallback, title: tc('site_step4_title', 'Track Your Impact'), desc: tc('site_step4_desc', '') },
   ];
 
   return (
@@ -50,9 +31,7 @@ export default function SiteHowItWorks() {
           <h1 className="text-foreground text-4xl font-bold mb-4 drop-shadow-lg">
             {tc('site_how_title', 'How to Get Badges')}
           </h1>
-          <p className="text-foreground/80 text-lg drop-shadow">
-            {tc('site_how_desc', '')}
-          </p>
+          <HtmlContent html={tc('site_how_desc', '')} className="text-foreground/80 text-lg drop-shadow" />
         </div>
       </section>
 
@@ -77,7 +56,7 @@ export default function SiteHowItWorks() {
                 </div>
                 <h3 className="text-foreground font-bold text-2xl">{step.title}</h3>
               </div>
-              <p className="text-muted-foreground leading-relaxed text-lg">{step.desc}</p>
+              <HtmlContent html={step.desc} className="text-muted-foreground leading-relaxed text-lg" />
             </div>
           </motion.div>
         ))}
