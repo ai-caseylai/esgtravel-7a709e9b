@@ -84,7 +84,7 @@ export default function LoginPage() {
               mode === 'otp' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground'
             }`}
           >
-            Magic Link
+            {mc('login', 'otp_label', '電郵快速登入(OTP)')}
           </button>
         </div>
 
