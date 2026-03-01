@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchUserOrders, fetchBadges } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import { useI18n, ui } from '@/lib/i18n';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, Navigate } from 'react-router-dom';
 import MobileHeader from '@/components/MobileHeader';
 import { motion } from 'framer-motion';
 import { Award } from 'lucide-react';
@@ -25,7 +25,7 @@ export default function PassportPage() {
     queryFn: () => fetchBadges(lang),
   });
 
-  if (!user) { navigate('/mobile/login'); return null; }
+  if (!user) return <Navigate to="/mobile/login" replace />;
 
   const userBadgeIds = [...new Set(orders?.map(o => o.badge_id) || [])];
   const collectedBadges = badges?.filter(b => userBadgeIds.includes(b.id)) || [];

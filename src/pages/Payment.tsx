@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchBadgeDetail } from '@/lib/api';
@@ -22,7 +22,7 @@ export default function PaymentPage() {
     enabled: !!badgeId,
   });
 
-  if (!user) { navigate('/mobile/login'); return null; }
+  if (!user) return <Navigate to="/mobile/login" replace />;
 
   const handlePayment = async () => {
     if (!badge || !user) return;

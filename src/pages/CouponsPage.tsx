@@ -1,6 +1,6 @@
 import { useI18n } from '@/lib/i18n';
 import { useAuth } from '@/lib/auth';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 import MobileHeader from '@/components/MobileHeader';
 import { motion } from 'framer-motion';
 import { Ticket } from 'lucide-react';
@@ -12,7 +12,7 @@ export default function CouponsPage() {
   const navigate = useNavigate();
   const { mc } = useMobileContent();
 
-  if (!user) { navigate('/mobile/login'); return null; }
+  if (!user) return <Navigate to="/mobile/login" replace />;
 
   const coupons = [
     { id: 1, discountKey: 'coupon1_discount', titleKey: 'coupon1_title', descKey: 'coupon1_desc', expiry: '2026-12-31' },
